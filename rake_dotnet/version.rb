@@ -30,11 +30,12 @@ module Rake
 				end
 				si = SvnInfo.new
 				v = "#{maj_min}.#{build}.#{si.revision}"
+				puts 'v: ' + name
 				File.write(name, v)
 			end
 			
 			desc 'Figure out the version of the application to build based on major/minor numbers from version.template.txt, ENV[build.number] and svn revision.  Write it for later reference'
-			task :version => [name]
+			task :version => [@name]
 			self
 		end
 		

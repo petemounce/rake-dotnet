@@ -9,8 +9,9 @@ module Rake
 		attr_accessor :name, :template_file, :product_name, :configuration, :company_name, :version
 
 		# Create an AssemblyInfo file-task; define a task to run it whose name is :assembly_info
-		def initialize(name) # :yield: self
+		def initialize(name, version='0.0.0.0') # :yield: self
 			@name = name
+			@version = version
 			yield self if block_given?
 			define
 		end
@@ -19,10 +20,12 @@ module Rake
 		def define
 			require 'pathname'
 			
-			puts 'define ai: ' + @name + ' ' + @version
+			puts 'define ai: ' + @name + ' ' + @version.to_s
+			desc 'Generate AssemblyInfo.cs file'
 			file @name do
 				template_file = Pathname.new(template)
 				content = template_file.read
+				puts 'ai: ' + @name + ' ' + @version.to_s
 				token_replacements.each do |key,value|
 					content = content.gsub(/(\$\{#{key}\})/, value.to_s)
 				end
@@ -46,8 +49,8 @@ module Rake
 			r[:product] = product_name
 			r[:configuration] = configuration
 			r[:company] = company_name
-			puts 'token repl: ' + version
-			r[:version] = version
+			puts 'token repl: ' + v
+			r[:version] = v
 			return r
 		end
 		
@@ -63,7 +66,7 @@ module Rake
 			@company_name ||= 'Narrowstep'
 		end
 		
-		def version
+		def v
 			@version ||= '0.0.0.0'
 		end
 	end
