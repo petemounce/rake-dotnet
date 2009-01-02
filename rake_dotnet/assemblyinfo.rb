@@ -4,14 +4,14 @@ require 'rake'
 require 'rake/tasklib'
 
 module Rake
-	class AssemblyInfoFileTask < Rake::TaskLib
+	class AssemblyInfoTask < Rake::TaskLib
 		# Name of the main, top level task.  (default is :asminfo)
-		attr_accessor :name, :template_file, :product_name, :configuration, :company_name, :version
+		attr_accessor :name, :template_file, :product_name, :configuration, :company_name, :versionTxt
 
 		# Create an AssemblyInfo file-task; define a task to run it whose name is :assembly_info
-		def initialize(name, version='0.0.0.0') # :yield: self
+		def initialize(name, versionTxt='build/version.txt') # :yield: self
 			@name = name
-			@version = version
+			@versionTxt = versionTxt
 			yield self if block_given?
 			define
 		end
@@ -20,12 +20,12 @@ module Rake
 		def define
 			require 'pathname'
 			
-			puts 'define ai: ' + @name + ' ' + @version.to_s
-			desc 'Generate AssemblyInfo.cs file'
-			file @name do
+			desc 'Generate the AssemblyInfo.cs file from the template'
+			task :assembly_info
+			
+			file @name => [@versionTxt] do
 				template_file = Pathname.new(template)
 				content = template_file.read
-				puts 'ai: ' + @name + ' ' + @version.to_s
 				token_replacements.each do |key,value|
 					content = content.gsub(/(\$\{#{key}\})/, value.to_s)
 				end
@@ -34,7 +34,6 @@ module Rake
 				File.write(of, content)
 			end
 			
-			desc 'Generate the AssemblyInfo.cs file from the template'
 			task :assembly_info => [@name]
 			self
 		end
@@ -49,13 +48,12 @@ module Rake
 			r[:product] = product_name
 			r[:configuration] = configuration
 			r[:company] = company_name
-			puts 'token repl: ' + v
-			r[:version] = v
+			r[:version] = version
 			return r
 		end
 		
 		def product_name
-			@product_name ||= 'Thor'
+			@product_name ||= 'NRWS rake_dotnet'
 		end
 		
 		def configuration
@@ -63,11 +61,12 @@ module Rake
 		end
 		
 		def company_name
-			@company_name ||= 'Narrowstep'
+			@company_name ||= 'NRWS'
 		end
 		
-		def v
-			@version ||= '0.0.0.0'
+		def version
+			vt = Pathname.new(@versionTxt)
+			@version = vt.read.chomp
 		end
 	end
 end

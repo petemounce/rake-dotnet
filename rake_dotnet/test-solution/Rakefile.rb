@@ -23,6 +23,7 @@ CLOBBER.include(buildDir)
 
 directory buildDir
 versionTxt = File.join('build','version.txt')
+asmInfoCs = File.join('src','AssemblyInfo.cs')
 
-Rake::VersionFileTask.new(versionTxt)
-
+vt = Rake::VersionTask.new(versionTxt)
+ai = Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt)

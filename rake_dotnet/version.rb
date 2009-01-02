@@ -4,7 +4,7 @@ require 'rake'
 require 'rake/tasklib'
 
 module Rake
-	class VersionFileTask < Rake::TaskLib
+	class VersionTask < Rake::TaskLib
 		attr_accessor :name
 		
 		def initialize(name) # :yield: self
@@ -21,14 +21,12 @@ module Rake
 		def define
 			require 'pathname'
 			
-			puts 'define vtf: ' + name
-			vt = Pathname.new(name)
+			vt = Pathname.new(@name)
 			vt_dir = "#{vt.dirname}"
 
-			puts vt.dirname
 			directory vt_dir
 			
-			file name => [vt_dir] do
+			file @name => [vt_dir] do
 				maj_min = template_file.read.chomp
 				build = 0
 				if ENV['build.number']
@@ -36,10 +34,10 @@ module Rake
 				end
 				si = SvnInfo.new
 				v = "#{maj_min}.#{build}.#{si.revision}"
-				File.write(name, v)
+				File.write(@name, v)
 			end
 			
-			desc 'Figure out the version of the application to build based on major/minor numbers from version.template.txt, ENV[build.number] and svn revision.  Write it for later reference'
+			desc 'Generate & store version from major/minor in version.template.txt, ENV[build.number] and svn revision.'
 			task :version => [@name]
 			self
 		end
@@ -49,7 +47,7 @@ module Rake
 		end
 		
 		def get_version()
-			vt = Pathname.new(name)
+			vt = Pathname.new(@name)
 			vt.read.chomp
 		end
 	end
