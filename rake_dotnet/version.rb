@@ -22,7 +22,13 @@ module Rake
 			require 'pathname'
 			
 			puts 'define vtf: ' + name
-			file name do
+			vt = Pathname.new(name)
+			vt_dir = "#{vt.dirname}"
+
+			puts vt.dirname
+			directory vt_dir
+			
+			file name => [vt_dir] do
 				maj_min = template_file.read.chomp
 				build = 0
 				if ENV['build.number']
@@ -30,7 +36,6 @@ module Rake
 				end
 				si = SvnInfo.new
 				v = "#{maj_min}.#{build}.#{si.revision}"
-				puts 'v: ' + name
 				File.write(name, v)
 			end
 			
