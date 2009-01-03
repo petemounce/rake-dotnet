@@ -11,11 +11,14 @@ require '../harvester'
 require '../msbuild'
 require '../svn'
 require '../version'
+require '../xunit'
 
+# allows you to do things like 'rake compile CONFIGURATION=Release' to specify these options
 PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
+XUNIT_OPTS = {:html=>true}
 
 # Source files
 srcDir = 'src'
@@ -23,6 +26,7 @@ srcDir = 'src'
 # Generated files
 buildDir = 'build'
 binDir = File.join(buildDir, 'bin', CONFIGURATION)
+reportsDir = File.join(buildDir, 'reports')
 versionTxt = File.join(buildDir,'version.txt')
 asmInfoCs = File.join(srcDir,'AssemblyInfo.cs')
 
@@ -35,10 +39,10 @@ CLEAN.include('src/**/AssemblyInfo.cs')
 CLOBBER.include(buildDir)
 
 project_list = FileList.new('src/**/*.*proj')
-project_dll_list = FileList.new(project_list.pathmap("#{binDir}/%n.dll"))
 
 directory buildDir
 directory binDir
+directory reportsDir
 
 Rake::VersionTask.new(versionTxt)
 Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
@@ -47,10 +51,12 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 	ai.company_name = COMPANY
 	ai.configuration = CONFIGURATION
 end
+Rake::XUnitTask.new(name=:test, suites_dir=binDir, reports_dir=reportsDir, opts=XUNIT_OPTS)
 
-rule(/build\/bin\/#{CONFIGURATION}\/.*\.dll/) do |r|
-	name = r.name.match(/build\/bin\/#{CONFIGURATION}\/(.*)\.dll/)[1]
-	project = File.join('src', name, name + '.csproj')
+rule(/build\/bin\/#{CONFIGURATION}\/[\w\.]+\.dll/) do |r|
+	pn = Pathname.new(r.name)
+	name = pn.basename.to_s.sub('.dll', '')
+	project = File.join(srcDir, name, name + '.csproj')
 	mb = MsBuild.new(project, {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
 	mb.run
 	h = Harvester.new(binDir)
@@ -62,6 +68,7 @@ rule(/build\/bin\/#{CONFIGURATION}\/.*\.dll/) do |r|
 	end
 	h.harvest
 end
+
 
 desc "Compile all the projects in #{PRODUCT}.sln"
 task :compile_sln => [:version, :assembly_info] do |t|
@@ -78,3 +85,5 @@ task :compile,[:projects] => [binDir, :version, :assembly_info] do |t, args|
 		Rake::FileTask[dll].invoke
 	end
 end
+
+task :test => [:compile]

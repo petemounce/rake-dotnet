@@ -10,7 +10,6 @@ class MsBuild
 	end
 	
 	def run
-		
 		cmd = "#{@exe} #{project} /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{properties} /t:#{targets}"
 		sh cmd
 	end
