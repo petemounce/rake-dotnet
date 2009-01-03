@@ -1,22 +1,31 @@
-class MSBuild
-	attr_accessor :version
-	attr_accessor :project
-	attr_accessor :properties
-	attr_accessor :targets
-	attr_accessor :verbosity
+class MsBuild
+	attr_accessor :project, :properties, :targets, :verbosity
 	
-	def initialize(opts)
-		@project = opts.fetch(:project, 'default.proj')
-		@properties = opts.fetch(:properties, {})
-		@targets = opts.fetch(:targets, 'Rebuild')
-		@verbosity = opts.fetch(:verbosity, 'n')
+	def initialize(project='default.proj', properties={}, targets=[], verbosity='n')
+		@project = project
+		@properties = properties
+		@targets = targets
+		@verbosity = verbosity
+		@exe = '"' + File.join(ENV['windir'].dup, 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe') + '"'
 	end
 	
 	def run
-		msbuildFile = File.join(File.join(ENV['windir'].dup, 'Microsoft.NET', 'Framework', 'v3.5'), 'msbuild.exe')
+		
+		cmd = "#{@exe} #{project} /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{properties} /t:#{targets}"
+		sh cmd
+	end
+	
+	def project
+		"\"#{@project}\""
+	end
+	
+	def targets
+		@targets.join(';')
+	end
+	
+	def properties
 		p = []
 		@properties.each {|key, value| p.push("#{key}=#{value}") }
-		cmd = "\"#{msbuildFile}\" \"#{@project}\" /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{p.join(";")} /t:#{@targets}"
-		sh cmd
+		p.join(';')
 	end
 end
