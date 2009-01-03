@@ -7,6 +7,7 @@ require 'rake/clean'
 require '../rake_dotnet'
 require '../assemblyinfo'
 require '../file'
+require '../harvester'
 require '../msbuild'
 require '../svn'
 require '../version'
@@ -14,6 +15,7 @@ require '../version'
 PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
+MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
 
 # Source files
 srcDir = 'src'
@@ -33,6 +35,7 @@ CLEAN.include('src/**/AssemblyInfo.cs')
 CLEAN.include('solution_projects.txt')
 CLOBBER.include(buildDir)
 
+project_list = FileList.new('src/**/*.*proj')
 
 directory buildDir
 
@@ -44,9 +47,23 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 	ai.configuration = CONFIGURATION
 end
 
-
-task :debug => [:version, :assembly_info] do |t|
-	src = Pathname.new('src')
-	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'])
+task :compile_sln => [:version, :assembly_info] do |t|
+	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
 	mb.run
+end
+
+task :compile,[:projects] => [binDir, :version, :assembly_info] do |t, args|
+	args.with_defaults(:projects => project_list)
+	h = Harvester.new(binDir)
+	args.projects.each do |p|
+		mb = MsBuild.new(p, {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
+		mb.run
+		isWeb = p.match(/Web\./)
+		if (isWeb)
+			h.add(p.pathmap("%d/bin/**/*"))
+		else
+			h.add(p.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
+		end
+	end
+	h.harvest
 end

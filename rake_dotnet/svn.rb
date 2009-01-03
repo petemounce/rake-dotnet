@@ -2,7 +2,7 @@ class Svn
 	attr_accessor :svn
 
 	def initialize(svn=nil)
-		@svn = svn ||= File.join('..', '..', '_library', 'svn', 'bin', 'svn.exe')
+		@svn = svn ||= File.join('..', '_library', 'svn', 'bin', 'svn.exe')
 		yield self if block_given?
 	end
 	
