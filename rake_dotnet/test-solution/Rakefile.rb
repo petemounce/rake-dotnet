@@ -22,9 +22,9 @@ srcDir = 'src'
 
 # Generated files
 buildDir = 'build'
+binDir = File.join(buildDir, 'bin', CONFIGURATION)
 versionTxt = File.join(buildDir,'version.txt')
 asmInfoCs = File.join(srcDir,'AssemblyInfo.cs')
-projects = 'solution_projects.txt'
 
 # clean will remove intermediate files (like the output of msbuild; things in the src tree)
 # clobber will remove build-output files (which will all live under the build tree)
@@ -32,12 +32,13 @@ CLEAN.exclude('**/core') # core files are a Ruby/*nix thing - dotNET developers 
 CLEAN.include('src/**/obj')
 CLEAN.include('src/**/bin')
 CLEAN.include('src/**/AssemblyInfo.cs')
-CLEAN.include('solution_projects.txt')
 CLOBBER.include(buildDir)
 
 project_list = FileList.new('src/**/*.*proj')
+project_dll_list = FileList.new(project_list.pathmap("#{binDir}/%n.dll"))
 
 directory buildDir
+directory binDir
 
 Rake::VersionTask.new(versionTxt)
 Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
@@ -47,23 +48,33 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 	ai.configuration = CONFIGURATION
 end
 
+rule(/build\/bin\/#{CONFIGURATION}\/.*\.dll/) do |r|
+	name = r.name.match(/build\/bin\/#{CONFIGURATION}\/(.*)\.dll/)[1]
+	project = File.join('src', name, name + '.csproj')
+	mb = MsBuild.new(project, {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
+	mb.run
+	h = Harvester.new(binDir)
+	isWeb = project.match(/src\/Web\..*\//)
+	if (isWeb)
+		h.add(project.pathmap("%d/bin/**/*"))
+	else
+		h.add(project.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
+	end
+	h.harvest
+end
+
+desc "Compile all the projects in #{PRODUCT}.sln"
 task :compile_sln => [:version, :assembly_info] do |t|
 	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
 	mb.run
 end
 
+desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{binDir}"
 task :compile,[:projects] => [binDir, :version, :assembly_info] do |t, args|
 	args.with_defaults(:projects => project_list)
-	h = Harvester.new(binDir)
 	args.projects.each do |p|
-		mb = MsBuild.new(p, {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
-		mb.run
-		isWeb = p.match(/Web\./)
-		if (isWeb)
-			h.add(p.pathmap("%d/bin/**/*"))
-		else
-			h.add(p.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
-		end
+		pn = Pathname.new(p)
+		dll = File.join(binDir, pn.basename.sub(pn.extname, '.dll'))
+		Rake::FileTask[dll].invoke
 	end
-	h.harvest
 end
