@@ -38,11 +38,6 @@ CLEAN.include('src/**/bin')
 CLEAN.include('src/**/AssemblyInfo.cs')
 CLOBBER.include(buildDir)
 
-project_list = FileList.new('src/**/*.*proj')
-
-directory buildDir
-directory binDir
-directory reportsDir
 
 Rake::VersionTask.new(versionTxt)
 Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
@@ -51,24 +46,8 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 	ai.company_name = COMPANY
 	ai.configuration = CONFIGURATION
 end
+Rake::MsBuildTask.new(name=:compile, src_dir=srcDir, out_dir=binDir, verbosity=MSBUILD_VERBOSITY)
 Rake::XUnitTask.new(name=:test, suites_dir=binDir, reports_dir=reportsDir, opts=XUNIT_OPTS)
-
-rule(/build\/bin\/#{CONFIGURATION}\/[\w\.]+\.dll/) do |r|
-	pn = Pathname.new(r.name)
-	name = pn.basename.to_s.sub('.dll', '')
-	project = File.join(srcDir, name, name + '.csproj')
-	mb = MsBuild.new(project, {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
-	mb.run
-	h = Harvester.new(binDir)
-	isWeb = project.match(/src\/Web\..*\//)
-	if (isWeb)
-		h.add(project.pathmap("%d/bin/**/*"))
-	else
-		h.add(project.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
-	end
-	h.harvest
-end
-
 
 desc "Compile all the projects in #{PRODUCT}.sln"
 task :compile_sln => [:version, :assembly_info] do |t|
@@ -76,14 +55,6 @@ task :compile_sln => [:version, :assembly_info] do |t|
 	mb.run
 end
 
-desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{binDir}"
-task :compile,[:projects] => [binDir, :version, :assembly_info] do |t, args|
-	args.with_defaults(:projects => project_list)
-	args.projects.each do |p|
-		pn = Pathname.new(p)
-		dll = File.join(binDir, pn.basename.sub(pn.extname, '.dll'))
-		Rake::FileTask[dll].invoke
-	end
-end
+task :compile => [binDir, :version, :assembly_info]
 
 task :test => [:compile]

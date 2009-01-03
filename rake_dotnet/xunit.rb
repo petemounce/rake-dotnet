@@ -29,6 +29,8 @@ module Rake
 				end
 			end
 
+			directory reports_dir
+			
 			desc "Generate test reports (which ones, depends on the content of XUNIT_OPTS) inside of each directory specified, where each directory matches a test-suite name (give relative paths) (otherwise, all matching #{suites_dir}/Tests.*.dll) and write reports to #{reports_dir}"
 			task @name,[:reports] => [reports_dir] do |t, args|
 				reports_list = FileList.new("#{suites_dir}/**/Tests.*.dll").pathmap("#{reports_dir}/%n/")
