@@ -36,6 +36,8 @@ module Rake
 			end
 			
 			task :repackage => [:clobber_package, :package]
+			
+			self
 		end
 	end
 end

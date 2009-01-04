@@ -44,6 +44,8 @@ module Rake
 			@deps.each do |d|
 				task @name => d
 			end
+			
+			self
 		end
 	end
 end

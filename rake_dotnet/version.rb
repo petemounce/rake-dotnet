@@ -39,6 +39,7 @@ module Rake
 			
 			desc 'Generate & store version from major/minor in version.template.txt, ENV[build.number] and svn revision.'
 			task :version => [@name]
+			
 			self
 		end
 		
