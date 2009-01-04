@@ -50,11 +50,7 @@ module Rake
 		def src_dir_regex
 			regexify(@src_dir)
 		end
-		
-		def regexify(path)
-			path.gsub('/', '\/').gsub('.', '\.')
-		end
-		
+				
 		def configuration
 			od = Pathname.new(out_dir)
 			od.basename

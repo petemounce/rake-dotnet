@@ -16,3 +16,7 @@ task :help do
     puts "rake #{key}#{indent.slice(0, indent.length - key.length)}##{value}"
   end
 end
+
+def regexify(path)
+	path.gsub('/', '\/').gsub('.', '\.')
+end

@@ -9,6 +9,7 @@ require '../assemblyinfo'
 require '../file'
 require '../harvester'
 require '../msbuild'
+require '../package'
 require '../svn'
 require '../version'
 require '../xunit'
@@ -48,6 +49,7 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 end
 Rake::MsBuildTask.new(name=:compile, src_dir=srcDir, out_dir=binDir, verbosity=MSBUILD_VERBOSITY)
 Rake::XUnitTask.new(name=:test, suites_dir=binDir, reports_dir=reportsDir, opts=XUNIT_OPTS)
+Rake::RDNPackageTask.new(name=:bin, {:in_dir=>binDir, :out_dir=>buildDir, :path_to_snip=>buildDir, :deps=>[:compile]})
 
 desc "Compile all the projects in #{PRODUCT}.sln"
 task :compile_sln => [:version, :assembly_info] do |t|
