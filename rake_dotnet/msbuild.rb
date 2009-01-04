@@ -2,11 +2,12 @@ module Rake
 	class MsBuildTask < TaskLib
 		attr_accessor :name, :src_dir, :out_dir, :verbosity
 	
-		def initialize(name=:compile, src_dir='src', out_dir='build/bin/Debug', verbosity='m')
+		def initialize(name=:compile, params={})
 			@name = name
-			@src_dir = src_dir
-			@out_dir = out_dir
-			@verbosity = verbosity
+			@src_dir = params[:src_dir] || 'src'
+			@out_dir = params[:out_dir] || 'build/bin/Debug'
+			@verbosity = params[:verbosity] || 'm'
+			@deps = params[:deps] || []
 			yield self if block_given?
 			define
 		end
@@ -41,6 +42,9 @@ module Rake
 				end
 			end
 
+			@deps.each do |d|
+				task :compile => d
+			end
 		end
 		
 		def out_dir_regex

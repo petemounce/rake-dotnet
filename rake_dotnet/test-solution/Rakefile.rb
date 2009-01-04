@@ -47,8 +47,8 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 	ai.company_name = COMPANY
 	ai.configuration = CONFIGURATION
 end
-Rake::MsBuildTask.new(name=:compile, src_dir=srcDir, out_dir=binDir, verbosity=MSBUILD_VERBOSITY)
-Rake::XUnitTask.new(name=:test, suites_dir=binDir, reports_dir=reportsDir, opts=XUNIT_OPTS)
+Rake::MsBuildTask.new(name=:compile, {:src_dir=>srcDir, :out_dir=>binDir, :verbosity=>MSBUILD_VERBOSITY, :deps=>[binDir, :version, :assembly_info]})
+Rake::XUnitTask.new(name=:test, {:suites_dir=>binDir, :reports_dir=>reportsDir, :opts=>XUNIT_OPTS, :deps=>[:compile]})
 Rake::RDNPackageTask.new(name=:bin, {:in_dir=>binDir, :out_dir=>buildDir, :path_to_snip=>buildDir, :deps=>[:compile]})
 
 desc "Compile all the projects in #{PRODUCT}.sln"
@@ -56,7 +56,3 @@ task :compile_sln => [:version, :assembly_info] do |t|
 	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
 	mb.run
 end
-
-task :compile => [binDir, :version, :assembly_info]
-
-task :test => [:compile]

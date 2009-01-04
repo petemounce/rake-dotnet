@@ -20,9 +20,6 @@ module Rake
 		def define
 			require 'pathname'
 			
-			desc 'Generate the AssemblyInfo.cs file from the template'
-			task :assembly_info
-			
 			file @name => [@versionTxt] do
 				template_file = Pathname.new(template)
 				content = template_file.read
@@ -34,7 +31,9 @@ module Rake
 				File.write(of, content)
 			end
 			
+			desc 'Generate the AssemblyInfo.cs file from the template'
 			task :assembly_info => [@name]
+
 			self
 		end
 		

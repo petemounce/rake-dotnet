@@ -7,11 +7,12 @@ module Rake
 	class XUnitTask < TaskLib
 		attr_accessor :name, :suites_dir, :reports_dir, :options
 		# Create an XUnitTask file-task; define a task to run it whose name is :xunit
-		def initialize(name=:test, suites_dir='build/bin/Debug', reports_dir='build/reports', options={}) # :yield: self
+		def initialize(name=:test, params={}) # :yield: self
 			@name = name
-			@suites_dir = suites_dir
-			@reports_dir = reports_dir
-			@options = options
+			@suites_dir = params[:suites_dir] || 'build/bin/Debug'
+			@reports_dir = params[:reports_dir] || 'build/reports'
+			@options = params[:options] || {}
+			@deps = params[:deps] || []
 			yield self if block_given?
 			define
 		end
@@ -38,6 +39,10 @@ module Rake
 				args.reports.each do |r|
 					Rake::FileTask[r].invoke
 				end
+			end
+			
+			@deps.each do |d|
+				task @name => d
 			end
 		end
 	end
