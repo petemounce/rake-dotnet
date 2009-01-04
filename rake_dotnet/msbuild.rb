@@ -33,7 +33,7 @@ module Rake
 			
 			desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{out_dir}"
 			task :compile,[:projects] => [out_dir] do |t, args|
-				project_list = FileList.new('src/**/*.*proj')
+				project_list = FileList.new("#{src_dir}/**/*.*proj")
 				args.with_defaults(:projects => project_list)
 				args.projects.each do |p|
 					pn = Pathname.new(p)

@@ -30,6 +30,9 @@ binDir = File.join(buildDir, 'bin', CONFIGURATION)
 reportsDir = File.join(buildDir, 'reports')
 versionTxt = File.join(buildDir,'version.txt')
 asmInfoCs = File.join(srcDir,'AssemblyInfo.cs')
+web_foo = 'Web.Foo'
+web_foo_src = File.join(srcDir,web_foo)
+web_foo_build = File.join(buildDir,web_foo)
 
 # clean will remove intermediate files (like the output of msbuild; things in the src tree)
 # clobber will remove build-output files (which will all live under the build tree)
@@ -49,7 +52,10 @@ Rake::AssemblyInfoTask.new(asmInfoCs, versionTxt) do |ai|
 end
 Rake::MsBuildTask.new(name=:compile, {:src_dir=>srcDir, :out_dir=>binDir, :verbosity=>MSBUILD_VERBOSITY, :deps=>[binDir, :version, :assembly_info]})
 Rake::XUnitTask.new(name=:test, {:suites_dir=>binDir, :reports_dir=>reportsDir, :opts=>XUNIT_OPTS, :deps=>[:compile]})
-Rake::RDNPackageTask.new(name=:bin, {:in_dir=>binDir, :out_dir=>buildDir, :path_to_snip=>buildDir, :deps=>[:compile]})
+Rake::RDNPackageTask.new(name='bin', {:in_dir=>binDir, :out_dir=>buildDir, :path_to_snip=>buildDir, :deps=>[:compile]})
+
+Rake::HarvestWebApplicationTask.new({:web_app_path=>web_foo_src, :target_path=>buildDir, :deps=>[:compile]})
+Rake::RDNPackageTask.new(name=web_foo, {:in_dir=>web_foo_build, :out_dir=>buildDir, :path_to_snip=>buildDir, :deps=>[:harvest_webapps]})
 
 desc "Compile all the projects in #{PRODUCT}.sln"
 task :compile_sln => [:version, :assembly_info] do |t|

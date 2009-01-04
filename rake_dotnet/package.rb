@@ -1,6 +1,6 @@
 module Rake
 	class RDNPackageTask < TaskLib
-		def initialize(name=:package, params={})
+		def initialize(name, params={})
 			@name = name
 			@in_dir = params[:in_dir] || []
 			@out_dir = params[:out_dir] || ''
@@ -12,10 +12,10 @@ module Rake
 		end
 		
 		def define
-			of = "#{@out_dir}/#{@out_file}"
-			of_regex = regexify(of)
+			package_file = "#{@out_dir}/#{@out_file}"
+			package_file_regex = regexify(package_file)
 			
-			rule(/#{of_regex}/) do |r|
+			rule(/#{package_file_regex}/) do |r|
 				target = @in_dir.sub(@path_to_snip + '/', '')
 				chdir(@path_to_snip) do
 					sh "zip -r #{@out_file} #{target}"
@@ -25,14 +25,15 @@ module Rake
 			directory @out_dir
 			
 			@deps.each do |d|
-				file of => d
+				file package_file => d
+				task :package => d
 			end
 			
-			desc "Package up output into zip file"
-			task :package => [@out_dir, of]
+			desc "Generate zip'd packages for all package-tasks"
+			task :package => [@out_dir, package_file]
 			
 			task :clobber_package do
-				rm_rf of
+				rm_rf package_file
 			end
 			
 			task :repackage => [:clobber_package, :package]
