@@ -4,6 +4,7 @@ module Rake
 			@src_path = params[:src_path] || 'src'
 			@target_path = params[:target_path] || 'build'
 			@deps = params[:deps] || []
+			@default_glob = params[:default_glob] || 'Yoti.Site'
 			yield self if block_given?
 			define
 		end
@@ -11,18 +12,18 @@ module Rake
 		def define
 			out_dir_regex = regexify(@target_path)
 			
-			rule(/#{out_dir_regex}\/Web([\w\.]+)\//) do |r|
-				web_app_name = r.name.match(/#{out_dir_regex}\/(Web\.[\w\.]+)\//)[1]
+			rule(/#{out_dir_regex}\/[\w\.-_ ]*Site[\w\.-_ ]*\//) do |r|
+				web_app_name = r.name.match(/#{out_dir_regex}\/([\w\.-_ ]*Site[\w\.-_ ]*)\//)[1]
 				src = File.join(@src_path, web_app_name)
 				svn = SvnExport.new(src, r.name)
 				svn.export
 				cp_r(File.join(src, 'bin'), r.name)
 			end
 			
-			desc "Harvest specified web-applications (or all matching #{@src_path}/Web.*) to #{@target_path}"
+			desc "Harvest specified web-applications (or all matching #{@src_path}/#{@default_glob}) to #{@target_path}"
 			task :harvest_webapps,[:web_app_list] => @target_path do |t, args|
-				web_app_list = FileList.new("#{@src_path}/Web.*")
-				args.with_defaults(:web_app_list => web_app_list)
+				list = FileList.new("#{@src_path}/#{@default_glob}")
+				args.with_defaults(:web_app_list => list)
 				args.web_app_list.each do |w| 
 					pn = Pathname.new(w)
 					out = File.join(@target_path, pn.basename) + '/'
@@ -33,6 +34,8 @@ module Rake
 			@deps.each do |d|
 				task :harvest_webapps => d
 			end
+			
+			self
 		end
 	end
 end
