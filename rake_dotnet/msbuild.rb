@@ -1,12 +1,13 @@
 module Rake
 	class MsBuildTask < TaskLib
-		attr_accessor :name, :src_dir, :out_dir, :verbosity
+		attr_accessor :name, :src_dir, :out_dir, :verbosity, :working_dir
 	
 		def initialize(name=:compile, params={})
 			@name = name
 			@src_dir = params[:src_dir] || 'src'
 			@out_dir = params[:out_dir] || 'build/bin/Debug'
 			@verbosity = params[:verbosity] || 'm'
+			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
 			yield self if block_given?
 			define
@@ -17,7 +18,7 @@ module Rake
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
 				project = File.join(@src_dir, name, name + '.csproj')
-				mb = MsBuild.new(project, {:Configuration => configuration}, ['Build'], verbosity)
+				mb = MsBuild.new(project, {:Configuration => configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
 				h = Harvester.new(out_dir)
 				isWeb = project.match(/"#{src_dir_regex}"\/Web\..*\//)
@@ -65,17 +66,25 @@ end
 class MsBuild
 	attr_accessor :project, :properties, :targets, :verbosity
 	
-	def initialize(project='default.proj', properties={}, targets=[], verbosity='n')
+	def initialize(project='default.proj', properties={}, targets=[], verbosity='n', working_dir=nil)
 		@project = project
 		@properties = properties
 		@targets = targets
 		@verbosity = verbosity
+		@working_dir = working_dir
 		@exe = '"' + File.join(ENV['windir'].dup, 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe') + '"'
 	end
 	
+	def cmd
+		"#{@exe} #{project} /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{properties} /t:#{targets}"
+	end
+	
 	def run
-		cmd = "#{@exe} #{project} /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{properties} /t:#{targets}"
-		sh cmd
+		if @working_dir
+			chdir(@working_dir) do
+				sh cmd
+			end
+		end
 	end
 	
 	def project
