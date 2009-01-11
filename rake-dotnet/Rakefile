@@ -1,0 +1,19 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+require './lib/rake-dotnet.rb'
+
+Hoe.new('rake-dotnet', Rake-dotnet::VERSION) do |p|
+  p.name = "rake-dotnet"
+  p.author = "Peter Mounce"
+  p.description = "Collection of custom tasks useful to .NET developers that use rake for build automation.  Also by-convention rules-based building."
+  p.email = 'projects@neverrunwithscissors.com'
+  p.summary = "Custom rake tasks wrapping .NET development tools."
+  p.url = "http://neverrunwithscissors.com/projects/rake-dotnet"
+  p.clean_globs = ['test/actual'] # Remove this directory on "rake clean"
+  p.remote_rdoc_dir = '' # Release to root
+  p.changes = p.paragraphs_of('CHANGELOG', 0..1).join("\n\n")  
+end
+
+# vim: syntax=Ruby
