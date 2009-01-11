@@ -4,7 +4,7 @@ module Rake
 			@src_path = params[:src_path] || 'src'
 			@target_path = params[:target_path] || 'build'
 			@deps = params[:deps] || []
-			@default_glob = params[:default_glob] || 'Yoti.Site'
+			@default_glob = params[:default_glob] || '*Site*'
 			yield self if block_given?
 			define
 		end
