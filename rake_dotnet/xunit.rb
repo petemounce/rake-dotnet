@@ -19,13 +19,13 @@ module Rake
 
 		# Create the tasks defined by this task lib.
 		def define
-			rule(/#{@reports_dir}\/.*\//) do |r|
-				suite = r.name.match(/.*\/(Tests\.[\w\.]+)\//)[1]
+			rule(/#{@reports_dir}\/.*Tests.*\//) do |r|
+				suite = r.name.match(/.*\/(.*Tests)\//)[1]
 				testsDll = File.join(@suites_dir, suite + '.dll')
 				out_dir = File.join(@reports_dir, suite)
 				unless File.exist?(out_dir) && uptodate?(testsDll, out_dir)
 					mkdir_p(out_dir) unless File.exist?(out_dir)
-					x = XUnit.new(testsDll, out_dir, nil, opts=@options)
+					x = XUnit.new(testsDll, out_dir, nil, options=@options)
 					x.run
 				end
 			end
@@ -34,7 +34,7 @@ module Rake
 			
 			desc "Generate test reports (which ones, depends on the content of XUNIT_OPTS) inside of each directory specified, where each directory matches a test-suite name (give relative paths) (otherwise, all matching #{suites_dir}/Tests.*.dll) and write reports to #{reports_dir}"
 			task @name,[:reports] => [reports_dir] do |t, args|
-				reports_list = FileList.new("#{suites_dir}/**/Tests.*.dll").pathmap("#{reports_dir}/%n/")
+				reports_list = FileList.new("#{suites_dir}/**/*Tests*.dll").pathmap("#{reports_dir}/%n/")
 				args.with_defaults(:reports => reports_list)
 				args.reports.each do |r|
 					Rake::FileTask[r].invoke
@@ -51,13 +51,13 @@ module Rake
 end
 
 class XUnit
-	attr_accessor :xunit, :testDll, :reports_dir, :opts
+	attr_accessor :xunit, :testDll, :reports_dir, :options
 	
-	def initialize(testDll, reports_dir, xunit=nil, opts={})
-		@xunit = xunit || File.join('..', '_library', 'xunit', 'xunit.console.exe')
+	def initialize(testDll, reports_dir, xunit=nil, options={})
+		@xunit = xunit || File.join('..', '..', '_library', 'xunit', 'xunit.console.exe')
 		@testDll = testDll
 		@reports_dir = reports_dir
-		@opts = opts
+		@options = options
 	end
 	
 	def run
@@ -81,26 +81,26 @@ class XUnit
 	end
 	
 	def html
-		"/html #{@reports_dir}/#{suite}.test-results.html" if @opts[:html]
+		"/html #{@reports_dir}/#{suite}.test-results.html" if @options.has_key?(:html)
 	end
 	
 	def xml
-		"/xml #{@reports_dir}/#{suite}.test-results.xml" if @opts.has_key?(:xml)
+		"/xml #{@reports_dir}/#{suite}.test-results.xml" if @options.has_key?(:xml)
 	end
 	
 	def nunit
-		"/nunit #{@reports_dir}/#{suite}.test-results.nunit.xml" if @opts.has_key?(:nunit)
+		"/nunit #{@reports_dir}/#{suite}.test-results.nunit.xml" if @options.has_key?(:nunit)
 	end
 
 	def wait
-		'/wait' if @opts.has_key?(:wait)
+		'/wait' if @options.has_key?(:wait)
 	end
 	
 	def noshadow
-		'/noshadow' if @opts.has_key?(:noshadow)
+		'/noshadow' if @options.has_key?(:noshadow)
 	end
 	
 	def teamcity
-		'/teamcity' if @opts.has_key?(:teamcity)
+		'/teamcity' if @options.has_key?(:teamcity)
 	end
 end
