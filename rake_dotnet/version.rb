@@ -7,14 +7,15 @@ module Rake
 	class VersionTask < Rake::TaskLib
 		attr_accessor :name
 		
-		def initialize(name) # :yield: self
-			init(name)
+		def initialize(name, options) # :yield: self
+			init(name, options)
 			yield self if block_given?
 			define
 		end
 		
-		def init(name)
+		def init(name, options)
 			@name = name
+			@tools_dir = options[:tools_dir] || File.join('..','..','_library')
 		end
 
 		# Create the tasks defined by this task lib.
@@ -32,7 +33,7 @@ module Rake
 				if ENV['build.number']
 					build = ENV['build.number']
 				end
-				si = SvnInfo.new
+				si = SvnInfo.new(:path => '.', :tools_dir => @tools_dir)
 				v = "#{maj_min}.#{build}.#{si.revision}"
 				File.write(@name, v)
 			end

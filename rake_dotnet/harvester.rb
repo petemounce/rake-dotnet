@@ -4,6 +4,7 @@ module Rake
 			@src_path = params[:src_path] || 'src'
 			@target_path = params[:target_path] || 'build'
 			@deps = params[:deps] || []
+			@tools_dir = params[:tools_dir] || File.join('..','..','_library')
 			@default_glob = params[:default_glob] || '*Site*'
 			yield self if block_given?
 			define
@@ -15,7 +16,7 @@ module Rake
 			rule(/#{out_dir_regex}\/[\w\.-_ ]*Site[\w\.-_ ]*\//) do |r|
 				web_app_name = r.name.match(/#{out_dir_regex}\/([\w\.-_ ]*Site[\w\.-_ ]*)\//)[1]
 				src = File.join(@src_path, web_app_name)
-				svn = SvnExport.new(src, r.name)
+				svn = SvnExport.new(src, r.name, {:tools_dir => @tools_dir})
 				svn.export
 				cp_r(File.join(src, 'bin'), r.name)
 			end

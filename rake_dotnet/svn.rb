@@ -1,8 +1,9 @@
 class Svn
 	attr_accessor :svn
 
-	def initialize(svn=nil)
-		@svn = svn || File.join('..', '..', '_library', 'svn', 'bin', 'svn.exe')
+	def initialize(opts={})
+		tools_dir = opts[:tools_dir] || File.join('..', '..', '_library')
+		@svn = File.join(tools_dir, 'svn', 'bin', 'svn.exe')
 		yield self if block_given?
 	end
 	
@@ -12,8 +13,8 @@ class Svn
 end
 
 class SvnExport < Svn
-	def initialize(src, dest)
-		@svn = File.join('..', '..', '_library', 'svn', 'bin', 'svn.exe')
+	def initialize(src, dest, opts)
+		super(opts)
 		@src = src
 		@dest = dest
 	end
@@ -33,9 +34,9 @@ end
 class SvnInfo < Svn
 	attr_accessor :svn
 	
-	def initialize(path = '.')
-		super()
-		@path = path
+	def initialize(opts)
+		super(opts)
+		@path = opts[:path] || '.'
 		yield self if block_given?
 	end
 
