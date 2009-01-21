@@ -31,7 +31,7 @@ src_dir = File.join(ROOT, 'src')
 # Generated files
 version_txt = File.join(OUT_DIR, 'version.txt')
 assembly_info_cs = File.join(src_dir,'AssemblyInfo.cs')
-bin_out = File.join(OUT_DIR, 'bin', CONFIGURATION)
+bin_out = File.join(OUT_DIR, 'bin')
 reports_out = File.join(OUT_DIR, 'reports')
 demo_site = File.join(OUT_DIR, 'Demo.Site')
 
@@ -45,7 +45,7 @@ CLEAN.include(version_txt)
 CLOBBER.include(OUT_DIR)
 
 
-Rake::VersionTask.new(version_txt, {:tools_dir=>TOOLS_DIR})
+Rake::FigureOutVersionTask.new(version_txt, {:tools_dir=>TOOLS_DIR})
 
 Rake::AssemblyInfoTask.new(assembly_info_cs, version_txt) do |ai|
 	# TODO: Read {configuration, product, company} from Rakefile.yaml config file ?
@@ -54,7 +54,8 @@ Rake::AssemblyInfoTask.new(assembly_info_cs, version_txt) do |ai|
 	ai.configuration = CONFIGURATION
 end
 
-Rake::MsBuildTask.new(name=:compile, {:src_dir=>src_dir, :out_dir=>bin_out, :verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :version, :assembly_info]})
+Rake::MsBuildTask.new(name=:compile, {:src_dir=>src_dir, :out_dir=>bin_out, :verbosity=>MSBUILD_VERBOSITY, :configuration=>CONFIGURATION, :deps=>[bin_out, :figure_out_version, :assembly_info]})
+Rake::NameOutputTask.new(name=bin_out, {:version_txt=>version_txt, :configuration=>CONFIGURATION, :deps=>[:figure_out_version, :compile]})
 
 Rake::XUnitTask.new(name=:test, {:suites_dir=>bin_out, :reports_dir=>reports_out, :options=>XUNIT_OPTS, :deps=>[:compile]})
 
@@ -65,7 +66,7 @@ Rake::HarvestWebApplicationTask.new({:src_path=>src_dir, :target_path=>OUT_DIR, 
 Rake::RDNPackageTask.new(name=demo_site, {:in_dir=>demo_site, :out_dir=>OUT_DIR, :path_to_snip=>OUT_DIR, :deps=>[:harvest_webapps]})
 
 desc "Compile all the projects in #{PRODUCT}.sln"
-task :compile_sln => [:version, :assembly_info] do |t|
+task :compile_sln => [:figure_out_version, :assembly_info] do |t|
 	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
 	mb.run
 end

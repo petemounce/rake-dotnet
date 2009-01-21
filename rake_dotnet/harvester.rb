@@ -4,8 +4,10 @@ module Rake
 			@src_path = params[:src_path] || 'src'
 			@target_path = params[:target_path] || 'build'
 			@deps = params[:deps] || []
-			@tools_dir = params[:tools_dir] || File.join('..','..','_library')
+			@out_dir = params[:out_dir] || 'out'
+			@tools_dir = params[:tools_dir] || File.join('..','lib')
 			@default_glob = params[:default_glob] || '*Site*'
+			@version_txt = params[:version_txt] || File.join(@out_dir, 'version.txt')
 			yield self if block_given?
 			define
 		end
@@ -44,9 +46,8 @@ end
 class Harvester
 	attr_accessor :files, :target
 	
-	def initialize(target)
+	def initialize
 		@files = Hash.new
-		@target = target
 	end
 	
 	def add(glob)
@@ -57,10 +58,10 @@ class Harvester
 		end
 	end
 	
-	def harvest
-		mkdir_p(@target) unless File.exist?(@target)
+	def harvest(target)
+		mkdir_p(target) unless File.exist?(target)
 		@files.sort.each do |k, v|
-			cp(v, @target)
+			cp(v, target)
 		end
 	end
 	

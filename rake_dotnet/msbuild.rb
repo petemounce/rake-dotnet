@@ -4,8 +4,9 @@ module Rake
 	
 		def initialize(name=:compile, params={})
 			@name = name
+			@configuration = params[:configuration] || 'Debug'
 			@src_dir = params[:src_dir] || 'src'
-			@out_dir = params[:out_dir] || 'build/bin/Debug'
+			@out_dir = params[:out_dir] || File.join('out','bin',@configuration)
 			@verbosity = params[:verbosity] || 'm'
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
@@ -18,16 +19,16 @@ module Rake
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
 				project = File.join(@src_dir, name, name + '.csproj')
-				mb = MsBuild.new(project, {:Configuration => configuration}, ['Build'], verbosity, @working_dir)
+				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
-				h = Harvester.new(@out_dir)
+				h = Harvester.new
 				isWeb = project.match(/"#{src_dir_regex}"\/Web\..*\//)
 				if (isWeb)
 					h.add(project.pathmap("%d/bin/**/*"))
 				else
 					h.add(project.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
 				end
-				h.harvest
+				h.harvest(@out_dir)
 			end
 
 			directory @out_dir
@@ -56,11 +57,6 @@ module Rake
 		
 		def src_dir_regex
 			regexify(@src_dir)
-		end
-				
-		def configuration
-			od = Pathname.new(@out_dir)
-			od.basename
 		end
 	end
 end
