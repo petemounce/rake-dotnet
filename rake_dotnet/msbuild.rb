@@ -46,6 +46,8 @@ module Rake
 			@deps.each do |d|
 				task :compile => d
 			end
+			
+			self
 		end
 		
 		def out_dir_regex
