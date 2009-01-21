@@ -20,7 +20,7 @@ module Rake
 				project = File.join(@src_dir, name, name + '.csproj')
 				mb = MsBuild.new(project, {:Configuration => configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
-				h = Harvester.new(out_dir)
+				h = Harvester.new(@out_dir)
 				isWeb = project.match(/"#{src_dir_regex}"\/Web\..*\//)
 				if (isWeb)
 					h.add(project.pathmap("%d/bin/**/*"))
@@ -30,15 +30,15 @@ module Rake
 				h.harvest
 			end
 
-			directory out_dir
+			directory @out_dir
 			
-			desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{out_dir}"
-			task :compile,[:projects] => [out_dir] do |t, args|
+			desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{@out_dir}"
+			task :compile,[:projects] => [@out_dir] do |t, args|
 				project_list = FileList.new("#{src_dir}/**/*.*proj")
 				args.with_defaults(:projects => project_list)
 				args.projects.each do |p|
 					pn = Pathname.new(p)
-					dll = File.join(out_dir, pn.basename.sub(pn.extname, '.dll'))
+					dll = File.join(@out_dir, pn.basename.sub(pn.extname, '.dll'))
 					Rake::FileTask[dll].invoke
 				end
 			end
@@ -59,7 +59,7 @@ module Rake
 		end
 				
 		def configuration
-			od = Pathname.new(out_dir)
+			od = Pathname.new(@out_dir)
 			od.basename
 		end
 	end
