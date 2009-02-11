@@ -29,8 +29,8 @@ module Rake
 			file @name => [vt_dir] do
 				maj_min = template_file.read.chomp
 				build = 0
-				if ENV['build.number']
-					build = ENV['build.number']
+				if ENV['BUILD_NUMBER']
+					build = ENV['BUILD_NUMBER']
 				end
 				si = SvnInfo.new(:path => '.', :tools_dir => @tools_dir)
 				v = "#{maj_min}.#{build}.#{si.revision}"
