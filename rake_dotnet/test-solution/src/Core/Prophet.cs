@@ -4,9 +4,9 @@ namespace Core
 {
 	public class Prophet
 	{
-		public void Speak()
+		public void Preach()
 		{
-			Console.WriteLine("foo");
+			Console.WriteLine("Yea, fire and brimstone upon all thee!");
 		}
 	}
 }

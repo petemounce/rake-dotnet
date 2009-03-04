@@ -5,59 +5,11 @@ require 'rake/tasklib'
 require 'pathname'
 
 module Rake
-	class FigureOutVersionTask < Rake::TaskLib
-		attr_accessor :name
-		
-		def initialize(name, options) # :yield: self
-			init(name, options)
-			yield self if block_given?
-			define
-		end
-		
-		def init(name, options)
-			@name = name
-			@tools_dir = options[:tools_dir] || File.join('..','..','_library')
-		end
-
-		# Create the tasks defined by this task lib.
-		def define
-			vt = Pathname.new(@name)
-			vt_dir = "#{vt.dirname}"
-
-			directory vt_dir
-			
-			file @name => [vt_dir] do
-				maj_min = template_file.read.chomp
-				build = 0
-				if ENV['BUILD_NUMBER']
-					build = ENV['BUILD_NUMBER']
-				end
-				si = SvnInfo.new(:path => '.', :tools_dir => @tools_dir)
-				v = "#{maj_min}.#{build}.#{si.revision}"
-				File.write(@name, v)
-			end
-			
-			desc 'Generate & store version from major/minor in version.template.txt, ENV[build.number] and svn revision.'
-			task :figure_out_version => [@name]
-			
-			self
-		end
-		
-		def template_file
-			template_file = Pathname.new('version.template.txt')
-		end
-		
-		def get_version()
-			vt = Pathname.new(@name)
-			vt.read.chomp
-		end
-	end
-	
 	class NameOutputTask < Rake::TaskLib
 		def initialize(name, options)
 			@name = name
 			@configuration = options[:configuration] || 'Debug'
-			@version_txt = options[:version_txt] || File.join('out', 'version.txt')
+			@version_txt = options[:version_txt] || File.join(OUT_DIR, 'version.txt')
 			@deps = options[:deps] || []
 			yield self if block_given?
 			define
@@ -92,13 +44,27 @@ module Rake
 		end
 		
 		def get_version(file)
-			file = File.join('out','version.txt') if file.nil?
+			file = File.join(OUT_DIR,'version.txt') if file.nil?
 			if File.exists?(file)
 				@version = Pathname.new(file).read.chomp
 			else
 				@version = '0.0.0.0'
 			end
 		end
+	end
+end
+
+class Versioner
+	def initialize(template_file=nil)
+		tf = template_file || 'version.template.txt'
+		template_file = Pathname.new(tf)
+		@maj_min = template_file.read.chomp
+		@build = ENV['BUILD_NUMBER'] || 0
+		@svn_info = SvnInfo.new(:path => '.')
+	end
+	
+	def get
+		"#{@maj_min}.#{@build}.#{@svn_info.revision}"
 	end
 end
 

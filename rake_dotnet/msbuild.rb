@@ -1,12 +1,10 @@
 module Rake
 	class MsBuildTask < TaskLib
-		attr_accessor :name, :src_dir, :out_dir, :verbosity, :working_dir
+		attr_accessor :src_dir, :verbosity, :working_dir
 	
-		def initialize(name=:compile, params={})
-			@name = name
+		def initialize(params={})
 			@configuration = params[:configuration] || 'Debug'
-			@src_dir = params[:src_dir] || 'src'
-			@out_dir = params[:out_dir] || File.join('out','bin',@configuration)
+			@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
 			@verbosity = params[:verbosity] || 'm'
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
@@ -15,31 +13,32 @@ module Rake
 		end
 		
 		def define
-			rule(/#{out_dir_regex}\/[\w\.]+\.dll/) do |r|
+			# most project types put output into bin/{configuration}
+			rule(/#{src_dir_regex}\/[\w\.]+\/bin\/#{@configuration}\/[\w\.]+\.(?:dll|exe)/) do |r|
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
 				project = File.join(@src_dir, name, name + '.csproj')
 				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
-				h = Harvester.new
-				isWeb = project.match(/"#{src_dir_regex}"\/Web\..*\//)
-				if (isWeb)
-					h.add(project.pathmap("%d/bin/**/*"))
-				else
-					h.add(project.pathmap("%d/bin/#{CONFIGURATION}/**/*"))
-				end
-				h.harvest(@out_dir)
+			end
+			
+			# web application projects put output into /bin
+			rule(/#{src_dir_regex}\/[\w\.]+\/bin\/[\w\.]+\.dll/) do |r|
+				pn = Pathname.new(r.name)
+				name = pn.basename.to_s.sub('.dll', '')
+				project = File.join(@src_dir, name, name + '.csproj')
+				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
+				mb.run
 			end
 
-			directory @out_dir
-			
-			desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj) and harvest output to #{@out_dir}"
-			task :compile,[:projects] => [@out_dir] do |t, args|
+			desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj)"
+			task :compile,[:projects] do |t, args|
 				project_list = FileList.new("#{src_dir}/**/*.*proj")
 				args.with_defaults(:projects => project_list)
 				args.projects.each do |p|
 					pn = Pathname.new(p)
-					dll = File.join(@out_dir, pn.basename.sub(pn.extname, '.dll'))
+					# TODO: Figure out which type of project we are so we can invoke the correct rule, with the correct output extension
+					dll = File.join(pn.dirname, 'bin', @configuration, pn.basename.sub(pn.extname, '.dll'))
 					Rake::FileTask[dll].invoke
 				end
 			end
@@ -51,12 +50,12 @@ module Rake
 			self
 		end
 		
-		def out_dir_regex
-			regexify(@out_dir)
-		end
-		
 		def src_dir_regex
 			regexify(@src_dir)
+		end
+		
+		def figure_out_project_type(project_pathname)
+			# TODO.
 		end
 	end
 end

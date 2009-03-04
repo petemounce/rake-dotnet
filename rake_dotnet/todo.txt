@@ -1,0 +1,9 @@
+* Run unit tests
+	* Generate reports according to XUNIT_OPTS
+	* Parameterise which test suites to run
+* Generate coverage files
+* Generate coverage reports
+* Generate fxcop report
+* Distinguish between C# projects:
+	* OutputType Exe, Library
+	* Web - project file imports ...Web.Application.targets

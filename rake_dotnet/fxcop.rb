@@ -1,7 +1,7 @@
 class FxCop
-	attr_accessor :lib_path, :dlls, :out_file, :out_xsl, :apply_out_xsl, :dependencies_path, :summary, :verbose, :echo_to_console, :xsl_echo_to_console, :ignore_autogen, :culture
-	def initialize(lib_path, dlls)
-		@exe = File.join(lib_path, 'fxcop', 'fxcopcmd.exe')
+	attr_accessor :dlls, :out_file, :out_xsl, :apply_out_xsl, :dependencies_path, :summary, :verbose, :echo_to_console, :xsl_echo_to_console, :ignore_autogen, :culture
+	def initialize(dlls)
+		@exe = File.join(TOOLS_DIR, 'fxcop', 'fxcopcmd.exe')
 		@dlls = dlls
 	end
 	

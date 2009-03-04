@@ -1,7 +1,7 @@
 class NCoverExplorer
 	attr_accessor :exe, :coverage_files, :html, :report, :min, :fail_min, :sort, :filter, :save
 	def initialize(coverage_files)
-		@exe = File.join('..', '_library', 'ncover', 'x86', 'ncoverexplorer.console.exe')
+		@exe = File.join(TOOLS_DIR, 'ncover', 'x86', 'ncoverexplorer.console.exe')
 		@coverage_files = coverage_files
 	end
 	

@@ -1,7 +1,6 @@
 class NCover
-	def initialize(lib_path, report_path, dllToRun, dllsToProfile)
-		@ncover = File.join(lib_path, 'ncover', 'x86', 'ncover.console.exe')
-		@lib_path = lib_path
+	def initialize(report_path, dllToRun, dllsToProfile)
+		@ncover = File.join(TOOLS_DIR, 'ncover', 'x86', 'ncover.console.exe')
 		@dllToRun = dllToRun
 		@dllsToProfile = ''
 		dllsToProfile.each do |dll|
@@ -15,7 +14,7 @@ class NCover
 	end
 	
 	def cmdToRun
-		x = XUnit.new(@lib_path, @dllToRun, {})
+		x = XUnit.new(@dllToRun, {})
 		x.cmd
 	end
 	

@@ -5,13 +5,11 @@ require 'rake/tasklib'
 
 module Rake
 	class AssemblyInfoTask < Rake::TaskLib
-		# Name of the main, top level task.  (default is :asminfo)
-		attr_accessor :name, :template_file, :product_name, :configuration, :company_name, :versionTxt
+		attr_accessor :name, :product_name, :configuration, :company_name, :version
 
 		# Create an AssemblyInfo file-task; define a task to run it whose name is :assembly_info
-		def initialize(name, versionTxt='build/version.txt') # :yield: self
+		def initialize(name) # :yield: self
 			@name = name
-			@versionTxt = versionTxt
 			yield self if block_given?
 			define
 		end
@@ -20,7 +18,7 @@ module Rake
 		def define
 			require 'pathname'
 			
-			file @name => [@versionTxt] do
+			file @name do
 				template_file = Pathname.new(template)
 				content = template_file.read
 				token_replacements.each do |key,value|
@@ -64,8 +62,7 @@ module Rake
 		end
 		
 		def version
-			vt = Pathname.new(@versionTxt)
-			@version = vt.read.chomp
+			@version ||= Versioner.new.get
 		end
 	end
 end

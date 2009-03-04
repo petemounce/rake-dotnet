@@ -14,26 +14,20 @@ require '../../svn'
 require '../../version'
 require '../../xunit'
 
-# allows you to do things like 'rake compile CONFIGURATION=Release' to specify these options
-# By default, we assume that this Rakefile lives in {root}/build
+# Setting constants like this allows you to do things like 'rake compile CONFIGURATION=Release' to specify their values
+# By default, we assume that this Rakefile lives in {PRODUCT_ROOT}/build, and that this is the working directory
+PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
+TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', 'lib')
 PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
-XUNIT_OPTS = {:html=>true}
-ROOT = ENV['ROOT'] ? ENV['ROOT'] : '..'
 OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
-TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(ROOT, 'lib')
+XUNIT_OPTS = {:html=>true}
+# Versioner depends on SvnInfo which depends on TOOLS_DIR being set
+RDNVERSION = Versioner.new.get
 
-# Source files
-src_dir = File.join(ROOT, 'src')
-
-# Generated files
-version_txt = File.join(OUT_DIR, 'version.txt')
-assembly_info_cs = File.join(src_dir,'AssemblyInfo.cs')
-bin_out = File.join(OUT_DIR, 'bin')
-reports_out = File.join(OUT_DIR, 'reports')
-demo_site = File.join(OUT_DIR, 'Demo.Site')
+src_dir = File.join(PRODUCT_ROOT, 'src')
 
 # clean will remove intermediate files (like the output of msbuild; things in the src tree)
 # clobber will remove build-output files (which will all live under the build tree)
@@ -41,34 +35,31 @@ CLEAN.exclude('**/core') # core files are a Ruby/*nix thing - dotNET developers 
 CLEAN.include("#{src_dir}/**/obj")
 CLEAN.include("#{src_dir}/**/bin")
 CLEAN.include("#{src_dir}/**/AssemblyInfo.cs")
-CLEAN.include(version_txt)
 CLOBBER.include(OUT_DIR)
 
 
-Rake::FigureOutVersionTask.new(version_txt, {:tools_dir=>TOOLS_DIR})
-
-Rake::AssemblyInfoTask.new(assembly_info_cs, version_txt) do |ai|
+assembly_info_cs = File.join(src_dir,'AssemblyInfo.cs')
+Rake::AssemblyInfoTask.new(assembly_info_cs) do |ai|
 	# TODO: Read {configuration, product, company} from Rakefile.yaml config file ?
 	ai.product_name = PRODUCT
 	ai.company_name = COMPANY
 	ai.configuration = CONFIGURATION
+	ai.version = RDNVERSION
 end
 
-Rake::MsBuildTask.new(name=:compile, {:src_dir=>src_dir, :out_dir=>bin_out, :verbosity=>MSBUILD_VERBOSITY, :configuration=>CONFIGURATION, :deps=>[bin_out, :figure_out_version, :assembly_info]})
-Rake::NameOutputTask.new(name=bin_out, {:version_txt=>version_txt, :configuration=>CONFIGURATION, :deps=>[:figure_out_version, :compile]})
+bin_out = File.join(OUT_DIR, 'bin')
+Rake::MsBuildTask.new({:out_dir=>bin_out, :verbosity=>MSBUILD_VERBOSITY, :configuration=>CONFIGURATION, :deps=>[bin_out, :assembly_info]})
 
-Rake::XUnitTask.new(name=:test, {:suites_dir=>bin_out, :reports_dir=>reports_out, :options=>XUNIT_OPTS, :deps=>[:compile]})
+Rake::HarvestOutputTask.new({:deps => [:compile]})
 
-Rake::RDNPackageTask.new(name='bin', {:in_dir=>bin_out, :out_dir=>OUT_DIR, :path_to_snip=>OUT_DIR, :deps=>[:compile]})
+reports_out = File.join(OUT_DIR, 'reports')
+Rake::XUnitTask.new({:suites_dir=>bin_out, :reports_dir=>reports_out, :options=>XUNIT_OPTS, :deps=>[:compile]})
+task :xunit => :harvest_output
 
-Rake::HarvestWebApplicationTask.new({:src_path=>src_dir, :target_path=>OUT_DIR, :deps=>[:compile], :tools_dir => TOOLS_DIR})
+demo_site = File.join(OUT_DIR, 'Demo.Site')
+Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
 
-Rake::RDNPackageTask.new(name=demo_site, {:in_dir=>demo_site, :out_dir=>OUT_DIR, :path_to_snip=>OUT_DIR, :deps=>[:harvest_webapps]})
+Rake::RDNPackageTask.new(name='bin', version=RDNVERSION, {:in_dir=>bin_out, :deps=>[:harvest_output, :xunit]})
+Rake::RDNPackageTask.new(name='Demo.Site', version=RDNVERSION, {:in_dir=>demo_site, :deps=>[:harvest_webapps, :xunit]})
 
-desc "Compile all the projects in #{PRODUCT}.sln"
-task :compile_sln => [:figure_out_version, :assembly_info] do |t|
-	mb = MsBuild.new("#{PRODUCT}.sln", {:Configuration => CONFIGURATION}, ['Build'], MSBUILD_VERBOSITY)
-	mb.run
-end
-
-task :default => [:package]
+task :default => [:compile, :harvest_output, :xunit, :package]
