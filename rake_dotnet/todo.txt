@@ -7,3 +7,8 @@
 * Distinguish between C# projects:
 	* OutputType Exe, Library
 	* Web - project file imports ...Web.Application.targets
+* Only harvest those parts of a web-application that should make it into deployment
+	* Exclude C# files
+	* Exclude ...
+	* Perhaps leverage web-deployment-project...?  Another dependency, though...
+* Change xunit so that it runs the suites in-place, rather than relying on their being harvested
