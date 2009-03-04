@@ -1,1 +1,0 @@
-You need to extract the subversion binaries into this directory, or you need to declare the tasks (version) that use them with an argument specifying where to start looking.

@@ -17,7 +17,7 @@ require '../../xunit'
 # Setting constants like this allows you to do things like 'rake compile CONFIGURATION=Release' to specify their values
 # By default, we assume that this Rakefile lives in {PRODUCT_ROOT}/build, and that this is the working directory
 PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
-TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', '_library')
+TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', '3rdparty')
 PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
