@@ -27,7 +27,6 @@ module Rake
 				suite = r.name.match(/.*\/(.*Tests)\//)[1]
 				testsDll = File.join(@suites_dir, suite + '.dll')
 				out_dir = File.join(@reports_dir, suite)
-				puts File.exist?(out_dir)
 				unless File.exist?(out_dir) && uptodate?(testsDll, out_dir)
 					mkdir_p(out_dir) unless File.exist?(out_dir)
 					x = XUnit.new(testsDll, out_dir, nil, options=@options)
