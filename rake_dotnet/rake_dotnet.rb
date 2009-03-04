@@ -20,3 +20,38 @@ end
 def regexify(path)
 	path.gsub('/', '\/').gsub('.', '\.')
 end
+
+# Setting constants like this allows you to do things like 'rake compile CONFIGURATION=Release' to specify their values
+# By default, we assume that this Rakefile lives in {PRODUCT_ROOT}/build, and that this is the working directory
+PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
+SRC_DIR = File.join(PRODUCT_ROOT, 'src')
+TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', '3rdparty')
+PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
+COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
+CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
+MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
+OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
+XUNIT_OPTS = {:html=>true}
+
+
+require 'rake/clean'
+
+# clean will remove intermediate files (like the output of msbuild; things in the src tree)
+# clobber will remove build-output files (which will all live under the build tree)
+CLEAN.exclude('**/core') # core files are a Ruby/*nix thing - dotNET developers are unlikely to generate them.
+CLEAN.include("#{SRC_DIR}/**/obj")
+CLEAN.include("#{SRC_DIR}/**/bin")
+CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
+CLOBBER.include(OUT_DIR)
+
+require '../../assemblyinfo'
+require '../../file'
+require '../../harvester'
+require '../../msbuild'
+require '../../package'
+require '../../svn'
+require '../../version'
+require '../../xunit'
+
+# Versioner depends on SvnInfo which depends on TOOLS_DIR being set
+RDNVERSION = Versioner.new.get
