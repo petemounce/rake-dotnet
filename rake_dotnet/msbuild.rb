@@ -8,6 +8,7 @@ module Rake
 			@verbosity = params[:verbosity] || 'm'
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
+			
 			yield self if block_given?
 			define
 		end
