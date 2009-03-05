@@ -26,12 +26,9 @@ end
 PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
 SRC_DIR = File.join(PRODUCT_ROOT, 'src')
 TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', '3rdparty')
-PRODUCT = ENV['PRODUCT'] ? ENV['PRODUCT'] : 'Yoti'
-COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
 OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
-XUNIT_OPTS = {:html=>true}
 
 
 require 'rake/clean'
@@ -46,6 +43,7 @@ CLOBBER.include(OUT_DIR)
 
 require '../../assemblyinfo'
 require '../../file'
+require '../../fxcop'
 require '../../harvester'
 require '../../msbuild'
 require '../../package'

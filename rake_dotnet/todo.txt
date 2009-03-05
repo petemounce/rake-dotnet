@@ -1,5 +1,4 @@
-* Run unit tests
-	* Generate reports according to XUNIT_OPTS
+* Run xunit tests
 	* Parameterise which test suites to run
 * Generate coverage files
 * Generate coverage reports
@@ -12,3 +11,4 @@
 	* Exclude ...
 	* Perhaps leverage web-deployment-project...?  Another dependency, though...
 * Change xunit so that it runs the suites in-place, rather than relying on their being harvested
+* Publish as a gem
