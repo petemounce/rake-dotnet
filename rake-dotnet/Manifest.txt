@@ -1,7 +1,0 @@
-History.txt
-Manifest.txt
-README.txt
-Rakefile
-bin/rake-dotnet
-lib/rake-dotnet.rb
-test/test_rake-dotnet.rb
