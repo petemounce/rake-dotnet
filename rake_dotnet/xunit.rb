@@ -45,6 +45,10 @@ module Rake
 				end
 			end
 			
+			task :xunit_clobber do
+				rm_rf(@reports_dir)
+			end
+			
 			self
 		end
 	end
