@@ -1,0 +1,25 @@
+=== 0.0.2 / 2009-03-09
+
+* Several major enhancements
+
+	* AssemblyInfoTask
+	
+		* Create AssemblyInfo.cs file(s) based on supplied AssemblyInfo.template.cs file(s)
+		* Perform token replacement within AssemblyInfo.cs to watermark assemblies with:
+			* major.minor.build.revision version number (from RDNVERSION)
+			* Product Name (from PRODUCT_NAME)
+			* Company Name (from COMPANY_NAME)
+			* Build configuration (from CONFIGURATION)
+		* Perform compilation of msbuild project files
+		* Harvest output of projects to a directory to act as main dumping ground to then zip up for build-artifacts to enable parallelisation later
+		* Harvest web-applications (greedily) to a directory, named like {name}-{configuration}-v{version}.zip
+		* Run xunit.net unit tests from assemblies with *Tests* in filename
+		* Run fxcop against assemblies whose filename contains PRODUCT_NAME
+		* Package a directory as a zip file, named like {name}-{configuration}-v{version}.zip
+
+=== 0.0.1 / 2009-03-09
+
+* 1 major enhancement
+
+  * Birthday!
+

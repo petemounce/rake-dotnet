@@ -1,0 +1,19 @@
+# -*- ruby -*-
+
+require 'rubygems'
+require 'hoe'
+require './lib/rake_dotnet.rb'
+
+Hoe.new('rake-dotnet', Rake_dotnet::VERSION) do |p|
+  p.author = 'Peter Mounce'
+  p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
+  p.email = 'pete@neverrunwithscissors.com'
+  p.summary = 'Build automation for .NET builds'
+  p.rubyforge_name = 'rake-dotnet' # if different than lowercase project name
+  p.developer('Peter Mounce', 'pete@neverrunwithscissors.com')
+  p.remote_rdoc_dir = ''
+  p.extra_deps = ['rake']
+end
+
+
+# vim: syntax=Ruby
