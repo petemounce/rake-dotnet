@@ -18,7 +18,7 @@ Rake::AssemblyInfoTask.new(assembly_info_cs) do |ai|
 end
 
 bin_out = File.join(OUT_DIR, 'bin')
-Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :configuration=>CONFIGURATION, :deps=>[bin_out, :assembly_info]})
+Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly_info]})
 
 Rake::HarvestOutputTask.new({:deps => [:compile]})
 

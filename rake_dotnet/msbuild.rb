@@ -3,7 +3,7 @@ module Rake
 		attr_accessor :src_dir, :verbosity, :working_dir
 	
 		def initialize(params={})
-			@configuration = params[:configuration] || 'Debug'
+			@configuration = params[:configuration] || CONFIGURATION
 			@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
 			@verbosity = params[:verbosity] || 'm'
 			@working_dir = params[:working_dir] || '.'

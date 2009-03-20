@@ -1,11 +1,12 @@
 * Run xunit tests
 	* Parameterise which test suites to run
+	* Run tests from the directories they're compiled within - change the globs for harvesting to something like src/**/bin/configuration/**/*...?
 * Generate coverage files
 * Generate coverage reports
-* Generate fxcop report
 * Distinguish between C# projects:
 	* OutputType Exe, Library
 	* Web - project file imports ...Web.Application.targets
+* Compile views/markup of web-application
 * Only harvest those parts of a web-application that should make it into deployment
 	* Exclude C# files
 	* Exclude ...
