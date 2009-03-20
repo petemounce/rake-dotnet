@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
+[assembly: ComVisible(false)]
 [assembly: AssemblyConfiguration("${configuration}")]
 [assembly: AssemblyCompany("${company}")]
 [assembly: AssemblyProduct("${product}")]
