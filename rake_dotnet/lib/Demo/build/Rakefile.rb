@@ -3,7 +3,8 @@ require 'rake'
 require 'rake/tasklib'
 
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
-COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'YotiCo'
+COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
+RDNVERSION = Versioner.new.get
 
 # Documentation: http://rake_dotnet.rubyforge.org/ -> Files/doc/rake_dotnet.rdoc
 require '../../rake_dotnet'
