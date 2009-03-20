@@ -42,7 +42,6 @@ CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLOBBER.include(OUT_DIR)
 
 require '../../assemblyinfo'
-require '../../file'
 require '../../fxcop'
 require '../../harvester'
 require '../../msbuild'
