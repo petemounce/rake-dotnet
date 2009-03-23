@@ -50,7 +50,6 @@ class FxCop
 	def initialize(dlls, params={})
 		@dlls = dlls
 
-		puts "of: " + params[:out_file]
 		@exe_dir = params[:fxcop_exe_dir] || File.join(TOOLS_DIR, 'fxcop')
 		@exe = params[:fxcop_exe] || File.join(@exe_dir, 'fxcopcmd.exe')
 
