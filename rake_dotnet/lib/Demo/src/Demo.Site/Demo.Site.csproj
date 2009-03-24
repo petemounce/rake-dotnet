@@ -59,17 +59,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Middle\Middle.csproj">
+    <ProjectReference Include="..\Demo.Middle\Demo.Middle.csproj">
       <Project>{AAD11A3D-D9F1-4334-B719-A27E8B78A379}</Project>
-      <Name>Middle</Name>
+      <Name>Demo.Middle</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
+    <ProjectReference Include="..\Demo\Demo.csproj">
+      <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
+      <Name>Demo</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\3rdparty\msbuild\Microsoft.WebApplication.targets" />

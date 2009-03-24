@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "src\Demo\Demo.csproj", "{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Middle", "src\Middle\Middle.csproj", "{AAD11A3D-D9F1-4334-B719-A27E8B78A379}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Middle", "src\Demo.Middle\Demo.Middle.csproj", "{AAD11A3D-D9F1-4334-B719-A27E8B78A379}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Site", "src\Demo.Site\Demo.Site.csproj", "{026A61E1-58A3-417A-AA6B-6EDE5002AD68}"
 EndProject

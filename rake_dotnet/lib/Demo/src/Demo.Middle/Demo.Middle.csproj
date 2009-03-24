@@ -8,8 +8,8 @@
     <ProjectGuid>{AAD11A3D-D9F1-4334-B719-A27E8B78A379}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Middle</RootNamespace>
-    <AssemblyName>Middle</AssemblyName>
+    <RootNamespace>Demo.Middle</RootNamespace>
+    <AssemblyName>Demo.Middle</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,9 +43,9 @@
     <Compile Include="Bar.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
+    <ProjectReference Include="..\Demo\Demo.csproj">
       <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
-      <Name>Core</Name>
+      <Name>Demo</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

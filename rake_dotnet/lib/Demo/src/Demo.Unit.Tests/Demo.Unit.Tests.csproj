@@ -47,17 +47,17 @@
     <Compile Include="ProphetFacts.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
-      <Name>Core</Name>
+    <ProjectReference Include="..\Demo.Middle\Demo.Middle.csproj">
+      <Project>{AAD11A3D-D9F1-4334-B719-A27E8B78A379}</Project>
+      <Name>Demo.Middle</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demo.Site\Demo.Site.csproj">
       <Project>{026A61E1-58A3-417A-AA6B-6EDE5002AD68}</Project>
       <Name>Demo.Site</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Middle\Middle.csproj">
-      <Project>{AAD11A3D-D9F1-4334-B719-A27E8B78A379}</Project>
-      <Name>Middle</Name>
+    <ProjectReference Include="..\Demo\Demo.csproj">
+      <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
+      <Name>Demo</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
