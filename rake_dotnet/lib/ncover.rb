@@ -6,6 +6,7 @@ module Rake
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
 			@deps = params[:deps] || []
+			@ncover_options = {:arch => 'x86'}.merge(params[:ncover_options] || {})
 
 			yield self if block_given?
 			define
@@ -16,25 +17,17 @@ module Rake
 				task :fxcop => d
 			end
 			
-			puts @report_dir
 			directory @report_dir
 			
 			reports_dir_regex = regexify(@report_dir)
 			rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 				dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
-				@dlls_to_profile.delete_if do |e|
-					e.match(/Tests/)
-				end
-				nc = NCover.new(@report_dir, dll_to_execute, @dlls_to_profile, {})
+				nc = NCover.new(@report_dir, dll_to_execute, @ncover_options)
 				nc.run
 			end
 			
 			desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
-			task :ncover_profile,[:dlls_to_run] do |t, args|
-				@dlls_to_profile = FileList.new
-				@dlls_to_profile.include("#{@bin_dir}/**/*#{@product_name}*.dll")
-				@dlls_to_profile.include("#{@bin_dir}/**/*#{@product_name}*.exe")
-
+			task :ncover_profile,[:dlls_to_run] => [@report_dir] do |t, args|
 				dlls_to_run_list = FileList.new
 				dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.dll")
 				dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.exe")
@@ -56,21 +49,15 @@ module Rake
 end
 
 class NCover
-	def initialize(report_path, dll_to_execute, dlls_to_profile, params)
+	def initialize(report_path, dll_to_execute, params)
 		params ||= {}
 		arch = params[:arch] || 'x86'
 		@exe = params[:ncover_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.console.exe')
 		@dll_to_execute = dll_to_execute
-		@dlls_to_profile = ''
-		dlls_to_profile.each do |dll|
-			f = File.split(dll)[1]
-			f.slice(/(.*)\.dll/)
-			@dlls_to_profile += f + ';'
-		end
-		@dlls_to_profile = @dlls_to_profile.chop
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_path, ofname)
 	end
+	# TODO: //bi, //ea
 	
 	def cmdToRun
 		x = XUnit.new(@dll_to_execute, {})
@@ -78,7 +65,7 @@ class NCover
 	end
 	
 	def cmd
-		"\"#{@exe}\" #{cmdToRun} //a #{@dlls_to_profile} //x #{@output_file}"
+		"\"#{@exe}\" #{cmdToRun} //x #{@output_file}"
 	end
 	
 	def run

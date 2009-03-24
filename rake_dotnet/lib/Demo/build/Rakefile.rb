@@ -35,7 +35,7 @@ Rake::HarvestOutputTask.new({:deps => [:compile]})
 
 Rake::XUnitTask.new({:options=>{:html=>true,:xml=>true}, :deps=>[:compile, :harvest_output]})
 Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]})
-Rake::NCoverTask.new
+Rake::NCoverTask.new({:deps=>[:compile, :harvest_output], :ncover_options=>{:arch=>'amd64'}})
 
 demo_site = File.join(OUT_DIR, 'Demo.Site')
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
