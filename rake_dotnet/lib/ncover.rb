@@ -56,16 +56,25 @@ class NCover
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_path, ofname)
+		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || '.*Tests.*'
+		@build_id = params[:build_id] || RDNVERSION
 	end
-	# TODO: //bi, //ea
 	
 	def cmdToRun
 		x = XUnit.new(@dll_to_execute, {})
 		x.cmd
 	end
 	
+	def bi
+		"//bi \"#{@build_id.to_s}\""
+	end
+	
+	def eas
+		"//eas #{@exclude_assemblies_regex}"
+	end
+	
 	def cmd
-		"\"#{@exe}\" #{cmdToRun} //x #{@output_file}"
+		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{eas} #{bi}"
 	end
 	
 	def run
