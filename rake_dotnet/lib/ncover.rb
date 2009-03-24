@@ -6,7 +6,9 @@ module Rake
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
 			@deps = params[:deps] || []
-			@ncover_options = {:arch => 'x86'}.merge(params[:ncover_options] || {})
+			tool_defaults = {:arch => 'x86'}
+			@ncover_options = tool_defaults.merge(params[:ncover_options] || {})
+			@ncover_reporting_options = tool_defaults.merge(params[:ncover_reporting_options] || {})
 
 			yield self if block_given?
 			define
@@ -14,7 +16,7 @@ module Rake
 		
 		def define
 			@deps.each do |d|
-				task :fxcop => d
+				task :ncover_profile => d
 			end
 			
 			directory @report_dir
@@ -40,6 +42,22 @@ module Rake
 				end
 				
 			end
+						
+			ncover_summary_report_html = File.join(@report_dir, 'merged.MethodSourceCodeClassMethod.coverage-report.html')
+			file ncover_summary_report_html do
+				# ncover lets us use *.coverage.xml to merge together files
+				include = [File.join(@report_dir, '*.coverage.xml')]
+				@ncover_reporting_options[:name] = 'merged'
+				ncr = NCoverReporting.new(@report_dir, include, @ncover_reporting_options)
+				ncr.run
+			end
+			
+			desc "Generate ncover coverage summary HTML report, on all coverage files, merged together"
+			task :ncover_summary => [:ncover_profile, ncover_summary_report_html]
+			
+			task :clean_coverage do
+				rm_rf 'out/reports/*coverage-report*'
+			end
 			
 			self
 		end
@@ -49,13 +67,13 @@ module Rake
 end
 
 class NCover
-	def initialize(report_path, dll_to_execute, params)
+	def initialize(report_dir, dll_to_execute, params)
 		params ||= {}
 		arch = params[:arch] || 'x86'
 		@exe = params[:ncover_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.console.exe')
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
-		@output_file = File.join(report_path, ofname)
+		@output_file = File.join(report_dir, ofname)
 		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || '.*Tests.*'
 		@build_id = params[:build_id] || RDNVERSION
 	end
@@ -66,7 +84,7 @@ class NCover
 	end
 	
 	def bi
-		"//bi \"#{@build_id.to_s}\""
+		"//bi #{@build_id.to_s}"
 	end
 	
 	def eas
@@ -82,40 +100,52 @@ class NCover
 	end
 end
 
-class NCoverExplorer
-	attr_accessor :exe, :coverage_files, :html, :report, :min, :fail_min, :sort, :filter, :save
-	def initialize(coverage_files)
-		@exe = File.join(TOOLS_DIR, 'ncover', 'x86', 'ncoverexplorer.console.exe')
-		@coverage_files = coverage_files
+class NCoverReporting
+	def initialize(report_dir, coverage_files, params)
+		@report_dir = report_dir
+		@coverage_files = coverage_files || []
+
+		params ||= {}
+		arch = params[:arch] || 'x86'
+		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
+
+		# required
+		@name = params[:name] || 'CoverageReport'
+		@report = params[:report] || 'MethodSourceCodeClassMethod'
+		@format = params[:report_format] || 'html' # can be xml or html
+		@output_path = File.join(@report_dir, @name + '.' + @report + '.' + @format)
+		
+		# optional
+		@build_id = params[:build_id] || RDNVERSION
+		@so = params[:sort] || 'CoveragePercentageAscending'
 	end
 	
 	def coverage_files
-		@coverage_files.join(' ')
+		list = ''
+		@coverage_files.each do |cf|
+			list += "\"#{cf}\" "
+		end
+		list
 	end
-	def html
-		"/html:#{@html}" unless @html.nil?
+	
+	def bi
+		"//bi #{@build_id.to_s}"
 	end
-	def report
-		"/report:#{@report}" if @report
+	
+	def r
+		"//r #{@report}"
 	end
-	def min
-		"/minCoverage:#{@min}" if @min
+	
+	def op
+		"//op \"#{@output_path}\""
 	end
-	def fail_min
-		"/f" if @fail_min
-	end
-	def sort
-		"/sort:#{@sort}" if @sort
-	end
-	def filter
-		"/filter:#{@filter}" if @filter
-	end
-	def save
-		"/save:#{@save}" if @save
+	
+	def so
+		"//so #{@so}"
 	end
 		
 	def cmd
-		"\"#{@exe}\" #{coverage_files} #{html} #{report} #{min} #{fail_min} #{sort} #{filter} #{save}"
+		"\"#{@exe}\" #{coverage_files} #{bi} #{r} #{op} #{so}"
 	end
 	
 	def run
