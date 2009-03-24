@@ -1,13 +1,23 @@
 # Documentation: http://rake.rubyforge.org/ -> Files/doc/rakefile.rdoc
 require 'rake'
 require 'rake/tasklib'
+require '../../assemblyinfo.rb'
+require '../../defaults.rb'
+require '../../fxcop.rb'
+require '../../harvester.rb'
+require '../../msbuild.rb'
+require '../../ncover.rb'
+require '../../package.rb'
+require '../../svn.rb'
+require '../../version.rb'
+require '../../xunit.rb'
 
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
 # Documentation: http://rake_dotnet.rubyforge.org/ -> Files/doc/rake_dotnet.rdoc
-require '../../rake_dotnet'
+#require '../../rake_dotnet.rb'
 
 assembly_info_cs = File.join(SRC_DIR,'AssemblyInfo.cs')
 Rake::AssemblyInfoTask.new(assembly_info_cs) do |ai|
@@ -25,6 +35,7 @@ Rake::HarvestOutputTask.new({:deps => [:compile]})
 
 Rake::XUnitTask.new({:options=>{:html=>true,:xml=>true}, :deps=>[:compile, :harvest_output]})
 Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]})
+Rake::NCoverTask.new
 
 demo_site = File.join(OUT_DIR, 'Demo.Site')
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
