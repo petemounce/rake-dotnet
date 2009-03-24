@@ -1,6 +1,4 @@
-﻿using Core;
-
-using Xunit;
+﻿using Xunit;
 
 namespace Demo.Unit.Tests
 {
