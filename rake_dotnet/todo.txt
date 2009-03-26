@@ -15,3 +15,4 @@
 	* Fixes problem of difference-in-path between VS host and out_dir hosted...?
 * Publish as a gem
 * Change to 7zip instead of depend on cygwin...?
+* Provide an InstallPad for the 3rdparty bits

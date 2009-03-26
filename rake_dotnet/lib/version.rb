@@ -1,6 +1,3 @@
-#!/usr/bin/env ruby
-require 'pathname'
-
 class Versioner
 	def initialize(template_file=nil)
 		tf = template_file || 'version.template.txt'

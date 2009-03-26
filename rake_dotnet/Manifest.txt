@@ -2,6 +2,5 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/rake_dotnet
 lib/rake_dotnet.rb
 test/test_rake_dotnet.rb

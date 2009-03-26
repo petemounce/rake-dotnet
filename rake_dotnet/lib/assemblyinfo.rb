@@ -1,8 +1,3 @@
-#!/usr/bin/env ruby
-
-require 'rake'
-require 'rake/tasklib'
-
 module Rake
 	class AssemblyInfoTask < Rake::TaskLib
 		attr_accessor :name, :product_name, :configuration, :company_name, :version
@@ -16,8 +11,6 @@ module Rake
 
 		# Create the tasks defined by this task lib.
 		def define
-			require 'pathname'
-			
 			file @name do
 				template_file = Pathname.new(template)
 				content = template_file.read

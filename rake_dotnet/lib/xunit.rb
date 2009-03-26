@@ -1,8 +1,3 @@
-#!/usr/bin/env ruby
-
-require 'rake'
-require 'rake/tasklib'
-
 module Rake
 	class XUnitTask < TaskLib
 		attr_accessor :suites_dir, :reports_dir, :options

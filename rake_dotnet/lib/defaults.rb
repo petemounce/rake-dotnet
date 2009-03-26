@@ -1,6 +1,3 @@
-# Documentation: http://rake.rubyforge.org/ -> Files/doc/rakefile.rdoc
-require 'rake'
-
 desc "Displays this message; a list of tasks"
 task :help do
   taskHash = Hash[*(`rake.cmd -T`.split(/\n/).collect { |l| l.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |l| [l[1], l[2]] }).flatten] 
@@ -30,7 +27,6 @@ CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
 OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
 
-require 'rake/clean'
 # clean will remove intermediate files (like the output of msbuild; things in the src tree)
 # clobber will remove build-output files (which will all live under the build tree)
 CLEAN.exclude('**/core') # core files are a Ruby/*nix thing - dotNET developers are unlikely to generate them.
@@ -38,4 +34,3 @@ CLEAN.include("#{SRC_DIR}/**/obj")
 CLEAN.include("#{SRC_DIR}/**/bin")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLOBBER.include(OUT_DIR)
-
