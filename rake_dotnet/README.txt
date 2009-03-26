@@ -20,6 +20,8 @@ Rake dotnet is a bunch of things that aim at doing the work of creating a featur
 * Build the project files to produce said DLLs (call msbuild against the project file(s))
 * Run XUnit.NET unit tests against said DLLs, and output reports (wrap xunit.console.exe)
 * Run FxCop against said DLLs, and output reports (wrap fxcopcmd.exe)
+* Run NCover against build output to generate coverage metrics
+* Run NCover against coverage to generate coverage reports
 * Harvest build output
 * Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
 
@@ -28,12 +30,11 @@ Rake dotnet is a bunch of things that aim at doing the work of creating a featur
 (In no particular order)
 * rdoc documentation to supplement blog'd about
 * Support other test-runners - nunit, mbunit, gallio
-* Change harvest/package to take file-glob include/exclude parameters (as rake's PackageTask) - allow more flexible building of packages
 * Support code-coverage runner(s) - ncover 1.68, ncover 3, partcover
 * Support clone-detective...?
 * Support other source-controls to get build version number - git, mercurial, cvs(?), TFS
-* Support 7z compression for packaging to eliminate cygwin dependency (7zip is easier/cleaner to get & maintain)
 * Support changing the conventions to allow users to specify their own source structure
+* Provide an InstallPad for the 3rdparty bits
 
 == REQUIREMENTS:
 

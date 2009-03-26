@@ -1,21 +1,47 @@
-=== 0.0.2 / 2009-03-09
+=== 0.0.2 / 2009-03-21
 
 * Several major enhancements
 
-	* AssemblyInfoTask
+	* Versioner
+		* Figure out a 4-token version number, major.minor.build.revision, taking:
+			* major.minor from version.template.txt
+			* build from ENV['BUILD_NUMBER'] (used by TeamCity)
+			* revision from svn working copy that the build is occurring in
 	
+	* AssemblyInfoTask
 		* Create AssemblyInfo.cs file(s) based on supplied AssemblyInfo.template.cs file(s)
 		* Perform token replacement within AssemblyInfo.cs to watermark assemblies with:
 			* major.minor.build.revision version number (from RDNVERSION)
 			* Product Name (from PRODUCT_NAME)
 			* Company Name (from COMPANY_NAME)
 			* Build configuration (from CONFIGURATION)
+	
+	* MsBuildTask
 		* Perform compilation of msbuild project files
-		* Harvest output of projects to a directory to act as main dumping ground to then zip up for build-artifacts to enable parallelisation later
-		* Harvest web-applications (greedily) to a directory, named like {name}-{configuration}-v{version}.zip
-		* Run xunit.net unit tests from assemblies with *Tests* in filename
-		* Run fxcop against assemblies whose filename contains PRODUCT_NAME
+	
+	* HarvestOutputTask
+		* Harvest output of projects to a directory to act as main dumping ground to then zip up for build-artifacts to enable CI-parallelisation later
+		
+	* HarvestWebApplicationTask
+		* Harvest web-applications (greedily) to a directory
+	
+	* XUnitTask
+		* Run xunit.net tests from assemblies with *Tests* in filename
+	
+	* FxCopTask
+		* Run fxcop against assemblies whose filenames contain PRODUCT_NAME
+	
+	* NCoverTask
+		* Run ncover.console against assemblies to generate coverage data
+		* Run ncover.reporting against coverage data to generate coverage reports
+			* Limited to simple case in this release
+	
+	* RDNPackageTask
 		* Package a directory as a zip file, named like {name}-{configuration}-v{version}.zip
+		* Uses 7-zip, instead of rake's built-in PackageTask, which would have required taking a dependency on cygwin (7-zip is lighter)
+		
+	* A demo solution as an example of usage
+		* See http://my-svn.assembla.com/svn/nrws/trunk/rake_dotnet/lib/Demo
 
 === 0.0.1 / 2009-03-09
 
