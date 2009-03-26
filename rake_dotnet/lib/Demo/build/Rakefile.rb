@@ -16,9 +16,6 @@ PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
-# Documentation: http://rake_dotnet.rubyforge.org/ -> Files/doc/rake_dotnet.rdoc
-#require '../../rake_dotnet.rb'
-
 assembly_info_cs = File.join(SRC_DIR,'AssemblyInfo.cs')
 Rake::AssemblyInfoTask.new(assembly_info_cs) do |ai|
 	# TODO: Read {configuration, product, company} from Rakefile.yaml config file ?
