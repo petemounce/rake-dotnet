@@ -96,7 +96,6 @@ class FxCop
 	end
 
 	def run
-		puts cmd
 		sh cmd
 	end
 end

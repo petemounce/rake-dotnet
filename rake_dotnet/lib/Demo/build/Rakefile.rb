@@ -28,7 +28,11 @@ Rake::NCoverTask.new({:deps=>[:compile, :harvest_output], :ncover_options=>{:arc
 demo_site = File.join(OUT_DIR, 'Demo.Site')
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
 
-Rake::RDNPackageTask.new(name='bin', version=RDNVERSION, {:in_dir=>bin_out, :deps=>[:harvest_output, :xunit]})
-Rake::RDNPackageTask.new(name='Demo.Site', version=RDNVERSION, {:in_dir=>demo_site, :deps=>[:harvest_webapps, :xunit]})
+Rake::RDNPackageTask.new(name='bin', version=RDNVERSION, {:deps=>[:harvest_output, :xunit]}) do |p|
+	p.targets.include("#{bin_out}/*")
+end
+Rake::RDNPackageTask.new(name='Demo.Site', version=RDNVERSION, {:deps=>[:harvest_webapps, :xunit]}) do |p|
+	p.targets.include("#{demo_site}/*")
+end
 
 task :default => [:compile, :harvest_output, :xunit, :package]
