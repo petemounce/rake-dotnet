@@ -1,16 +1,7 @@
 # Documentation: http://rake.rubyforge.org/ -> Files/doc/rakefile.rdoc
 require 'rake'
 require 'rake/tasklib'
-require '../../assemblyinfo.rb'
-require '../../defaults.rb'
-require '../../fxcop.rb'
-require '../../harvester.rb'
-require '../../msbuild.rb'
-require '../../ncover.rb'
-require '../../package.rb'
-require '../../svn.rb'
-require '../../version.rb'
-require '../../xunit.rb'
+require 'rake_dotnet'
 
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
