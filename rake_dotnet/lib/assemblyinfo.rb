@@ -19,10 +19,7 @@ module Rake
 				end
 				of = Pathname.new(@name)
 				of.delete if of.exist?
-				#File.write(of, content)
-				of.open('w') {|f|
-					f.puts content
-				}
+				of.open('w') { |f| f.puts content }
 			end
 			
 			desc 'Generate the AssemblyInfo.cs file from the template'
