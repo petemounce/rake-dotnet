@@ -35,4 +35,6 @@ task :generate_lib => generated_library
 
 task :check_manifest => generated_library
 
+task :test => generated_library
+
 # vim: syntax=Ruby
