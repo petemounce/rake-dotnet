@@ -34,14 +34,14 @@ module Rake
 				@targets.each do |t|
 					f = Pathname.new(t)
 					if f.directory?
-						mv "#{t}/*", pkg_root
+						cp_r f, pkg_root
 					else
-						mv t, pkg_root
+						cp f, pkg_root
 					end
 				end
 				snipped = pkg_root.sub(pkg + '/', '')
 				chdir pkg do
-					sz = SevenZip.new('../../'+package_file, snipped, {:sevenzip=>File.join('..','..',TOOLS_DIR, '7zip', '7z.exe')})
+					sz = SevenZip.new('../../'+package_file, snipped, {:sevenzip=>File.join('..','..',TOOLS_DIR, '7zip', 'x86', '7za.exe')})
 					sz.run_add
 				end
 			end

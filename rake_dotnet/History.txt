@@ -1,3 +1,12 @@
+=== 0.0.3 / 2009-03-30
+
+* Bugfix release
+
+	* SevenZip now uses the 7za command-line archiver by default.
+	* Can now pass in VERBOSE=true to listen to cp/mv logging-to-console on file operations.
+	* Correctly package web-applications now.
+	* Copy, don't move, when packaging.
+
 === 0.0.2 / 2009-03-21
 
 * Several major enhancements

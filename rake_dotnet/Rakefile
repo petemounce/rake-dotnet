@@ -37,4 +37,8 @@ task :check_manifest => generated_library
 
 task :test => generated_library
 
+task :uninstall_gem do
+	sh "gem uninstall rake-dotnet"
+end
+
 # vim: syntax=Ruby

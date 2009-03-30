@@ -29,21 +29,27 @@ Rake dotnet is a bunch of things that aim at doing the work of creating a featur
 
 (In no particular order)
 * rdoc documentation to supplement blog'd about
+* unit-tests
 * Support other test-runners - nunit, mbunit, gallio
+* unit-tests!
 * Support code-coverage runner(s) - ncover 1.68, ncover 3, partcover
+* unit-tests!!
 * Support clone-detective...?
+* unit-tests!!!
 * Support other source-controls to get build version number - git, mercurial, cvs(?), TFS
+* unit-tests!!!!
 * Support changing the conventions to allow users to specify their own source structure
+* unit-tests
 * Provide an InstallPad for the 3rdparty bits
 
 == REQUIREMENTS:
 
-* ruby 1.8.x
+* ruby 1.8.6+
 * rake 0.8.3+
 
 == INSTALL:
 
-* sudo gem install rakedotnet
+* sudo gem install rake-dotnet
 
 == LICENSE:
 
