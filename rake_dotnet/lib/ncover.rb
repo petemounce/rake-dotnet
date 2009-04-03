@@ -4,7 +4,7 @@ module Rake
 		
 			@product_name = params[:product_name] || PRODUCT_NAME
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
-			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
+			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
 			tool_defaults = {:arch => 'x86'}
 			@ncover_options = tool_defaults.merge(params[:ncover_options] || {})
@@ -56,7 +56,7 @@ module Rake
 			task :ncover_summary => [:ncover_profile, ncover_summary_report_html]
 			
 			task :clean_coverage do
-				rm_rf 'out/reports/*coverage-report*'
+				rm_rf @report_dir
 			end
 			
 			self
