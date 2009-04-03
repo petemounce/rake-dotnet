@@ -7,8 +7,7 @@ PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
-assembly_info_cs = File.join(SRC_DIR,'AssemblyInfo.cs')
-Rake::AssemblyInfoTask.new(assembly_info_cs) do |ai|
+Rake::AssemblyInfoTask.new do |ai|
 	# TODO: Read {configuration, product, company} from Rakefile.yaml config file ?
 	ai.product_name = PRODUCT_NAME
 	ai.company_name = COMPANY
