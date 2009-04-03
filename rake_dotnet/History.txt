@@ -1,7 +1,10 @@
-=== 0.0.5 / 
+=== 0.0.5 / 2009-04-03
 
 * Support non-svn version-control.  In this case, write today's date as YYYYMMDD into revision number of assembly version.
 * Write ncover reports into out/reports/ncover, since there may be many, and there are some asset files too.
+* Generate the {project}/Properties/AssemblyInfo.cs in place rather than making users add a link to the common one (friction)
+* Generate the {project}/Properties/AssemblyInfo.cs from either a .template next-door, or the common template in {src_dir}
+* Change the name of the AssemblyInfo template because if it ends in .cs msbuild assumes it should be compiled, which will then fail. 
 
 === 0.0.4 / 2009-03-31
 
