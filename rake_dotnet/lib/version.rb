@@ -15,7 +15,6 @@ class Versioner
 
   def revision
     if (Pathname.new('.svn').exist?)
-      puts foo
       SvnInfo.new(:path => '.').revision
     else
       now = Date.today
