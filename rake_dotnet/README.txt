@@ -12,6 +12,7 @@ Rake dotnet is a bunch of things that aim at doing the work of creating a featur
 
 == FEATURES/PROBLEMS:
 
+Features:
 * Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
 	* major.minor.build.svn-revision version number
 	* product-name
@@ -24,6 +25,42 @@ Rake dotnet is a bunch of things that aim at doing the work of creating a featur
 * Run NCover against coverage to generate coverage reports
 * Harvest build output
 * Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
+
+Conventions:
+The tasks rely on you following some conventions.  These are configurable to some extent, by calling rake to pass in values for the constants.
+* PRODUCT_ROOT defaults to '..' - rake's working directory is build/, where Rakefile.rb is used.  All paths are relative to the rake working directory.
+* OUT_DIR defaults to 'out', hence equivalent to '{PRODUCT_ROOT}/build/out' - build-output gets squirted here.
+* SRC_DIR defaults to '{PRODUCT_ROOT}/src' -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
+* TOOLS_DIR defaults to '{PRODUCT_ROOT}/../3rdparty' - intentionally, tools are kept outside of the source tree.  This allows for efficient xcopy deployment, or a source-control symbolic link arrangement (svn:externals works well).
+* test projects should have "Tests" somewhere in their project-name.
+* web-application projects should have "Site" somewhere in their project-name.
+* msbuild is assumed to follow its defaults and output into {project-being-built}/bin/{configuration} for class libraries and so forth.
+
+So our source structure looks like:
+/
+	/3rdparty - contains tools, one directory per tool
+	/Foo
+		/build
+			/Rakefile.rb
+		/src
+			/Foo.Bar
+				/Foo.Bar.csproj
+				{files}
+		/Foo.sln
+	/OtherProduct
+		/build
+			/Rakefile.rb
+		/src
+			/OtherProduct.Core
+				/OtherProduct.Core.csproj
+				{files}
+		/OtherProduct.sln
+
+Example: http://my-svn.assembla.com/svn/nrws/trunk/rake_dotnet/lib/DemoRoot
+
+Problems:
+* Need to get a whole bunch of 3rd-party tools.  I might provide an install-pad for this.  List is in http://my-svn.assembla.com/svn/nrws/trunk/rake_dotnet/lib/DemoRoot/3rdparty/readme.txt
+ 
 
 == ROADMAP:
 
