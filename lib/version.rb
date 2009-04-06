@@ -17,8 +17,7 @@ class Versioner
     if (Pathname.new('.svn').exist?)
       SvnInfo.new(:path => '.').revision
     else
-      now = Date.today
-      "#{now.to_s.gsub('-','')}"
+      '0' # YYYYMMDD is actually invalid for a {revision} number.
     end
   end
 end
