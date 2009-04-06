@@ -64,7 +64,7 @@ module Rake
 			rule(/#{out_dir_regex}\/[\w\.-_ ]*Site[\w\.-_ ]*\//) do |r|
 				web_app_name = r.name.match(/#{out_dir_regex}\/([\w\.-_ ]*Site[\w\.-_ ]*)\//)[1]
 				src = File.join(@src_path, web_app_name)
-				if (File.exist?("#{src}/.svn")
+				if (File.exist?("#{src}/.svn"))
 					svn = SvnExport.new(src, r.name)
 					svn.export
 					cp_r(File.join(src, 'bin'), r.name)
