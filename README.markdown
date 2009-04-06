@@ -1,6 +1,6 @@
 # rake-dotnet
 
-* [Rake on my blog](http://blog.neverrunwithscissors.com/tag/rake)
+[Rake on my blog](http://blog.neverrunwithscissors.com/tag/rake)
 
 ## DESCRIPTION:
 
@@ -12,37 +12,36 @@ rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 
 ## Features
 
-* Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
-	* major.minor.build.svn-revision version number
-	* product-name
-	* company-name
-	* build configuration
-* Build the project files to produce said DLLs (call msbuild against the project file(s))
-* Run XUnit.NET unit tests against said DLLs, and output reports (wrap xunit.console.exe)
-* Run FxCop against said DLLs, and output reports (wrap fxcopcmd.exe)
-* Run NCover against build output to generate coverage metrics
-* Run NCover against coverage to generate coverage reports
-* Harvest build output
-* Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
+*	Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
+	*	major.minor.build.svn-revision version number
+	*	product-name
+	*	company-name
+	*	build configuration
+*	Build the project files to produce said DLLs (call msbuild against the project file(s))
+*	Run XUnit.NET unit tests against said DLLs, and output reports (wrap xunit.console.exe)
+*	Run FxCop against said DLLs, and output reports (wrap fxcopcmd.exe)
+*	Run NCover against build output to generate coverage metrics
+*	Run NCover against coverage to generate coverage reports
+*	Harvest build output
+*	Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
 
 ## Problems:
 
-* Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
-
-** InstallPad?
-** Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) and there is a readme.txt next-door with URLs to fetch from.
+*	Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
+	*	InstallPad?
+	*	Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) and there is a readme.txt next-door with URLs to fetch from.
 
 ## Conventions:
 
 The tasks rely on you following some conventions.  These are configurable to some extent, by calling rake to pass in values for the constants.
 
-* PRODUCT_ROOT defaults to '..' - rake's working directory is build/, where Rakefile.rb is used.  All paths are relative to the rake working directory.
-* OUT_DIR defaults to 'out', hence equivalent to '{PRODUCT_ROOT}/build/out' - build-output gets squirted here.
-* SRC_DIR defaults to '{PRODUCT_ROOT}/src' -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
-* TOOLS_DIR defaults to '{PRODUCT_ROOT}/../3rdparty' - intentionally, tools are kept outside of the source tree.  This allows for efficient xcopy deployment, or a source-control symbolic link arrangement (svn:externals works well).
-* test projects should have "Tests" somewhere in their project-name.
-* web-application projects should have "Site" somewhere in their project-name.
-* msbuild is assumed to follow its defaults and output into {project-being-built}/bin/{configuration} for class libraries and so forth.
+*	PRODUCT_ROOT defaults to '..' - rake's working directory is build/, where Rakefile.rb is used.  All paths are relative to the rake working directory.
+*	OUT_DIR defaults to 'out', hence equivalent to '{PRODUCT_ROOT}/build/out' - build-output gets squirted here.
+*	SRC_DIR defaults to '{PRODUCT_ROOT}/src' -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
+*	TOOLS_DIR defaults to '{PRODUCT_ROOT}/../3rdparty' - intentionally, tools are kept outside of the source tree.  This allows for efficient xcopy deployment, or a source-control symbolic link arrangement (svn:externals works well).
+*	test projects should have "Tests" somewhere in their project-name.
+*	web-application projects should have "Site" somewhere in their project-name.
+*	msbuild is assumed to follow its defaults and output into {project-being-built}/bin/{configuration} for class libraries and so forth.
 
 So our source structure looks like:
 	
@@ -71,33 +70,33 @@ Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/maste
 
 (In no particular order)
 
-* rdoc documentation to supplement blog'd about
-* unit-tests
-* Support other test-runners - nunit, mbunit, gallio
-* unit-tests!
-* Support code-coverage runner(s) - ncover 1.68 (?), ncover 3, partcover
-* unit-tests!!
-* Support clone-detective...?
-* unit-tests!!!
-* Support other source-controls to get build version number - git, mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
-* unit-tests!!!!
-* Support changing the conventions to allow users to specify their own source structure
-* unit-tests
-* Provide an InstallPad for the 3rdparty bits
+*	rdoc documentation to supplement blog'd about
+*	unit-tests
+*	Support other test-runners - nunit, mbunit, gallio
+*	unit-tests!
+*	Support code-coverage runner(s) - ncover 1.68 (?), ncover 3, partcover
+*	unit-tests!!
+*	Support clone-detective...?
+*	unit-tests!!!
+*	Support other source-controls to get build version number - git, mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
+*	unit-tests!!!!
+*	Support changing the conventions to allow users to specify their own source structure
+*	unit-tests
+*	Provide an InstallPad for the 3rdparty bits
 
 ## Requirements:
 
-* ruby 1.8.6+
-* rake 0.8.3+
+*	ruby 1.8.6+ [One-click Windows installer](http://rubyinstaller.rubyforge.org/wiki/wiki.pl)
+*	rake 0.8.3+ (but this will be installed when you do `gem install rake-dotnet`)
 
 ## Install:
 
 1. gem install rake-dotnet (prepend sudo if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 2. Create a directory to hold 3rdparty dependencies
-** if you mirror [{github}/DemoRoot/3rdparty/](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) you'll get default paths that rake-dotnet expects
-** if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
+	* if you mirror [{github}/DemoRoot/3rdparty/](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) you'll get default paths that rake-dotnet expects
+	* if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
 3. Fetch the 3rdparty dependencies listed in [{github}/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty/readme.txt)
-** rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
+	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## License:
 
