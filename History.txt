@@ -3,6 +3,7 @@
 * Move source control to github at http://github.com/petemounce/rake-dotnet
 * Change format of readme to markdown for prettiness on the repo homepage
 * FIX: YYYYMMDD is invalid for file/assembly-version attribute; use '0' instead in non-svn source-control case.
+* FIX: Fix harvesting a web-application when it's not under svn source-control
 
 === 0.0.5 / 2009-04-03
 
