@@ -1,8 +1,8 @@
-= rakedotnet
+# rake-dotnet
 
 * http://blog.neverrunwithscissors.com/tag/rake
 
-== DESCRIPTION:
+## DESCRIPTION:
 
 Rake dotnet is a library of custom tasks designed to (try to!) make your life as a build-automation author easier.
 
@@ -10,9 +10,8 @@ When have you ever heard of a build-script called anything other than a script? 
 
 Rake dotnet is a bunch of things that aim at doing the work of creating a featureful build-script, so you don't have to.  RDN likes convention-over-configuration.  RDN tries to keep the Rakefile (the part YOU have to get involved with) short, because that means you can get on with the business of making software that YOU care about.  RDN is designed to try to waste as little of your time as possible (and I'd like to know whether I succeeded, or failed, please ;-) ).
 
-== FEATURES/PROBLEMS:
+## Features
 
-Features:
 * Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
 	* major.minor.build.svn-revision version number
 	* product-name
@@ -26,8 +25,16 @@ Features:
 * Harvest build output
 * Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
 
-Conventions:
+## Problems:
+
+* Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
+** InstallPad?
+** Currently, the directories for each tool are created within http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty and there is a readme.txt next-door with URLs to fetch from.
+
+## Conventions:
+
 The tasks rely on you following some conventions.  These are configurable to some extent, by calling rake to pass in values for the constants.
+
 * PRODUCT_ROOT defaults to '..' - rake's working directory is build/, where Rakefile.rb is used.  All paths are relative to the rake working directory.
 * OUT_DIR defaults to 'out', hence equivalent to '{PRODUCT_ROOT}/build/out' - build-output gets squirted here.
 * SRC_DIR defaults to '{PRODUCT_ROOT}/src' -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
@@ -56,39 +63,41 @@ So our source structure looks like:
 				{files}
 		/OtherProduct.sln
 
-Example: http://my-svn.assembla.com/svn/nrws/trunk/rake_dotnet/lib/DemoRoot
+Example: http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot
 
-Problems:
-* Need to get a whole bunch of 3rd-party tools.  I might provide an install-pad for this.  List is in http://my-svn.assembla.com/svn/nrws/trunk/rake_dotnet/lib/DemoRoot/3rdparty/readme.txt
- 
-
-== ROADMAP:
+== Roadmap:
 
 (In no particular order)
+
 * rdoc documentation to supplement blog'd about
 * unit-tests
 * Support other test-runners - nunit, mbunit, gallio
 * unit-tests!
-* Support code-coverage runner(s) - ncover 1.68, ncover 3, partcover
+* Support code-coverage runner(s) - ncover 1.68 (?), ncover 3, partcover
 * unit-tests!!
 * Support clone-detective...?
 * unit-tests!!!
-* Support other source-controls to get build version number - git, mercurial, cvs(?), TFS
+* Support other source-controls to get build version number - git, mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
 * unit-tests!!!!
 * Support changing the conventions to allow users to specify their own source structure
 * unit-tests
 * Provide an InstallPad for the 3rdparty bits
 
-== REQUIREMENTS:
+== Requirements:
 
 * ruby 1.8.6+
 * rake 0.8.3+
 
-== INSTALL:
+== Install:
 
-* sudo gem install rake-dotnet
+1. gem install rake-dotnet (prepend sudo if you're not on Windows - which doesn't seem likely considering the audience ;-) )
+2. Create a directory to hold 3rdparty dependencies - 
+** if you mirror http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty you'll get default paths that rake-dotnet expects
+** if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
+3. Fetch the 3rdparty dependencies listed in http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty/readme.txt
+** rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
-== LICENSE:
+== License:
 
 (The MIT License)
 

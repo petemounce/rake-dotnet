@@ -1,3 +1,8 @@
+=== 0.0.6 / 2009-04-06
+
+* Move source control to github at http://github.com/petemounce/rake-dotnet
+* Change format of readme to markdown for prettiness on the repo homepage
+
 === 0.0.5 / 2009-04-03
 
 * Support non-svn version-control.  In this case, write today's date as YYYYMMDD into revision number of assembly version.
