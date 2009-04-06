@@ -64,9 +64,13 @@ module Rake
 			rule(/#{out_dir_regex}\/[\w\.-_ ]*Site[\w\.-_ ]*\//) do |r|
 				web_app_name = r.name.match(/#{out_dir_regex}\/([\w\.-_ ]*Site[\w\.-_ ]*)\//)[1]
 				src = File.join(@src_path, web_app_name)
-				svn = SvnExport.new(src, r.name)
-				svn.export
-				cp_r(File.join(src, 'bin'), r.name)
+				if (File.exist?("#{src}/.svn")
+					svn = SvnExport.new(src, r.name)
+					svn.export
+					cp_r(File.join(src, 'bin'), r.name)
+				else
+					cp_r src, r.name
+				end
 			end
 			
 			desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
