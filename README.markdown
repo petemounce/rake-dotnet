@@ -35,13 +35,13 @@ rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 
 The tasks rely on you following some conventions.  These are configurable to some extent, by calling rake to pass in values for the constants.
 
-*	PRODUCT_ROOT defaults to '..' - rake's working directory is build/, where Rakefile.rb is used.  All paths are relative to the rake working directory.
-*	OUT_DIR defaults to 'out', hence equivalent to '{PRODUCT_ROOT}/build/out' - build-output gets squirted here.
-*	SRC_DIR defaults to '{PRODUCT_ROOT}/src' -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
-*	TOOLS_DIR defaults to '{PRODUCT_ROOT}/../3rdparty' - intentionally, tools are kept outside of the source tree.  This allows for efficient xcopy deployment, or a source-control symbolic link arrangement (svn:externals works well).
-*	test projects should have "Tests" somewhere in their project-name.
-*	web-application projects should have "Site" somewhere in their project-name.
-*	msbuild is assumed to follow its defaults and output into {project-being-built}/bin/{configuration} for class libraries and so forth.
+*	`PRODUCT_ROOT` defaults to `..` - rake's working directory is `build/`, where Rakefile.rb is used.  All paths are relative to the rake working directory.
+*	`OUT_DIR` defaults to `out`, hence equivalent to `#{PRODUCT_ROOT}/build/out` - build-output gets squirted here.
+*	`SRC_DIR` defaults to `#{PRODUCT_ROOT}/src` -  buildable projects should live here (this includes test projects).  One directory per project, directory-name matches project-filename matches generated assembly-name. 
+*	`TOOLS_DIR` defaults to `#{PRODUCT_ROOT}/../3rdparty` - intentionally, tools are kept outside of the source tree.  This allows for efficient xcopy deployment, or a source-control symbolic link arrangement (svn:externals works well).
+*	test projects should have `Tests` somewhere in their project-name.
+*	web-application projects should have `Site` somewhere in their project-name.
+*	msbuild is assumed to follow its defaults and output into `#{SRC_DIR}/{project-being-built}/bin/{configuration}` for class libraries and so forth.
 
 So our source structure looks like:
 	
@@ -91,7 +91,7 @@ Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/maste
 
 ## Install:
 
-1. gem install rake-dotnet (prepend sudo if you're not on Windows - which doesn't seem likely considering the audience ;-) )
+1. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 2. Create a directory to hold 3rdparty dependencies
 	* if you mirror [{github}/DemoRoot/3rdparty/](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) you'll get default paths that rake-dotnet expects
 	* if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
