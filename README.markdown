@@ -28,6 +28,7 @@ rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 ## Problems:
 
 * Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
+
 ** InstallPad?
 ** Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) and there is a readme.txt next-door with URLs to fetch from.
 
@@ -92,7 +93,7 @@ Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/maste
 ## Install:
 
 1. gem install rake-dotnet (prepend sudo if you're not on Windows - which doesn't seem likely considering the audience ;-) )
-2. Create a directory to hold 3rdparty dependencies - 
+2. Create a directory to hold 3rdparty dependencies
 ** if you mirror [{github}/DemoRoot/3rdparty/](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) you'll get default paths that rake-dotnet expects
 ** if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
 3. Fetch the 3rdparty dependencies listed in [{github}/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty/readme.txt)
