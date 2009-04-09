@@ -1,2 +1,15 @@
+# ruby stuff
 lib/rake_dotnet.rb
 pkg/
+
+# Demo / .NET stuff
+DemoRoot/Demo/*/*/bin/
+DemoRoot/Demo/*/*/obj/
+DemoRoot/Demo/_ReSharper.Demo/
+*.suo
+*.resharper.user
+*proj.user
+AssemblyInfo.cs
+
+# Stuff I don't want to shove into the git repository by accident
+DemoRoot/3rdparty/*/

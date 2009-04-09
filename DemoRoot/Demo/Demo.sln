@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsmInfo", "src\AsmInfo\AsmI
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FED62BDA-F563-4A4E-A455-1DD2C37AB162}"
 	ProjectSection(SolutionItems) = preProject
-		src\TemplateAssemblyInfo.cs = src\TemplateAssemblyInfo.cs
+		src\AssemblyInfo.cs.template = src\AssemblyInfo.cs.template
 	EndProjectSection
 EndProject
 Global
