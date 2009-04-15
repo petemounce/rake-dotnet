@@ -26,13 +26,15 @@ module Rake
 					if pn.directory?
 						output = FileList.new
 						#TODO: distinguish between web and class and console output
-						output.include("#{entry}/bin/#{@configuration}/**/*")
-						output.include("#{entry}/bin/**/*")
+						output.include("#{entry}/bin/#{@configuration}/*")
+						output.include("#{entry}/bin/*")
 						output.each do |o|
 							o_pn = Pathname.new(o)
-							unless (o_pn.directory?)
-								to_pn = Pathname.new("#{@target_path}/#{o_pn.basename}")
-								cp(o, to_pn) unless to_pn.exist?
+							to_pn = Pathname.new("#{@target_path}")
+							if (o_pn.directory?)
+								cp_r(o, to_pn) unless o_pn.to_s.match(/#{@configuration}$/)
+							else 
+								cp(o, to_pn)
 							end
 						end
 					end

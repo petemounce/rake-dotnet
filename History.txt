@@ -1,7 +1,7 @@
 === 0.0.8 / 2009-?
 
 * CHANGE: Eliminate the need to pass stuff to AssemblyInfoTask when it can just use the defaults ... by default.
-* 
+* FIX: Bug with harvesting when output contains directories
 
 === 0.0.7 / 2009-04-15
 
