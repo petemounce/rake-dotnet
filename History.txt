@@ -1,4 +1,8 @@
-=== 0.0.8 / 2009-?
+=== 0.0.9 / 2009-04-
+
+* 
+
+=== 0.0.8 / 2009-04-16
 
 * CHANGE: Eliminate the need to pass stuff to AssemblyInfoTask when it can just use the defaults ... by default.
 * FIX: Bug with harvesting when output contains directories
