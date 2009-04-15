@@ -54,13 +54,17 @@ class XUnit
 	
 	def initialize(testDll, reports_dir, xunit=nil, options={})
 		@xunit = xunit || File.join(TOOLS_DIR, 'xunit', 'xunit.console.exe')
-		@testDll = testDll
-		@reports_dir = reports_dir
+		@xunit = File.expand_path(@xunit)
+		@testDll = File.expand_path(testDll)
+		@reports_dir = File.expand_path(reports_dir)
 		@options = options
 	end
 	
 	def run
-		sh cmd
+		test_dir = Pathname.new(testDll).dirname
+		chdir test_dir do
+			sh cmd
+		end
 	end
 	
 	def cmd
