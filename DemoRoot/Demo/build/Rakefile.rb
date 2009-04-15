@@ -21,7 +21,9 @@ Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly
 Rake::HarvestOutputTask.new({:deps => [:compile]})
 
 Rake::XUnitTask.new({:options=>{:html=>true,:xml=>true}, :deps=>[:compile, :harvest_output]})
-Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]})
+Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]}) do |fxc|
+	fxc.dll_list.exclude("#{@suites_dir}/**/*Tests*.dll")
+end
 Rake::NCoverTask.new({:deps=>[:compile, :harvest_output], :ncover_options=>{:arch=>'amd64'}, :ncover_reporting_options=>{:arch=>'amd64'}})
 
 demo_site = File.join(OUT_DIR, 'Demo.Site')

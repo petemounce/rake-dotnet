@@ -5,6 +5,7 @@
 * FIX: YYYYMMDD is invalid for file/assembly-version attribute; use '0' instead in non-svn source-control case.
 * FIX: Fix harvesting a web-application when it's not under svn source-control
 * CHANGE: Adjust TOOLS_DIR initialisation so it looks for a shared 3rdparty folder at the same level as the product folder first, then it looks for a 3rdparty folder inside of the product folder.
+* CHANGE: Adjust the Demo's Rakefile to make FxCop ignore assemblies with "Tests" in their filename.
 
 === 0.0.5 / 2009-04-03
 

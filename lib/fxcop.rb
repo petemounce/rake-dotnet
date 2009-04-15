@@ -1,5 +1,7 @@
 module Rake
 	class FxCopTask < TaskLib
+		attr_accessor :dll_list
+		
 		def initialize(params={})
 			@product_name = params[:product_name] || PRODUCT_NAME
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
