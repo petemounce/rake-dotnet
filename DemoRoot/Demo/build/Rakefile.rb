@@ -7,13 +7,7 @@ PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
-Rake::AssemblyInfoTask.new do |ai|
-	# TODO: Read {configuration, product, company} from Rakefile.yaml config file ?
-	ai.product_name = PRODUCT_NAME
-	ai.company_name = COMPANY
-	ai.configuration = CONFIGURATION
-	ai.version = RDNVERSION
-end
+Rake::AssemblyInfoTask.new
 
 bin_out = File.join(OUT_DIR, 'bin')
 Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly_info]})

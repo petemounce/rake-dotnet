@@ -67,19 +67,19 @@ module Rake
     end
 
     def product_name
-      @product_name ||= 'NRWS rake_dotnet'
+      @product_name ||= PRODUCT_NAME
     end
 
     def configuration
-      @configuration ||= 'Debug'
+      @configuration ||= CONFIGURATION
     end
 
     def company_name
-      @company_name ||= 'NRWS'
+      @company_name ||= COMPANY_NAME
     end
 
     def version
-      @version ||= Versioner.new.get
+      @version ||= RDNVERSION
     end
   end
 end
