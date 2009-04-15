@@ -18,11 +18,22 @@ def regexify(path)
 	path.gsub('/', '\/').gsub('.', '\.')
 end
 
+def find_tools_dir
+	shared = File.join(PRODUCT_ROOT, '..', '3rdparty')
+	owned = File.join(PRODUCT_ROOT, '3rdparty')
+	if File.exist?(shared) 
+		shared 
+	end
+	if File.exist?(owned) 
+		owned 
+	end
+end
+
 # Setting constants like this allows you to do things like 'rake compile CONFIGURATION=Release' to specify their values
 # By default, we assume that this Rakefile lives in {PRODUCT_ROOT}/build, and that this is the working directory
 PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
-SRC_DIR = File.join(PRODUCT_ROOT, 'src')
-TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : File.join(PRODUCT_ROOT, '..', '3rdparty')
+SRC_DIR = ENV['SRC_DIR'] ? ENV['SRC_DIR'] : File.join(PRODUCT_ROOT, 'src')
+TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : find_tools_dir
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
 OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
