@@ -2,6 +2,7 @@
 
 * CHANGE: Eliminate the need to pass stuff to AssemblyInfoTask when it can just use the defaults ... by default.
 * FIX: Bug with harvesting when output contains directories
+* FIX: Test-runner now executes from within the same directory as the DLL(s) containing tests that it's running through.
 
 === 0.0.7 / 2009-04-15
 
