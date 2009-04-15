@@ -1,6 +1,6 @@
 module Rake
 	class FxCopTask < TaskLib
-		attr_accessor :dll_list
+		attr_accessor :dll_list, :suites_dir
 		
 		def initialize(params={})
 			@product_name = params[:product_name] || PRODUCT_NAME

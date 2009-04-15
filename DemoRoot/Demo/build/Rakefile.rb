@@ -4,7 +4,7 @@ require 'rake/tasklib'
 require 'rake_dotnet'
 
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
-COMPANY = ENV['COMPANY'] ? ENV['COMPANY'] : 'DemoCompany'
+COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
 Rake::AssemblyInfoTask.new
@@ -16,7 +16,7 @@ Rake::HarvestOutputTask.new({:deps => [:compile]})
 
 Rake::XUnitTask.new({:options=>{:html=>true,:xml=>true}, :deps=>[:compile, :harvest_output]})
 Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]}) do |fxc|
-	fxc.dll_list.exclude("#{@suites_dir}/**/*Tests*.dll")
+	fxc.dll_list.exclude("#{fxc.suites_dir}/**/*Tests*.dll")
 end
 Rake::NCoverTask.new({:deps=>[:compile, :harvest_output], :ncover_options=>{:arch=>'amd64'}, :ncover_reporting_options=>{:arch=>'amd64'}})
 
