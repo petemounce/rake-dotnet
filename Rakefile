@@ -14,6 +14,7 @@ Hoe.new('rake-dotnet', '0.0.9') do |p|
   p.developer('Peter Mounce', 'pete@neverrunwithscissors.com')
   p.remote_rdoc_dir = ''
   p.extra_deps = ['rake']
+  p.url = 'http://blog.neverrunwithscissors.com/tag/rake-dotnet'
 end
 
 generated_library = File.join('lib','rake_dotnet.rb')
