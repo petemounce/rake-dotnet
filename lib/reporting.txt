@@ -1,0 +1,246 @@
+NCover Reporting Complete Trial v3.0.22 x64 (Administrator)
+Merging and Reporting for NCover
+Copyright (c) 2007 - 2009 Gnoso Inc.
+http://www.ncover.com
+
+Unable to continue reporting as the program was unable to load data to report on!
+Execution Time: 20 ms
+
+Arguments: NCover.Reporting.exe  
+
+NCover.Reporting [inputfiles] [options]
+Processes a set of NCover coverage xml files from the console.
+Intended for usage in automated builds.
+Options:
+ //at[appendTrend] <file name>
+    Append trend data from merged coverage files to the given file.
+
+ //bi[buildId] <string>
+    Specify the build ID of the coverage data saved with the //s argument.
+    Defaults to the build id of the first coverage file loaded
+
+ //cr[configRead] <file name>
+    Path to an alternative settings file.
+    Defaults to that used by NCoverExplorer.exe
+
+ //cs[configSave] <file name>
+    Path to save a settings file to.
+
+ //ccf
+    Clear the existing coverage filters on the view.
+
+ //cf[coveragefilter] (This switch may be used more than once)
+    Specifies a filter to run against the coverage data.
+    If not specified, filters are taked from the first
+    loaded coverage data file.
+    Format: //cf filterdata[:item type][:isRegex][:isInclude]
+
+      'filterdata' is the pattern the filter uses to match elements
+      'item type' is the type of element the filter matches
+        Possible Values: "Assembly", "Namespace", "Class", "Method", "Document" 
+      'isRegex' when true the 'filterdata' is interpreted as
+      a regular expression, when false it is interpreted as a wildcard
+      (default is false)
+      'isInclude' when true elements that don't match the filter are
+      excluded, and when true, elements that match the filter are excluded
+      (default is false)
+
+ //hi[hide] <type>
+    Specify what elements to hide if any for the report
+    None (default)
+    HideUnvisited
+    HideFullyCovered
+    HideThresholdCovered
+
+ //lt[loadTrend] <file name>
+    Load trend data for the reports from the given filename and directory.
+
+ //mfm
+    Determines how to handled the filters of a coverage file during merge operations.
+    Default or KeepSourceFilters - Keep First file filters and purge excluded nodes from other files.
+    Destructive - Remove all excluded items from all files and remove all filters.
+    AppendFilters - Keep all of the nodes and append all of the filters to the first file.
+
+ //mc  (This switch may be used more than once)
+    Fails the build if the coverage on the specified item type is
+    less than the given coverage.
+
+
+    Format:
+      //mc Coverage Metric[:Min Coverage Value][:Item Type][:Pattern]
+    Coverage Types:
+      SymbolCoverage
+      BranchCoverage
+      MethodCoverage
+      LineCoverage
+      CyclomaticComplexity
+    Item Types:
+      (default= View)
+      Module
+      Namespace
+      Class
+      Document
+    Examples:
+      Fails the build if the method coverage of any class dips below 34.5%
+      //mc MethodCoverage:34.5:Class
+
+      Fails the build if the maximum cyclomatic complexity
+      of namespace 'Ergo.Unit.Tests' is above 20
+      //mc CyclomaticComplexity:20:Namespace:Ergo.Unit.Tests
+
+ //mcsc
+    Use //mc rules for satisfactory coverage percentages as well.
+    The //mc rules will be merged with existing satisfactory coverage rules.
+
+ //op[outputPath] <path>
+    Save the report to the specified path.
+    Default is the current directory
+
+ //or[outputreport] (this switch may be used more than once)
+    Create the given report and write it to the given path. The default file
+    format is Html. If the Output Path isn't given, then it's taken from
+    the output path specified with the //op argument, and the filename
+    defaults to the name of the report type with an appropriate extension.
+    Format:
+    //or Report Type[:File Format][:Output Path] 
+
+    -- Available Report Types
+    FullCoverageReport (HTML only, //op will be interpreted as a folder)
+    Summary (HTML only)
+    UncoveredCodeSections (HTML only)
+
+    Source Code File Reports (Enterprise Only)
+      SymbolSourceCode
+        - Create a report showing coverage for source files
+      SymbolSourceCodeClass
+        - Create a Source Code and Class coverage coverage report
+      SymbolSourceCodeClassMethod
+        - Create a Source Code, Class, and Method coverage report
+      MethodSourceCode
+        - Create a report showing function coverage for source files
+      MethodSourceCodeClass
+        - Create a Source Code and Class function coverage report
+      MethodSourceCodeClassMethod
+        - Create a Source Code, Class, and Method function coverage report
+
+    Symbol and Branch Coverage Reports
+      SymbolModule
+        - Create a Module coverage report
+      SymbolModuleNamespace
+        - Create a Module and Namespace coverage report
+      SymbolModuleNamespaceClass
+        - Create a Module, Namespace and Class coverage report
+      SymbolModuleNamespaceClassMethod
+        - Create a Module, Namespace, Class and Method coverage report
+      SymbolCCModuleClassFailedCoverageTop
+        - Create a Cyclomatic Complexity Module and Class coverage report
+           showing the top items failing the build
+      SymbolCCModuleClassCoverageTop
+        - Create a Cyclomatic Complexity Module and Class coverage report
+
+    Function Coverage Reports
+      MethodModule
+        - Create a Module function coverage report
+      MethodModuleNamespace
+        - Create a Module, Namespace function coverage report
+      MethodModuleNamespaceClass
+        - Create a Module, Namespace and Class function coverage report
+      MethodModuleNamespaceClassMethod
+        - Create a Module, Namespace, Class and Method function coverage report
+      MethodCCModuleClassFailedCoverageTop
+        - Create a Cyclomatic Complexity Module and Class function coverage report
+           showing the top items failing the build
+      MethodCCModuleClassCoverageTop
+        - Create a Cyclomatic Complexity Module and Class function coverage report
+    -- Available File Formats
+    Html (default) -- Create an html format report
+    Xml -- Create an xml format report
+
+ //p[project] <project name>
+    Name of the project to appear in the report.
+
+ //rdf Assembly | Namespace | Class | Method | Document
+    Only include data for the specified types in the xml report
+    (strips extra data out)
+
+ //s[save] [file name]
+    Specify the filename for the merged coverage xml.
+    If no name defaults to CoverageMerge.xml
+
+ //sct  (This switch may be used more than once)
+    Fails satisfactory coverage if the coverage on the specified item type is
+    less than the given coverage (default //sct SequencePoints:95)
+
+
+    Format:
+      //sct Coverage Metric[:Min Coverage Value][:Item Type][:Pattern]
+    Coverage Types:
+      SymbolCoverage
+      BranchCoverage
+      MethodCoverage
+      LineCoverage
+      CyclomaticComplexity
+    Item Types:
+      (default= View)
+      Module
+      Namespace
+      Class
+      Document
+    Examples:
+      Fails satisfactory coverage if the method coverage of any class dips below 34.5%
+      //sct MethodCoverage:34.5:Class
+
+      Fails satisfactory coverage if the maximum cyclomatic complexity
+      of namespace 'Ergo.Unit.Tests' is above 20
+      //sct CyclomaticComplexity:20:Namespace:Ergo.Unit.Tests
+
+ //smf[showMaxFailed] <number>
+    Controls how many items that fail the //mc rules will
+    be displayed on the console. Default is 50.
+
+ //so[sort] <sort style>
+    Specify the sorting if any for the report (default = None)
+    Name
+    ClassLine
+    CoveragePercentageAscending
+    CoveragePercentageDescending
+    UnvisitedSequencePointsAscending
+    UnvisitedSequencePointsDescending
+    VisitCountAscending
+    VisitCountDescending
+    FunctionCoverageAscending
+    FunctionCoverageDescending
+
+ //tu[topuncovered] <integer>
+    Specify the number of uncovered items to show
+    in the top uncovered reports.
+
+ //q[quiet]
+    Minimise the console message output
+
+ //? or //help
+    Displays this help
+
+Exit Codes:
+ 0 - OK.
+ 2 - Exception.
+ 3 - Failed minimum coverage threshold check.
+
+Example 1: Producing Module xml report for CC.Net
+ncover.reporting coverage.xml //rf Xml //r SymbolModule
+
+Example 2: Producing Module html report
+ncover.reporting coverage.xml //rf Html //r SymbolModule
+
+Example 3: Producing Module Class html report for named project
+ncover.reporting coverage.xml //rf Html //op MyCoverage.html //r SymbolModuleNamespaceClassMethod //p MyApp
+
+Example 4: Merging multiple coverage files to a new file
+ncover.reporting *.coverage.xml //s merged.xml
+
+Example 5: Failing a build if minimum 80% coverage not met
+ncover.reporting coverage.xml //mc SequencePoints:80 
+
+Example 6: Reading from an external settings file
+ncover.reporting //cr MyApp.settings
+
