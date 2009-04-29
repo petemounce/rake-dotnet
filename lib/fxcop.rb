@@ -98,6 +98,7 @@ class FxCop
 	end
 
 	def run
+		if VERBOSE { puts cmd }
 		sh cmd
 	end
 end
