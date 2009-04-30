@@ -18,7 +18,7 @@ Rake::XUnitTask.new({:options=>{:html=>true,:xml=>true}, :deps=>[:compile, :harv
 Rake::FxCopTask.new({:deps=>[:compile, :harvest_output]}) do |fxc|
 	fxc.dll_list.exclude("#{fxc.suites_dir}/**/*Tests*.dll")
 end
-Rake::NCoverTask.new({:deps=>[:compile, :harvest_output], :ncover_options=>{:arch=>'amd64'}, :ncover_reporting_options=>{:arch=>'amd64'}})
+Rake::NCoverTask.new({:deps=>[:compile, :harvest_output]})
 
 demo_site = File.join(OUT_DIR, 'Demo.Site')
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})

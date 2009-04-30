@@ -5,7 +5,7 @@ module Rake
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
-			tool_defaults = {:arch => 'x86'}
+			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
 			@ncover_options = tool_defaults.merge(params[:ncover_options] || {})
 			@ncover_reporting_options = tool_defaults.merge(params[:ncover_reporting_options] || {})
 
@@ -68,7 +68,7 @@ end
 class NCover
 	def initialize(report_dir, dll_to_execute, params)
 		params ||= {}
-		arch = params[:arch] || 'x86'
+		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		@exe = params[:ncover_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.console.exe')
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
@@ -111,7 +111,7 @@ class NCoverReporting
 		@coverage_files = coverage_files || []
 
 		params ||= {}
-		arch = params[:arch] || 'x86'
+		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
 
 		# required
