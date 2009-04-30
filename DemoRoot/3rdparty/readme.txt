@@ -1,7 +1,7 @@
 I haven't committed the tools in here to my svn repository, since space is limited for me.  Here's an index:
 
 7zip - http://7-zip.org (zip/unzip)
-fxcop - http://code.msdn.microsoft.com/codeanalysis (static analysis of source)
+fxcop - http://www.pnpguidance.net/post/DownloadFxCop136NETCodeAnalysisTool.aspx (static analysis of source)
 ncover - http://www.ncover.com (code coverage analysis)
 rhino.mocks - http://www.ayende.com/projects/rhino-mocks.aspx (mocking framework for unit testing)
 svn - http://subversion.tigris.org (source control)
