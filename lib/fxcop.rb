@@ -98,9 +98,7 @@ class FxCop
 	end
 
 	def run
-		if VERBOSE 
-			puts cmd
-		end
+		puts cmd if VERBOSE
 		sh cmd
 	end
 end

@@ -23,6 +23,7 @@ class SvnExport < Svn
 	end
 	
 	def export
+		puts cmd if VERBOSE
 		sh cmd
 	end
 	
@@ -49,6 +50,7 @@ class SvnInfo < Svn
 	end
 
 	def revision
+		puts cmd if VERBOSE
 		out = `#{cmd}`
 		out.match(/Revision: (\d+)/)[1]
 	end

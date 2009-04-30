@@ -63,6 +63,7 @@ class XUnit
 	def run
 		test_dir = Pathname.new(testDll).dirname
 		chdir test_dir do
+			puts cmd if VERBOSE
 			sh cmd
 		end
 	end
