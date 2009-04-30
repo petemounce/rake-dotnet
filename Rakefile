@@ -5,7 +5,7 @@ require 'hoe'
 require 'Pathname'
 require 'rake/clean'
 
-Hoe.new('rake-dotnet', '0.0.10') do |p|
+Hoe.new('rake-dotnet', '0.0.11') do |p|
   p.author = 'Peter Mounce'
   p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
   p.email = 'pete@neverrunwithscissors.com'
