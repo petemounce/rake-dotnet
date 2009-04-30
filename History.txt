@@ -1,3 +1,7 @@
+=== 0.0.10 / 2009-04-30
+
+* SLAP: Forgot to update release notes before releasing.
+
 === 0.0.9 / 2009-04-30
 
 * NEW: If VERBOSE=true is passed on the command line, command-line calls will get echoed before they're run (otherwise, they get ellipsis'd by rake's error tracing, which doesn't let one see the arguments)

@@ -4,7 +4,7 @@
 
 ## DESCRIPTION:
 
-Rake dotnet is a library of custom tasks designed to (try to!) make your life as a build-automation author easier.
+rake-dotnet is a library of custom tasks designed to (try to!) make your life as a build-automation author easier.
 
 When have you ever heard of a build-script called anything other than a script?  msbuild and nant both try to get you to call them projects.  I'll say it up front - the idea of using XML to declaratively define the sequence of hoops one gets the computer to jump through to turn source into packaged software never sat right with me.  I looked for something better one day, and found rake.  I haven't touched msbuild or nant since, and I've been happier ;-)
 
