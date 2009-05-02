@@ -5,7 +5,7 @@ require 'hoe'
 require 'Pathname'
 require 'rake/clean'
 
-Hoe.new('rake-dotnet', '0.0.9') do |p|
+Hoe.new('rake-dotnet', '0.0.11') do |p|
   p.author = 'Peter Mounce'
   p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
   p.email = 'pete@neverrunwithscissors.com'
@@ -14,6 +14,7 @@ Hoe.new('rake-dotnet', '0.0.9') do |p|
   p.developer('Peter Mounce', 'pete@neverrunwithscissors.com')
   p.remote_rdoc_dir = ''
   p.extra_deps = ['rake']
+  p.url = 'http://blog.neverrunwithscissors.com/tag/rake-dotnet'
 end
 
 generated_library = File.join('lib','rake_dotnet.rb')

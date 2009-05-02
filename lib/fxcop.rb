@@ -39,6 +39,10 @@ module Rake
 				Rake::FileTask[@name].invoke
 			end
 			
+			task :clobber_fxcop,[:globs] do |t, args|
+				rm_rf @report_dir
+			end
+			
 			self
 		end
 		
@@ -98,6 +102,7 @@ class FxCop
 	end
 
 	def run
+		puts cmd if VERBOSE
 		sh cmd
 	end
 end

@@ -80,6 +80,7 @@ class MsBuild
 	def run
 		if @working_dir
 			chdir(@working_dir) do
+				puts cmd if VERBOSE
 				sh cmd
 			end
 		end

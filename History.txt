@@ -1,8 +1,19 @@
-=== 0.0.9 / 2009-04-
+=== 0.0.11 / 2009-04-30
 
-* 
+* FIX: Detect processor architecture from environment variable rather than require user to figure it out and pass it in.
 
-=== 0.0.8 / 2009-04-16
+=== 0.0.10 / 2009-04-30
+
+* SLAP: Forgot to update release notes before releasing.
+
+=== 0.0.9 / 2009-04-30
+
+* NEW: If VERBOSE=true is passed on the command line, command-line calls will get echoed before they're run (otherwise, they get ellipsis'd by rake's error tracing, which doesn't let one see the arguments)
+* NEW: clobber_fxcop will kill off the fxcop report in isolation
+* FIX: make get_tools_dir correctly return the path instead of just think about it.
+* FIX: Implement working-directory on ncover so it executes from the same location as the DLLs it's using a tool to profile
+
+=== 0.0.8 / 2009-?
 
 * CHANGE: Eliminate the need to pass stuff to AssemblyInfoTask when it can just use the defaults ... by default.
 * FIX: Bug with harvesting when output contains directories

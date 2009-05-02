@@ -1,12 +1,11 @@
 module Rake
 	class NCoverTask < TaskLib
 		def initialize(params={})
-		
 			@product_name = params[:product_name] || PRODUCT_NAME
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
-			tool_defaults = {:arch => 'x86'}
+			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
 			@ncover_options = tool_defaults.merge(params[:ncover_options] || {})
 			@ncover_reporting_options = tool_defaults.merge(params[:ncover_reporting_options] || {})
 
@@ -69,17 +68,18 @@ end
 class NCover
 	def initialize(report_dir, dll_to_execute, params)
 		params ||= {}
-		arch = params[:arch] || 'x86'
+		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		@exe = params[:ncover_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.console.exe')
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_dir, ofname)
 		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || '.*Tests.*'
 		@build_id = params[:build_id] || RDNVERSION
+		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
 	end
 	
 	def cmdToRun
-		x = XUnit.new(@dll_to_execute, {})
+		x = XUnit.new(@dll_to_execute, '', nil, {})
 		x.cmd
 	end
 	
@@ -87,15 +87,20 @@ class NCover
 		"//bi #{@build_id.to_s}"
 	end
 	
+	def working_dir
+		"//w #{@working_dir}"
+	end
+	
 	def eas
 		"//eas #{@exclude_assemblies_regex}"
 	end
-	
+
 	def cmd
-		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{eas} #{bi}"
+		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{eas} #{bi} #{working_dir}"
 	end
 	
 	def run
+		puts cmd if VERBOSE
 		sh cmd
 	end
 end
@@ -106,7 +111,7 @@ class NCoverReporting
 		@coverage_files = coverage_files || []
 
 		params ||= {}
-		arch = params[:arch] || 'x86'
+		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
 
 		# required
@@ -132,8 +137,8 @@ class NCoverReporting
 		"//bi #{@build_id.to_s}"
 	end
 	
-	def r
-		"//r #{@report}"
+	def output_report
+		"//or #{@report}"
 	end
 	
 	def op
@@ -145,7 +150,7 @@ class NCoverReporting
 	end
 		
 	def cmd
-		"\"#{@exe}\" #{coverage_files} #{bi} #{r} #{op} #{so}"
+		"\"#{@exe}\" #{coverage_files} #{bi} #{output_report} #{op} #{so}"
 	end
 	
 	def run

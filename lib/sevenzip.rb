@@ -14,6 +14,7 @@ class SevenZip
 	end
 	
 	def run_add
+		puts cmd_add if VERBOSE
 		sh cmd_add
 	end
 	
