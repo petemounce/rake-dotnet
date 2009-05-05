@@ -1,6 +1,6 @@
 # rake-dotnet
 
-[Rake on my blog](http://blog.neverrunwithscissors.com/tag/rake)
+[Rake on my blog](http://blog.neverrunwithscissors.com/tag/rake), [Rake-dotnet on my blog](http://blog.neverrunwithscissors.com/tag/rake-dotnet)
 
 ## DESCRIPTION:
 
@@ -8,7 +8,7 @@ rake-dotnet is a library of custom tasks designed to (try to!) make your life as
 
 When have you ever heard of a build-script called anything other than a script?  msbuild and nant both try to get you to call them projects.  I'll say it up front - the idea of using XML to declaratively define the sequence of hoops one gets the computer to jump through to turn source into packaged software never sat right with me.  I looked for something better one day, and found rake.  I haven't touched msbuild or nant since, and I've been happier ;-)
 
-rake-dotnet is a bunch of things that aim at doing the work of creating a featureful build-script, so you don't have to.  RDN likes convention-over-configuration.  RDN tries to keep the Rakefile (the part YOU have to get involved with) short, because that means you can get on with the business of making software that YOU care about.  RDN is designed to try to waste as little of your time as possible (and I'd like to know whether I succeeded, or failed, please ;-) ).
+Rake-dotnet is a bunch of things that aim at doing the work of creating a featureful build-script, so you don't have to.  RDN likes convention-over-configuration.  RDN tries to keep the Rakefile (the part YOU have to get involved with) short, because that means you can get on with the business of making software that YOU care about.  RDN is designed to try to waste as little of your time as possible (and I'd like to know whether I succeeded, or failed, please ;-) ).
 
 ## Features
 
@@ -29,7 +29,7 @@ rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 
 *	Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
 	*	InstallPad?
-	*	Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) and there is a readme.txt next-door with URLs to fetch from.
+	*	Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master) and there is a readme.txt next-door with URLs to fetch from.
 
 ## Conventions:
 
@@ -64,7 +64,7 @@ So our source structure looks like:
 					{files}
 			/OtherProduct.sln
 
-Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot)
+Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/master)
 
 ## Roadmap:
 
@@ -78,7 +78,7 @@ Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/maste
 *	unit-tests!!
 *	Support clone-detective...?
 *	unit-tests!!!
-*	Support other source-controls to get build version number - git, mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
+*	Support other source-controls to get build version number - mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
 *	unit-tests!!!!
 *	Support changing the conventions to allow users to specify their own source structure
 *	unit-tests
