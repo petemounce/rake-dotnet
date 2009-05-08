@@ -1,3 +1,9 @@
+=== 0.1.0 / 2009-05-08
+
+* NEW: Add the ability for ncover.reporting to generate more than one report at a time
+
+
+
 === 0.0.12 / 2009-05-01
 
 * FIX: Automatically create {project}/Properties directories when generating AssemblyInfo.cs files (git does not version empty directories)

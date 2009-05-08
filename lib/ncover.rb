@@ -42,8 +42,8 @@ module Rake
 				
 			end
 						
-			ncover_summary_report_html = File.join(@report_dir, 'merged.MethodSourceCodeClassMethod.coverage-report.html')
-			file ncover_summary_report_html do
+			desc "Generate ncover coverage report(s), on all coverage files, merged together"
+			task :ncover_reports => [:ncover_profile] do
 				# ncover lets us use *.coverage.xml to merge together files
 				include = [File.join(@report_dir, '*.coverage.xml')]
 				@ncover_reporting_options[:name] = 'merged'
@@ -51,10 +51,7 @@ module Rake
 				ncr.run
 			end
 			
-			desc "Generate ncover coverage summary HTML report, on all coverage files, merged together"
-			task :ncover_summary => [:ncover_profile, ncover_summary_report_html]
-			
-			task :clean_coverage do
+			task :clobber_ncover do
 				rm_rf @report_dir
 			end
 			
@@ -115,10 +112,8 @@ class NCoverReporting
 		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
 
 		# required
-		@name = params[:name] || 'CoverageReport'
-		@report = params[:report] || 'MethodSourceCodeClassMethod'
-		@format = params[:report_format] || 'html' # can be xml or html
-		@output_path = File.join(@report_dir, @name + '.' + @report + '.' + @format)
+		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections']
+		@output_path = File.join(@report_dir)
 		
 		# optional
 		@build_id = params[:build_id] || RDNVERSION
@@ -137,8 +132,12 @@ class NCoverReporting
 		"//bi #{@build_id.to_s}"
 	end
 	
-	def output_report
-		"//or #{@report}"
+	def output_reports
+		cmd = ''
+		@reports.each do |r|
+			cmd += "//or #{r} "
+		end
+		return cmd
 	end
 	
 	def op
@@ -150,7 +149,7 @@ class NCoverReporting
 	end
 		
 	def cmd
-		"\"#{@exe}\" #{coverage_files} #{bi} #{output_report} #{op} #{so}"
+		"\"#{@exe}\" #{coverage_files} #{bi} #{output_reports} #{op} #{so}"
 	end
 	
 	def run
