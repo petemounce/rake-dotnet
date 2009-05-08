@@ -11,6 +11,8 @@ module Rake
     def define
       src_dir_regex = regexify(@src_dir)
       rule(/#{src_dir_regex}\/[\w\.\d]+\/Properties\/AssemblyInfo.cs/) do |r|
+	    dir = Pathname.new(r.name).dirname
+		mkdir_p dir
         nextdoor = Pathname.new(r.name + '.template')
         common = Pathname.new(File.join(@src_dir, 'AssemblyInfo.cs.template'))
         if (nextdoor.exist?)
@@ -24,7 +26,7 @@ module Rake
       task :assembly_info do |t|
         # for each project, invoke the rule
         Dir.foreach(@src_dir) do |e|
-          asm_info = File.join(@src_dir, e, 'Properties', 'AssemblyInfo.cs')
+		  asm_info = File.join(@src_dir, e, 'Properties', 'AssemblyInfo.cs')
           if is_project e
             Rake::FileTask[asm_info].invoke
           end
