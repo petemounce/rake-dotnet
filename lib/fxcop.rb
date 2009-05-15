@@ -104,6 +104,6 @@ class FxCop
 	def run
 		puts cmd if VERBOSE
 		sh cmd
-		puts "##teamcity[importData type='FxCop' path='#{out_file}']" if ENV['BUILD_NUMBER']
+		puts "##teamcity[importData type='FxCop' path='#{File.expand_path(out_file)}']" if ENV['BUILD_NUMBER']
 	end
 end
