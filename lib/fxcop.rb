@@ -9,7 +9,7 @@ module Rake
 			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 			@dll_list = FileList.new
 			@deps = params[:deps] || []
-			@fxcop_options = {:apply_out_xsl=>true, :out_xsl=>'CodeAnalysisReport.xsl'}.merge(params[:fxcop_options] || {})
+			@fxcop_options = params[:fxcop_options] || {}
 			if @fxcop_options[:apply_out_xsl].nil? || @fxcop_options[:apply_out_xsl] == false
 				@name += '.xml' 
 			else
@@ -104,5 +104,6 @@ class FxCop
 	def run
 		puts cmd if VERBOSE
 		sh cmd
+		puts "##teamcity[importData type='FxCop' path='#{out_file}']" if ENV['BUILD_NUMBER']
 	end
 end
