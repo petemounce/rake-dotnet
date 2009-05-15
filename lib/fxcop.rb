@@ -33,9 +33,15 @@ module Rake
 				runner.run
 			end
 			
-			task :fxcop,[:globs] do |t, args|
-				args.with_defaults(:globs => "#{@suites_dir}/**/*#{@product_name}*.dll")
-				@dll_list = FileList.new(args.globs)
+			task :fxcop,[:include_globs, :exclude_globs] do |t, args|
+				args.with_defaults(:include_globs => "#{@suites_dir}/**/*#{@product_name}*.dll")
+				args.include_globs.each do |g|
+					@dll_list.include g
+				end
+				args.with_defaults(:exclude_globs => "#{@suites_dir}/*Tests*.dll")
+				args.exclude_globs.each do |g|
+					@dll_list.exclude g
+				end
 				Rake::FileTask[@name].invoke
 			end
 			
