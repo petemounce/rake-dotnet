@@ -4,8 +4,8 @@ module Rake
 	
 		def initialize(params={})
 			@configuration = params[:configuration] || CONFIGURATION
-			@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
-			@verbosity = params[:verbosity] || 'm'
+			@src_dir = params[:src_dir] || SRC_DIR
+			@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
 			

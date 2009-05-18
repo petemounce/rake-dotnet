@@ -1,6 +1,7 @@
 === 0.1.1 / 2009-05-15
 
 * NEW: Add FxCop -> TeamCity code-inspections reporting via TeamCity's service-messages feature
+* CHANGE: MsBuild; use constants rather than hard-codings for verbosity of output and source-directory
 
 === 0.1.0 / 2009-05-08
 
