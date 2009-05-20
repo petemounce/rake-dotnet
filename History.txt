@@ -1,7 +1,8 @@
-=== 0.1.1 / 2009-05-15
+=== 0.1.1 / 2009-05-
 
 * NEW: Add FxCop -> TeamCity code-inspections reporting via TeamCity's service-messages feature
 * CHANGE: MsBuild; use constants rather than hard-codings for verbosity of output and source-directory
+* FIX: If BUILD_NUMBER environment variable is not a number, use 0 (since only numbers are valid to the AssemblyFileVersion and AssemblyVersion attributes)
 
 === 0.1.0 / 2009-05-08
 
