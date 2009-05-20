@@ -9,7 +9,7 @@ module Rake
 			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 			@dll_list = FileList.new
 			@deps = params[:deps] || []
-			@fxcop_options = {:apply_out_xsl=>true, :out_xsl=>'CodeAnalysisReport.xsl'}.merge(params[:fxcop_options] || {})
+			@fxcop_options = params[:fxcop_options] || {}
 			if @fxcop_options[:apply_out_xsl].nil? || @fxcop_options[:apply_out_xsl] == false
 				@name += '.xml' 
 			else
@@ -33,9 +33,15 @@ module Rake
 				runner.run
 			end
 			
-			task :fxcop,[:globs] do |t, args|
-				args.with_defaults(:globs => "#{@suites_dir}/**/*#{@product_name}*.dll")
-				@dll_list = FileList.new(args.globs)
+			task :fxcop,[:include_globs, :exclude_globs] do |t, args|
+				args.with_defaults(:include_globs => "#{@suites_dir}/**/*#{@product_name}*.dll")
+				args.include_globs.each do |g|
+					@dll_list.include g
+				end
+				args.with_defaults(:exclude_globs => "#{@suites_dir}/*Tests*.dll")
+				args.exclude_globs.each do |g|
+					@dll_list.exclude g
+				end
 				Rake::FileTask[@name].invoke
 			end
 			
@@ -104,5 +110,6 @@ class FxCop
 	def run
 		puts cmd if VERBOSE
 		sh cmd
+		puts "##teamcity[importData type='FxCop' path='#{File.expand_path(@out_file)}']" if ENV['BUILD_NUMBER']
 	end
 end
