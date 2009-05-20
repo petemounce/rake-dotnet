@@ -1,3 +1,7 @@
+=== 0.1.2 / 2009
+
+* 
+
 === 0.1.1 / 2009-05-20
 
 * NEW: Add FxCop -> TeamCity code-inspections reporting via TeamCity's service-messages feature
