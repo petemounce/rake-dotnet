@@ -10,7 +10,9 @@ class Versioner
   end
 
   def build
-    ENV['BUILD_NUMBER'] || 0
+	bn = ENV['BUILD_NUMBER']
+	return 0 if bn == nil || !bn.match(/\d+/)
+	return bn
   end
 
   def revision
