@@ -4,7 +4,7 @@ module Rake
 			@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
 			@target_path = params[:target_path] || File.join(OUT_DIR, 'bin')
 			@deps = params[:deps] || []
-			@configuration = params[:configuration] || 'Debug'
+			@configuration = params[:configuration] || CONFIGURATION
 			@glob = params[:glob] || "#{@src_path}/*"
 			
 			yield self if block_given?
