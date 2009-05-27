@@ -112,12 +112,13 @@ class NCoverReporting
 		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
 
 		# required
-		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections']
+		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections', 'FullCoverageReport']
 		@output_path = File.join(@report_dir)
 		
 		# optional
 		@build_id = params[:build_id] || RDNVERSION
-		@so = params[:sort] || 'CoveragePercentageAscending'
+		@sort_order = params[:sort] || 'CoveragePercentageAscending'
+		@project_name = params[:project_name] || PRODUCT_NAME
 	end
 	
 	def coverage_files
@@ -128,7 +129,7 @@ class NCoverReporting
 		list
 	end
 	
-	def bi
+	def build_id
 		"//bi #{@build_id.to_s}"
 	end
 	
@@ -140,16 +141,20 @@ class NCoverReporting
 		return cmd
 	end
 	
-	def op
+	def output_path
 		"//op \"#{@output_path}\""
 	end
 	
-	def so
-		"//so #{@so}"
+	def sort_order
+		"//so #{@sort_order}"
+	end
+	
+	def project_name
+		"//p #{@project_name}" unless @project_name.nil?
 	end
 		
 	def cmd
-		"\"#{@exe}\" #{coverage_files} #{bi} #{output_reports} #{op} #{so}"
+		"\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name}"
 	end
 	
 	def run
