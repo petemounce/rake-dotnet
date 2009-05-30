@@ -58,9 +58,21 @@ How?
 	* Wrap other command line tools and call them
 		Example: how_4_console_tool_wrap/Rakefile.rb
 		rake 
+	
+	* rule-based tasks
+		Example: how_5_rules/Rakefile.rb
+		rake
+			builds default
+		rake clean
+		rake foo.a
+			builds foo.a via *.a rule
+		rake bar.a
+			builds bar.a via *.a rule
+		rake anything.b
+			builds anything.b via regex rule
 		
 	* Demo custom rake task
-		Example: how_5_xunit/Rakefile.rb
+		Example: how_6_xunit/Rakefile.rb
 		rake -T
 			observe, documentation for the tasks decorated with desc
 		rake
