@@ -42,18 +42,23 @@ How?
 		Example: how_2_parameters/Rakefile.rb
 		rake CONFIGURATION=Release
 			runs clean, then build, passing in 'Release' as a parameter
-		
-	* Wrap other command line tools and call them
-		Example: how_3_console_tool_wrap/Rakefile.rb
-		rake 
 	
-	* Demo clean/clobber
-		Example: how_4_clean/Rakefile.rb
+	* Demo dependencies and clean/clobber
+		Example: how_3_dependencies_and_clean/Rakefile.rb
 		rake default clean --trace
 			build then call clean; deletes the intermediate files but not the output files
 		rake default clobber --trace
 			build then call clobber; deletes the intermediate files AND the output files - idea is to bring us back to fresh-checkout state
+		rake VERBOSE=true
+		rake clean uber.end_result
+			see that since foo.intermediate is new, dependencies are rebuilt
+		del uber.end_result; rake uber.end_result
+			see that only uber.end_result is run because dependencies are up-to-date
 	
+	* Wrap other command line tools and call them
+		Example: how_4_console_tool_wrap/Rakefile.rb
+		rake 
+		
 	* Demo custom rake task
 		Example: how_5_xunit/Rakefile.rb
 		rake -T
