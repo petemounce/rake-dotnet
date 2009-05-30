@@ -91,7 +91,18 @@ How?
 		Conventions:
 			README.markdown -> conventions
 
-TeamCity
+TeamCity (this is a simple setup that doesn't attempt to parallelise work among the agents in the build cloud)
 	* Install TC
 	* Install JetBrains git-plugin
-	
+	* New project
+	* New config
+		General settings:
+			artifacts
+				build/out/reports/**/*
+				build/out/pkg/*.zip
+		VCS settings:
+		Runner settings:
+			type: Rake
+			path to rakefile: build/Rakefile.rb
+			working directory: build
+			tasks: clobber assembly_info compile harvest_output xunit harvest_webapps package
