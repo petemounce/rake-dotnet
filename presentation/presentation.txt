@@ -71,21 +71,27 @@ How?
 		rake anything.b
 			builds anything.b via regex rule
 		
-	* Demo custom rake task
-		Example: how_6_xunit/Rakefile.rb
+	* Demo custom rake tasks
+		Example: how_6_custom_tasks/Rakefile.rb
 		rake -T
 			observe, documentation for the tasks decorated with desc
-		rake
-			build and run some tests
-		make a test break
-			build and see broken test
+		rake :foo
+			foo task is run
+		rake :bar
+			bar task is run, with the non-default param pushed in by the block when initialised
+		rake :baz
+			baz task is run, with the non-default param pushed in by the attr_accessor after initialised
+			point out that if you had a standardised build-script, would need to store the task in a constant so it's visible outside of the scope of the common file, if specific projects needed to set properties in this manner
 	
 	* Make it by-conventional
 		gem install rake-dotnet (need internet connection)
 		Example: ../DemoRoot
 		rake
+			observe what happens out of the box; compare to length of rakefile vs msbuild project to do same
 		Conventions:
-			
+			README.markdown -> conventions
 
 TeamCity
-	*
+	* Install TC
+	* Install JetBrains git-plugin
+	
