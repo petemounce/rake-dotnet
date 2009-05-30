@@ -1,0 +1,74 @@
+Presentation
+
+Why?
+	* Who here has written a build script in msbuild or nant?
+		* How many lines of code was it?
+		* How many times did you need to write a custom task?
+		* How many times was it possible for a colleague to modify it without you helping?
+	* I wrote first msbuild project 3 years ago
+		* Painful to maintain
+			* Never remembered the syntax for the collection types
+			* Always had to re-learn how to use it
+		* No-one else wanted to learn it to be able to change it
+			* I'm the only one able to change it - and it hurts
+
+What?
+	* rake is "Ruby make"
+	* make is a build tool; one deals with tasks, and files, and dependencies between the two
+		* Example - compile a set of .o file from a .c file with a cc command
+		* Example - create a zip file of the output for deployment
+		* Example - find out whether a service is running, and if not; start it
+		* Example - compile a .NET dll from a c# project file with an msbuild command
+	* Ruby is a dynamic scripting language
+		* When have you ever called a build script anything but a "script"?  XML/declarative-approach is the wrong abstraction to apply for a build script
+
+How?
+	* Install steps:
+		* Install ruby - one-click installer to c:\ruby (might even work with IronRuby; haven't tried)
+		* gem install rake
+		* (optional) gem install rake-dotnet
+	* Simplistic - wrap msbuild and call it to build the solution
+		Example: how_1_msbuild/Rakefile.rb
+		rake
+			runs clean, then build
+		rake clean
+			runs clean
+		rake clean build
+			runs clean, then build
+		rake clean build --trace
+			ditto with more output
+		
+	* Supply some parameters from the command-line
+		Example: how_2_parameters/Rakefile.rb
+		rake CONFIGURATION=Release
+			runs clean, then build, passing in 'Release' as a parameter
+		
+	* Wrap other command line tools and call them
+		Example: how_3_console_tool_wrap/Rakefile.rb
+		rake 
+	
+	* Demo clean/clobber
+		Example: how_4_clean/Rakefile.rb
+		rake default clean --trace
+			build then call clean; deletes the intermediate files but not the output files
+		rake default clobber --trace
+			build then call clobber; deletes the intermediate files AND the output files - idea is to bring us back to fresh-checkout state
+	
+	* Demo custom rake task
+		Example: how_5_xunit/Rakefile.rb
+		rake -T
+			observe, documentation for the tasks decorated with desc
+		rake
+			build and run some tests
+		make a test break
+			build and see broken test
+	
+	* Make it by-conventional
+		gem install rake-dotnet (need internet connection)
+		Example: ../DemoRoot
+		rake
+		Conventions:
+			
+
+TeamCity
+	*

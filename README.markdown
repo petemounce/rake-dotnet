@@ -29,7 +29,7 @@ Rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 
 *	Relies on a whole bunch of third-party tools and libraries which are too big to distribute within the gem or host myself.  So users need to fetch these before they can get up and running.  So think of a way to make this more frictionless...
 	*	InstallPad?
-	*	Currently, the directories for each tool are created within [{github}/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master) and there is a readme.txt next-door with URLs to fetch from.
+	*	Currently, the directories for each tool are created within [{github}/presentation/DemoRoot/3rdparty](http://github.com/petemounce/rake-dotnet/tree/master) and there is a readme.txt next-door with URLs to fetch from.
 
 ## Conventions:
 
@@ -64,7 +64,7 @@ So our source structure looks like:
 					{files}
 			/OtherProduct.sln
 
-Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/master)
+Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/master)
 
 ## Roadmap:
 
@@ -93,9 +93,9 @@ Example: [{github}/DemoRoot](http://github.com/petemounce/rake-dotnet/tree/maste
 
 1. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 2. Create a directory to hold 3rdparty dependencies
-	* if you mirror [{github}/DemoRoot/3rdparty/](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty) you'll get default paths that rake-dotnet expects
+	* if you follow the instructions in  [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/) you'll get default paths that rake-dotnet expects
 	* if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
-3. Fetch the 3rdparty dependencies listed in [{github}/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/DemoRoot/3rdparty/readme.txt)
+3. Fetch the 3rdparty dependencies listed in [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/)
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## License:
