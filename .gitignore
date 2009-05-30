@@ -3,13 +3,16 @@ lib/rake_dotnet.rb
 pkg/
 
 # Demo / .NET stuff
-DemoRoot/Demo/*/*/bin/
-DemoRoot/Demo/*/*/obj/
-DemoRoot/Demo/_ReSharper.Demo/
+presentation/DemoRoot/Demo/*/*/bin/
+presentation/DemoRoot/Demo/*/*/obj/
+presentation/DemoRoot/Demo/_ReSharper.Demo/
 *.suo
 *.resharper.user
 *proj.user
 AssemblyInfo.cs
 
 # Stuff I don't want to shove into the git repository by accident
-DemoRoot/3rdparty/*/
+presentation/DemoRoot/3rdparty/*/
+*.intermediate
+*.end_result
+*.cache
