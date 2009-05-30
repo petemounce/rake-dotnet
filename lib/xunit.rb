@@ -50,18 +50,18 @@ module Rake
 end
 
 class XUnit
-	attr_accessor :xunit, :testDll, :reports_dir, :options
+	attr_accessor :xunit, :test_dll, :reports_dir, :options
 	
-	def initialize(testDll, reports_dir, xunit=nil, options={})
+	def initialize(test_dll, reports_dir, xunit=nil, options={})
 		@xunit = xunit || File.join(TOOLS_DIR, 'xunit', 'xunit.console.exe')
 		@xunit = File.expand_path(@xunit)
-		@testDll = File.expand_path(testDll)
+		@test_dll = File.expand_path(test_dll)
 		@reports_dir = File.expand_path(reports_dir)
 		@options = options
 	end
 	
 	def run
-		test_dir = Pathname.new(testDll).dirname
+		test_dir = Pathname.new(test_dll).dirname
 		chdir test_dir do
 			puts cmd if VERBOSE
 			sh cmd
@@ -69,7 +69,7 @@ class XUnit
 	end
 	
 	def cmd
-		cmd = "#{exe} #{testDll} #{html} #{xml} #{nunit} #{wait} #{noshadow} #{teamcity}"
+		cmd = "#{exe} #{test_dll} #{html} #{xml} #{nunit} #{wait} #{noshadow} #{teamcity}"
 	end
 	
 	def exe
@@ -77,11 +77,11 @@ class XUnit
 	end
 	
 	def suite
-		@testDll.match(/.*\/([\w\.]+)\.dll/)[1]
+		@test_dll.match(/.*\/([\w\.]+)\.dll/)[1]
 	end
 	
-	def testDll
-		"\"#{@testDll}\""
+	def test_dll
+		"\"#{@test_dll}\""
 	end
 	
 	def html
