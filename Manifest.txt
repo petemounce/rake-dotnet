@@ -2,6 +2,6 @@ History.txt
 Manifest.txt
 README.markdown
 README.txt
-Rakefile
+Rakefile.rb
 lib/rake_dotnet.rb
 test/test_rake_dotnet.rb
