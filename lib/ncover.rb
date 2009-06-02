@@ -58,8 +58,6 @@ module Rake
 			
 			self
 		end
-		
-		self
 	end
 end
 
