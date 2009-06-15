@@ -1,13 +1,14 @@
 module Rake
 	class NCoverTask < TaskLib
+		attr_accessor :profile_options, :reporting_options
 		def initialize(params={})
 			@product_name = params[:product_name] || PRODUCT_NAME
 			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
 			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
-			@ncover_options = tool_defaults.merge(params[:ncover_options] || {})
-			@ncover_reporting_options = tool_defaults.merge(params[:ncover_reporting_options] || {})
+			@profile_options = tool_defaults.merge(params[:profile_options] || {})
+			@reporting_options = tool_defaults.merge(params[:reporting_options] || {})
 
 			yield self if block_given?
 			define
@@ -23,7 +24,7 @@ module Rake
 			reports_dir_regex = regexify(@report_dir)
 			rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 				dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
-				nc = NCover.new(@report_dir, dll_to_execute, @ncover_options)
+				nc = NCover.new(@report_dir, dll_to_execute, @profile_options)
 				nc.run
 			end
 			
@@ -46,8 +47,8 @@ module Rake
 			task :ncover_reports => [:ncover_profile] do
 				# ncover lets us use *.coverage.xml to merge together files
 				include = [File.join(@report_dir, '*.coverage.xml')]
-				@ncover_reporting_options[:name] = 'merged'
-				ncr = NCoverReporting.new(@report_dir, include, @ncover_reporting_options)
+				@reporting_options[:name] = 'merged'
+				ncr = NCoverReporting.new(@report_dir, include, @reporting_options)
 				ncr.run
 			end
 			
@@ -57,8 +58,6 @@ module Rake
 			
 			self
 		end
-		
-		self
 	end
 end
 
@@ -70,7 +69,8 @@ class NCover
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_dir, ofname)
-		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || '.*Tests.*'
+		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
+		@exclude_assemblies_regex.push('ISymWrapper')
 		@build_id = params[:build_id] || RDNVERSION
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
 	end
@@ -88,12 +88,15 @@ class NCover
 		"//w #{@working_dir}"
 	end
 	
-	def eas
-		"//eas #{@exclude_assemblies_regex}"
+	def exclude_assemblies
+		if @exclude_assemblies_regex.instance_of?(Array)
+			return '//eas ' + @exclude_assemblies_regex.join(';')
+		end
+		return '//eas ' + @exclude_assemblies_regex if @exclude_assemblies_regex.instance_of?(String)
 	end
 
 	def cmd
-		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{eas} #{bi} #{working_dir}"
+		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{exclude_assemblies} #{bi} #{working_dir}"
 	end
 	
 	def run

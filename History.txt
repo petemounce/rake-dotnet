@@ -1,6 +1,8 @@
 === 0.1.2 / 2009
 
-* NEW: Generate the full-coverage report from NCover
+* NEW: NCover: Generate the full-coverage report
+* FIX: NCover: Exclude-assemblies can be an array
+* CHANGE: NCover: Ignore ISymWrapper assembly by default; seems to be an NCover artefact
 
 === 0.1.1 / 2009-05-20
 
