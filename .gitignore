@@ -10,6 +10,7 @@ presentation/DemoRoot/Demo/_ReSharper.Demo/
 *.resharper.user
 *proj.user
 AssemblyInfo.cs
+out/
 
 # Stuff I don't want to shove into the git repository by accident
 presentation/DemoRoot/3rdparty/*/
