@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
-    <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Default.aspx.cs">
@@ -65,6 +64,9 @@
       <Project>{B654C7BE-FA9D-433E-81F1-58A9CEE2118C}</Project>
       <Name>Demo</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Web.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\..\..\3rdparty\msbuild\Microsoft.WebApplication.targets" />

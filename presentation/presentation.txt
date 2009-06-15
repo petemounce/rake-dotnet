@@ -1,10 +1,87 @@
-Presentation
-
 Why?
-	* Who here has written a build script in msbuild or nant?
-		* How many lines of code was it?
+	* Who here has written a build script?
+		* Who has needed to?
+		* Who has wanted to?
+
+		
+		
+		
+		
+
+
+		
+		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	* Did you use msbuild or nant?
+		* How many lines of XML was it?
 		* How many times did you need to write a custom task?
 		* How many times was it possible for a colleague to modify it without you helping?
+
+
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		
 	* I wrote first msbuild project 3 years ago
 		* Painful to maintain
 			* Never remembered the syntax for the collection types
@@ -12,6 +89,45 @@ Why?
 		* No-one else wanted to learn it to be able to change it
 			* I'm the only one able to change it - and it hurts
 
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 What?
 	* rake is "Ruby make"
 	* make is a build tool; one deals with tasks, and files, and dependencies between the two
@@ -22,11 +138,93 @@ What?
 	* Ruby is a dynamic scripting language
 		* When have you ever called a build script anything but a "script"?  XML/declarative-approach is the wrong abstraction to apply for a build script
 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 How?
 	* Install steps:
 		* Install ruby - one-click installer to c:\ruby (might even work with IronRuby; haven't tried)
 		* gem install rake
 		* (optional) gem install rake-dotnet
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	* Simplistic - wrap msbuild and call it to build the solution
 		Example: how_1_msbuild/Rakefile.rb
 		rake
@@ -37,12 +235,85 @@ How?
 			runs clean, then build
 		rake clean build --trace
 			ditto with more output
-		
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 	* Supply some parameters from the command-line
 		Example: how_2_parameters/Rakefile.rb
 		rake CONFIGURATION=Release
 			runs clean, then build, passing in 'Release' as a parameter
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
 	* Demo dependencies and clean/clobber
 		Example: how_3_dependencies_and_clean/Rakefile.rb
 		rake default clean --trace
@@ -54,11 +325,94 @@ How?
 			see that since foo.intermediate is new, dependencies are rebuilt
 		del uber.end_result; rake uber.end_result
 			see that only uber.end_result is run because dependencies are up-to-date
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
 	* Wrap other command line tools and call them
 		Example: how_4_console_tool_wrap/Rakefile.rb
 		rake 
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		
 	* rule-based tasks
 		Example: how_5_rules/Rakefile.rb
 		rake
@@ -70,7 +424,48 @@ How?
 			builds bar.a via *.a rule
 		rake anything.b
 			builds anything.b via regex rule
-		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
 	* Demo custom rake tasks
 		Example: how_6_custom_tasks/Rakefile.rb
 		rake -T
@@ -82,7 +477,48 @@ How?
 		rake :baz
 			baz task is run, with the non-default param pushed in by the attr_accessor after initialised
 			point out that if you had a standardised build-script, would need to store the task in a constant so it's visible outside of the scope of the common file, if specific projects needed to set properties in this manner
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
 	* Make it by-conventional
 		gem install rake-dotnet (need internet connection)
 		Example: ../DemoRoot
@@ -91,6 +527,52 @@ How?
 		Conventions:
 			README.markdown -> conventions
 
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+Links:
+	* msbuild-based featureful build-script  http://dotnet.org.za/cjlotz/archive/2007/04/04/part-1-continuous-integration-using-msbuild-cruisecontrol-net-fxcop-nunit-ncover-subversion.aspx
+	* ruby - http://www.ruby-lang.org/
+		* C# developer's guide to ruby - http://www.codethinked.com/post/2008/07/21/Learning-Ruby-via-IronRuby-and-C-Part-1.aspx
+	* rake - http://rake.rubyforge.org/
+	* rake-dotnet - http://github.com/petemounce/rake-dotnet + http://blog.neverrunwithscissors.com/tag/rake-dotnet
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 TeamCity (this is a simple setup that doesn't attempt to parallelise work among the agents in the build cloud)
 	* Install TC
 	* Install JetBrains git-plugin
