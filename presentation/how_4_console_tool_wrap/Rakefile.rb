@@ -16,7 +16,7 @@ CLOBBER.include('../DemoRoot/Demo/**/obj')
 CLOBBER.include('*.html')
 
 task :build do
-	sh "#{msbuild} /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
+	sh "#{msbuild} /v:m /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
 end
 
 report_dir = File.join('out')

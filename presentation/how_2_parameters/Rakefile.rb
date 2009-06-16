@@ -10,11 +10,11 @@ task :echo do
 end
 
 task :clean do
-	sh "#{msbuild} /t:Clean /p:Configuration=#{CONFIGURATION} #{solution}"
+	sh "#{msbuild} /v:m /t:Clean /p:Configuration=#{CONFIGURATION} #{solution}"
 end
 
 task :build do
-	sh "#{msbuild} /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
+	sh "#{msbuild} /v:m /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
 end
 
-task :default => [:clean, :build]
+task :default => [:clean, :build, :echo]
