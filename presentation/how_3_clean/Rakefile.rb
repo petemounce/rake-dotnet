@@ -40,7 +40,7 @@ CLOBBER.include('../DemoRoot/Demo/**/bin')
 CLOBBER.include('../DemoRoot/Demo/**/obj')
 
 task :build => [uber] do
-	sh "#{msbuild} /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
+	sh "#{msbuild} /v:m /t:Build /p:Configuration=#{CONFIGURATION} #{solution}"
 end
 
 task :default => [:build]

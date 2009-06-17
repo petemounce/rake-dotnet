@@ -1,3 +1,62 @@
+Peter Mounce
+	Homepage: 
+		http://neverrunwithscissors.com
+		http://www.onalytica.com
+		
+rake-dotnet:
+	source - http://github.com/petemounce/rake-dotnet
+	"documentation" - http://blog.neverrunwithscissors.com/tag/rake-dotnet
+	example teamcity - http://teamcity.codebetter.com -> IncludeCombiner
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Why?
 	* Who here has written a build script?
 		* Who has needed to?
@@ -182,8 +241,9 @@ What?
 How?
 	* Install steps:
 		* Install ruby - one-click installer to c:\ruby (might even work with IronRuby; haven't tried)
-		* gem install rake
-		* (optional) gem install rake-dotnet
+		* From a command-line:
+			* gem update rake
+			* (optional) gem install rake-dotnet
 	
 	
 	
