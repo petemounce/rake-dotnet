@@ -3,6 +3,7 @@ module Rake
 		attr_accessor :src_dir, :verbosity, :working_dir
 	
 		def initialize(params={})
+			#TODO: Support for arbitrary properties, not just configuration.  For example, TreatWarningsAsErrors, WarningLevel.
 			@configuration = params[:configuration] || CONFIGURATION
 			@src_dir = params[:src_dir] || SRC_DIR
 			@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
