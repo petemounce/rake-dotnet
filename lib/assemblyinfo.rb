@@ -22,14 +22,23 @@ module Rake
         end
       end
 
+      rule(/#{src_dir_regex}\/[\w\.\d]+\/My Project\/AssemblyInfo.vb/) do |r|
+	    dir = Pathname.new(r.name).dirname
+		mkdir_p dir
+        nextdoor = Pathname.new(r.name + '.template')
+        common = Pathname.new(File.join(@src_dir, 'AssemblyInfo.vb.template'))
+        if (nextdoor.exist?)
+          generate(nextdoor, r.name)
+        elsif (common.exist?)
+          generate(common, r.name)
+        end
+      end
+
       desc 'Generate the AssemblyInfo.cs file from the template closest'
       task :assembly_info do |t|
-        # for each project, invoke the rule
-        Dir.foreach(@src_dir) do |e|
-		  asm_info = File.join(@src_dir, e, 'Properties', 'AssemblyInfo.cs')
-          if is_project e
-            Rake::FileTask[asm_info].invoke
-          end
+        Pathname.new(@src_dir).entries.each do |e|
+          asm_info = asm_info_to_generate(e)
+		  Rake::FileTask[asm_info].invoke unless asm_info.nil?
         end
       end
 
@@ -46,16 +55,24 @@ module Rake
       of.open('w') { |f| f.puts content }
     end
 
-    def is_project entry
-      if (entry == '.' || entry == '..' || entry == '.svn')
-        return false
+    def asm_info_to_generate pn_entry
+      if (pn_entry == '.' || pn_entry == '..' || pn_entry == '.svn')
+        return nil
       end
-      if (entry == 'AssemblyInfo.cs.template')
-        return false
+      if (pn_entry == 'AssemblyInfo.cs.template' || pn_entry == 'AssemblyInfo.vb.template')
+        return nil
       end
-      #puts "#{entry} is directory? #{File.directory?(entry)}"
-      #return File.directory?(entry)
-      return true
+
+      proj = FileList.new("#{@src_dir}/#{pn_entry}/*.*proj").first
+      return nil if proj.nil?
+
+      proj_ext = Pathname.new(proj).extname
+      path = case proj_ext
+        when '.csproj' then File.join(@src_dir, pn_entry, 'Properties', 'AssemblyInfo.cs')
+        when '.vbproj' then File.join(@src_dir, pn_entry, 'My Project', 'AssemblyInfo.vb')
+        else nil
+      end
+      return path
     end
 
     def token_replacements

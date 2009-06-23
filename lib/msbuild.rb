@@ -9,6 +9,7 @@ module Rake
 			@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
+            @buildable_projects = ['.csproj','.vbproj','.wixproj']
 			
 			yield self if block_given?
 			define
@@ -19,7 +20,7 @@ module Rake
 			rule(/#{src_dir_regex}\/[\w\.]+\/bin\/#{@configuration}\/[\w\.]+\.(?:dll|exe)/) do |r|
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
-				project = File.join(@src_dir, name, name + '.csproj')
+				project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
 				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
 			end
@@ -28,7 +29,7 @@ module Rake
 			rule(/#{src_dir_regex}\/[\w\.]+\/bin\/[\w\.]+\.dll/) do |r|
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
-				project = File.join(@src_dir, name, name + '.csproj')
+				project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
 				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
 				mb.run
 			end
@@ -41,7 +42,7 @@ module Rake
 					pn = Pathname.new(p)
 					# TODO: Figure out which type of project we are so we can invoke the correct rule, with the correct output extension
 					dll = File.join(pn.dirname, 'bin', @configuration, pn.basename.sub(pn.extname, '.dll'))
-					Rake::FileTask[dll].invoke
+                    Rake::FileTask[dll].invoke if @buildable_projects.include?(pn.extname)
 				end
 			end
 
@@ -50,7 +51,7 @@ module Rake
 			end
 			
 			self
-		end
+        end
 		
 		def src_dir_regex
 			regexify(@src_dir)

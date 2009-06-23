@@ -1,3 +1,8 @@
+=== 0.1.3 / 2009-06-23
+
+* NEW: MSBuild - support for building VB.NET and WiX projects
+* NEW: AssemblyInfo - support for generating AssemblyInfo.vb into {project}/My Project/ (which I hope is the by-convention place)
+
 === 0.1.2 / 2009
 
 * NEW: NCover: Generate the full-coverage report
