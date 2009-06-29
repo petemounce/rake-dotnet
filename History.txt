@@ -1,3 +1,7 @@
+=== 0.1.5 / 2009-
+
+* NEW: RDNPackageTask generates a named task per package so they can be built individually
+
 === 0.1.4 / 2009-06-23
 
 * FIX: FxCop - support for running against .exe files instead of just DLLs.  Exclude *.vshost.exe by default

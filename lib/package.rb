@@ -51,6 +51,9 @@ module Rake
 			desc "Generate zip'd packages for all package-tasks"
 			task :package => [@out_dir, pkg, pkg_root, package_file]
 			
+			desc "Generate zip'd package for #{@name}"
+			task "package_#{@name}".to_sym => [@out_dir, pkg, pkg_root, package_file]
+			
 			desc "Delete all packages"
 			task :clobber_package do
 				rm_rf pkg
