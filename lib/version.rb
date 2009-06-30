@@ -12,12 +12,11 @@ class Versioner
 
   def build
 	fl = FileList.new("#{@bin_out}*")
-	bn = 0
 	if ENV['TEAMCITY_BUILDCONF_NAME']
 		# use a previous binaries-build if one exists
 		fl.each do |e|
-			if (e.test(regexify(@bin_out)))
-				bn = e.match(/\w+-v\d+\.\d+\.(\d+)\.\d+\//)[1]
+			if (e.to_s.test(regexify(@bin_out)))
+				bn = e.to_s.match(/\w+-v\d+\.\d+\.(\d+)\.\d+\//)[1]
 				return bn
 			end
 		end
