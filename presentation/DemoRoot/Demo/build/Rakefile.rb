@@ -7,19 +7,20 @@ PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
 RDNVERSION = Versioner.new.get
 
-bin_out = File.join(OUT_DIR, 'bin')
-demo_site = File.join(OUT_DIR, 'Demo.Site')
+bin_out = File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{RDNVERSION}")
+demo_site = File.join(OUT_DIR, "Demo.Site-#{CONFIGURATION}-v#{RDNVERSION}")
 
 Rake::AssemblyInfoTask.new
 Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly_info]})
 Rake::XUnitTask.new({:options=>{:html=>true}})
 Rake::HarvestOutputTask.new({:deps => [:compile]})
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
-Rake::RDNPackageTask.new(name='bin', version=RDNVERSION, {:deps=>[:harvest_output, :xunit]}) do |p|
-	p.targets.include("#{bin_out}/*")
+Rake::RDNPackageTask.new(name='bin', version=RDNVERSION, {:deps=>[:compile, :harvest_output, :xunit]}) do |p|
+	p.targets.include("#{bin_out}")
 end
-Rake::RDNPackageTask.new(name='Demo.Site', version=RDNVERSION, {:deps=>[:harvest_webapps, :xunit]}) do |p|
-	p.targets.include("#{demo_site}/*")
+Rake::RDNPackageTask.new(name='Demo.Site', version=RDNVERSION, {:deps=>[:compile, :harvest_webapps, :xunit]}) do |p|
+	p.targets.include("#{demo_site}")
+	p.targets.exclude("#{demo_site}**/obj")
 end
 
 Rake::FxCopTask.new do |fxc|

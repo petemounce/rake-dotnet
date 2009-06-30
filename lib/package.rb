@@ -40,8 +40,8 @@ module Rake
 					end
 				end
 				snipped = pkg_root.sub(pkg + '/', '')
-				chdir pkg do
-					sz = SevenZip.new('../../'+package_file, snipped, {:sevenzip=>File.join('..','..',TOOLS_DIR, '7zip', 'x86', '7za.exe')})
+				sz = SevenZip.new(package_file)
+				chdir pkg_root do
 					sz.run_add
 				end
 			end

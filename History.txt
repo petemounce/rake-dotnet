@@ -1,6 +1,10 @@
 === 0.1.5 / 2009-
 
-* NEW: RDNPackageTask generates a named task per package so they can be built individually
+* NEW: RDNPackageTask - generate a named task per package so they can be built individually
+* NEW: SevenZip - wrapper for extracting an archive
+* CHANGE: SevenZip - wrapper is more useful ;-)
+* CHANGE: Harvesters - harvest dumps output into a config-version named directory now
+(adjusted demo-project to match)
 
 === 0.1.4 / 2009-06-23
 
