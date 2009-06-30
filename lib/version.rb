@@ -13,13 +13,8 @@ class Versioner
   def build
 	fl = FileList.new("#{@bin_out}*")
 	if ENV['TEAMCITY_BUILDCONF_NAME']
-		# use a previous binaries-build if one exists
-		fl.each do |e|
-			if (e.to_s.test(regexify(@bin_out)))
-				bn = e.to_s.match(/\w+-v\d+\.\d+\.(\d+)\.\d+\//)[1]
-				return bn
-			end
-		end
+		pb = get_from_previous_binaries('.*-v\d+\.\d+\.(\d+)\.\d+')
+		return pb unless pb.nil?# use a previous binaries-build if one exists
 		# otherwise use the current environment variable
 		bn = ENV['BUILD_NUMBER']
 	end
@@ -29,10 +24,26 @@ class Versioner
 
   def revision
     if (Pathname.new('.svn').exist?)
-      SvnInfo.new(:path => '.').revision
+		if ENV['TEAMCITY_BUILDCONF_NAME']
+			pb = get_from_previous_binaries('.*-v\d+\.\d+\.\d+\.(\d+)')
+			return pb unless pb.nil?
+		end
+		return SvnInfo.new(:path => '.').revision
     else
-      '0' # YYYYMMDD is actually invalid for a {revision} number.
+		return '0' # YYYYMMDD is actually invalid for a {revision} number.
     end
+  end
+  
+  def get_from_previous_binaries(regex)
+	fl = FileList.new("#{@bin_out}*")
+	fl.each do |e|
+		re = regexify(@bin_out)
+		unless e.match(/#{re}/).nil?
+			matches = e.match(/#{regex}/)
+			return matches[1] unless matches.nil?
+		end
+	end
+	return nil
   end
 end
 
