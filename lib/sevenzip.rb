@@ -19,7 +19,7 @@ class SevenZip
 	end
 	
 	def cmd_extract
-		"#{exe} e -y #{out_dir} #{archive_name} #{file_names}"
+		"#{exe} x -y #{out_dir} #{archive_name} #{file_names}"
 	end
 	
 	def run_extract
@@ -28,7 +28,8 @@ class SevenZip
 	end
 	
 	def out_dir
-		"-o #{@params[:out_dir]}" unless @params[:out_dir].nil?
+		od = @params[:out_dir]
+		"-o#{File.expand_path(od)}" unless @params[:out_dir].nil?
 	end
 	
 	def archive_name
