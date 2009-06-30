@@ -11,7 +11,7 @@ class Versioner
   end
 
   def build
-	fl = FileList.new("#{bin_out}*")
+	fl = FileList.new("#{@bin_out}*")
 	bn = 0
 	if ENV['TEAMCITY_BUILDCONF_NAME']
 		# use a previous binaries-build if one exists
