@@ -1,4 +1,4 @@
-=== 0.1.5 / 2009-
+=== 0.1.5 / 2009-06-30
 
 * NEW: RDNPackageTask - generate a named task per package so they can be built individually
 * NEW: SevenZip - wrapper for extracting an archive
