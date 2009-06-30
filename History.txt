@@ -1,3 +1,7 @@
+=== 0.1.7 / 2009-06-30
+
+(Messed up release)
+
 === 0.1.6 / 2009-06-30
 
 * FIX: Initialise bin_dir to correct defaults
