@@ -1,3 +1,7 @@
+=== 0.1.6 / 2009-06-30
+
+* FIX: Initialise bin_dir to correct defaults
+
 === 0.1.5 / 2009-06-30
 
 * NEW: RDNPackageTask - generate a named task per package so they can be built individually

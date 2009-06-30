@@ -3,7 +3,7 @@ module Rake
 		attr_accessor :profile_options, :reporting_options
 		def initialize(params={})
 			@product_name = params[:product_name] || PRODUCT_NAME
-			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
+			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{RDNVERSION}")
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
 			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}

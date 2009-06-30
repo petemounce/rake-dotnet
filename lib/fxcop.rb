@@ -6,7 +6,7 @@ module Rake
 			@product_name = params[:product_name] || PRODUCT_NAME
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
 			@name = params[:name] || File.join(@report_dir, @product_name + '.fxcop')
-			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
+			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{RDNVERSION}")
 			@dll_list = FileList.new
 			@deps = params[:deps] || []
 			@fxcop_options = params[:fxcop_options] || {}
