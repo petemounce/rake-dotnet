@@ -10,6 +10,7 @@ module Rake
 			@working_dir = params[:working_dir] || '.'
 			@deps = params[:deps] || []
             @buildable_projects = ['.csproj','.vbproj','.wixproj']
+            @properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
 			
 			yield self if block_given?
 			define
@@ -21,7 +22,7 @@ module Rake
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
 				project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
+				mb = MsBuild.new(project, @properties, ['Build'], verbosity, @working_dir)
 				mb.run
 			end
 			
@@ -30,7 +31,7 @@ module Rake
 				pn = Pathname.new(r.name)
 				name = pn.basename.to_s.sub('.dll', '')
 				project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-				mb = MsBuild.new(project, {:Configuration => @configuration}, ['Build'], verbosity, @working_dir)
+				mb = MsBuild.new(project, @properties, ['Build'], verbosity, @working_dir)
 				mb.run
 			end
 
@@ -76,7 +77,7 @@ class MsBuild
 	end
 	
 	def cmd
-		"#{@exe} #{project} /maxcpucount /v:#{@verbosity} /property:BuildInParallel=true /p:#{properties} /t:#{targets}"
+		"#{@exe} #{project} /maxcpucount /v:#{@verbosity} /p:#{properties} /t:#{targets}"
 	end
 	
 	def run

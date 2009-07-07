@@ -1,3 +1,8 @@
+=== 0.1.9 / 2009-07-07
+
+NEW: MsBuild: Can now take arbitrary properties list
+NEW: MsBuild: Default to treating warnings as errors, as stringently as possible
+
 === 0.1.8 / 2009-06-30
 
 FIX: When TeamCity build-configs are out-of-sync, number-wise, we cannot rely on RDNVERSION to be a sensible default.
