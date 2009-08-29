@@ -45,6 +45,7 @@ CLEAN.include("#{SRC_DIR}/**/obj")
 CLEAN.include("#{SRC_DIR}/**/bin")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.vb")
+CLEAN.include('version.txt')
 CLOBBER.include(OUT_DIR)
 
 VERBOSE = ENV['VERBOSE'] ? ENV['VERBOSE'] : false

@@ -1,3 +1,7 @@
+=== 0.1.12 / 2009-08-29
+
+FIX: Versioner: Cache the version number to a file, so CI can pull/push it and maintain same version number throughout CI pipeline stages
+
 === 0.1.9 / 2009-07-07
 
 NEW: MsBuild: Can now take arbitrary properties list

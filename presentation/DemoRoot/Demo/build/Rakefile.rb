@@ -5,7 +5,6 @@ require 'rake_dotnet'
 
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
-RDNVERSION = Versioner.new.get
 
 bin_out = File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{RDNVERSION}")
 demo_site = File.join(OUT_DIR, "Demo.Site-#{CONFIGURATION}-v#{RDNVERSION}")
