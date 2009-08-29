@@ -14,6 +14,7 @@ out/
 
 # Stuff I don't want to shove into the git repository by accident
 presentation/DemoRoot/3rdparty/*/
+presentation/*/*.[ab]
 *.intermediate
 *.end_result
 *.cache
