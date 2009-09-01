@@ -10,7 +10,6 @@ class Versioner
 	
 	v = "#{maj_min}.#{build}.#{revision}"
 	@vf.open('w') {|f| f.write(v) }
-	
 	return v
   end
 
@@ -35,4 +34,8 @@ class Versioner
 end
 
 RDNVERSION = Versioner.new.get
-
+Version_txt = 'version.txt'
+file Version_txt do
+	Versioner.new.get
+end
+task :assembly_info => Version_txt
