@@ -1,3 +1,7 @@
+=== 0.1.13 / 2009-09-01
+
+FIX: Versioner: Need to make the version.txt file a file-task, so assembly_info can depend on it.
+
 === 0.1.12 / 2009-08-29
 
 FIX: Versioner: Cache the version number to a file, so CI can pull/push it and maintain same version number throughout CI pipeline stages
