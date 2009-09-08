@@ -1,3 +1,8 @@
+=== 0.1.14 / 2009-09-08
+
+FIX: Versioner: Replace the RDNVERSION constant with calls to Versioner.new.get
+CHANGE: Added version task for convenience
+
 === 0.1.13 / 2009-09-01
 
 FIX: Versioner: Need to make the version.txt file a file-task, so assembly_info can depend on it.

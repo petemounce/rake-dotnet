@@ -3,7 +3,7 @@ module Rake
 		attr_accessor :suites_dir, :reports_dir, :options
 
 		def initialize(params={}) # :yield: self
-			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{RDNVERSION}")
+			@suites_dir = params[:suites_dir] || File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{Versioner.new.get}")
 			@reports_dir = params[:reports_dir] || File.join(OUT_DIR, 'reports')
 			@options = params[:options] || {}
 			@deps = params[:deps] || []

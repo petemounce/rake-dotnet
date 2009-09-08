@@ -33,9 +33,9 @@ class Versioner
   end
 end
 
-RDNVERSION = Versioner.new.get
 Version_txt = 'version.txt'
 file Version_txt do
 	Versioner.new.get
 end
+task :version => Version_txt
 task :assembly_info => Version_txt

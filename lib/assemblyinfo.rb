@@ -98,7 +98,7 @@ module Rake
     end
 
     def version
-      @version ||= RDNVERSION
+      @version ||= Versioner.new.get
     end
   end
 end

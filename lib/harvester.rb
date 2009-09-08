@@ -4,7 +4,7 @@ module Rake
 			@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
 			@deps = params[:deps] || []
 			@configuration = params[:configuration] || CONFIGURATION
-			@version = params[:version] || RDNVERSION
+			@version = params[:version] || Versioner.new.get
 			@target_path = params[:target_path] || File.join(OUT_DIR, "bin-#{@configuration}-v#{@version}")
 			@glob = params[:glob] || "#{@src_path}/*"
 			
@@ -56,7 +56,7 @@ module Rake
 			@target_path = params[:target_path] || OUT_DIR
 			@deps = params[:deps] || []
 			@configuration = params[:configuration] || CONFIGURATION
-			@version = params[:version] || RDNVERSION
+			@version = params[:version] || Versioner.new.get
 			@glob = params[:glob] || "**/*.Site"
 			
 			yield self if block_given?
