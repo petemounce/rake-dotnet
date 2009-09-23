@@ -1,3 +1,7 @@
+=== 0.1.15 / 2009-09-23
+
+CHANGE: Xunit.NET - cope with v1.5 release which packages an x86 console runner as well as x64 one, in combination with wanting to run x86 one if it exists because of WatiN seeming to not be happy running under x64.
+
 === 0.1.14 / 2009-09-08
 
 FIX: Versioner: Replace the RDNVERSION constant with calls to Versioner.new.get
