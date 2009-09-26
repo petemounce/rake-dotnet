@@ -2,9 +2,8 @@ module Rake
 	class RDNPackageTask < TaskLib
 		attr_accessor :targets
 	
-		def initialize(name, version, params={})
+		def initialize(name, params={})
 			@name = name
-			@version = version
 			@out_dir = params[:out_dir] || OUT_DIR
 			@deps = params[:deps] || []
 			@configuration = params[:configuration] || CONFIGURATION
@@ -17,10 +16,10 @@ module Rake
 		
 		def define
 			pkg = File.join(@out_dir, 'pkg')
-			pkg_root = renamed(File.join(pkg, @name))
+			pkg_root = File.join(pkg, @name)
 			
-			directory pkg
-			directory pkg_root
+			directory pkg # out/pkg
+			directory pkg_root # out/pkg/bin
 			
 			package_file = pkg_root + '.zip'
 			package_file_regex = regexify(package_file)
@@ -30,7 +29,19 @@ module Rake
 				task :package => d
 			end
 			
-			rule(/#{package_file_regex}/) do |r|
+			pkg_root_regex = regexify(pkg_root)
+			rule(/#{pkg_root_regex}\.zip/) do |r|
+				run_package
+			end
+			
+			rule(/#{pkg_root_regex}-#{@configuration}\.zip/) do |r|
+				run_package
+			end
+			rule(/#{pkg_root_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
+				run_package
+			end
+			
+			def run_package(configuration, version)
 				@targets.each do |t|
 					f = Pathname.new(t)
 					if f.directory?
@@ -65,10 +76,6 @@ module Rake
 			task :repackage => [:clobber_package, :package]
 			
 			self
-		end
-		
-		def renamed(target)
-			"#{target}-#{@configuration}-v#{@version}"
 		end
 	end
 end

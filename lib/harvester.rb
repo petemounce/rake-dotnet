@@ -4,8 +4,6 @@ module Rake
 			@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
 			@deps = params[:deps] || []
 			@configuration = params[:configuration] || CONFIGURATION
-			@version = params[:version] || Versioner.new.get
-			@target_path = params[:target_path] || File.join(OUT_DIR, "bin-#{@configuration}-v#{@version}")
 			@glob = params[:glob] || "#{@src_path}/*"
 			
 			yield self if block_given?
@@ -56,7 +54,6 @@ module Rake
 			@target_path = params[:target_path] || OUT_DIR
 			@deps = params[:deps] || []
 			@configuration = params[:configuration] || CONFIGURATION
-			@version = params[:version] || Versioner.new.get
 			@glob = params[:glob] || "**/*.Site"
 			
 			yield self if block_given?
@@ -66,19 +63,13 @@ module Rake
 		def define
 			out_dir_regex = regexify(@target_path)
 			
-			# config/version included
-			versioned_regex = /#{out_dir_regex}\/([\w\.-_ ]*Site)-\w+-v\d+\.\d+\.\d+\.\d+\//
-			rule(versioned_regex) do |r|
-				harvest(r.name, versioned_regex)
-			end
-						
 			desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
 			task :harvest_webapps,[:web_app_list] => @target_path do |t, args|
 				list = FileList.new("#{@src_path}/#{@glob}")
 				args.with_defaults(:web_app_list => list)
 				args.web_app_list.each do |w| 
 					pn = Pathname.new(w)
-					out = File.join(@target_path, "#{pn.basename}-#{@configuration}-v#{@version}") + '/'
+					out = File.join(@target_path, pn.basename) + '/'
 					Rake::FileTask[out].invoke
 				end
 			end

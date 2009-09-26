@@ -6,18 +6,18 @@ require 'rake_dotnet'
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
 
-bin_out = File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{Versioner.new.get}")
-demo_site = File.join(OUT_DIR, "Demo.Site-#{CONFIGURATION}-v#{Versioner.new.get}")
+bin_out = File.join(OUT_DIR, "bin")
+demo_site = File.join(OUT_DIR, "Demo.Site")
 
 Rake::AssemblyInfoTask.new
 Rake::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly_info]})
 Rake::XUnitTask.new({:options=>{:html=>true}})
 Rake::HarvestOutputTask.new({:deps => [:compile]})
 Rake::HarvestWebApplicationTask.new({:deps=>[:compile]})
-Rake::RDNPackageTask.new(name='bin', version=Versioner.new.get, {:deps=>[:compile, :harvest_output, :xunit]}) do |p|
+Rake::RDNPackageTask.new(name='bin', {:deps=>[:compile, :harvest_output, :xunit]}) do |p|
 	p.targets.include("#{bin_out}")
 end
-Rake::RDNPackageTask.new(name='Demo.Site', version=Versioner.new.get, {:deps=>[:compile, :harvest_webapps, :xunit]}) do |p|
+Rake::RDNPackageTask.new(name='Demo.Site', {:deps=>[:compile, :harvest_webapps, :xunit]}) do |p|
 	p.targets.include("#{demo_site}")
 	p.targets.exclude("#{demo_site}**/obj")
 end

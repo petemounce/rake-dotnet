@@ -1,0 +1,17 @@
+1st build of smoke
+	Version_txt = File.join(OUT_DIR, 'version.txt')
+	file Version_txt do
+		create version.txt based on version.txt.template + BUILD_NUMBER + revision
+	end
+	task :version => Version_txt
+	task :assembly_info => Version_txt
+
+1st build of post-smoke
+	teamcity fetches version.txt -> OUT_DIR
+	teamcity fetches bin-config-version.zip -> OUT_DIR
+	unzip into OUT_DIR
+	read version from contents...?
+	proceed
+
+2nd build of smoke
+	clobber Version_txt etc

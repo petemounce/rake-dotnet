@@ -3,7 +3,7 @@ module Rake
 		attr_accessor :profile_options, :reporting_options
 		def initialize(params={})
 			@product_name = params[:product_name] || PRODUCT_NAME
-			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, "bin-#{CONFIGURATION}-v#{Versioner.new.get}")
+			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
 			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 			@deps = params[:deps] || []
 			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
@@ -71,7 +71,6 @@ class NCover
 		@output_file = File.join(report_dir, ofname)
 		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
 		@exclude_assemblies_regex.push('ISymWrapper')
-		@build_id = params[:build_id] || Versioner.new.get
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
 	end
 	
@@ -81,7 +80,7 @@ class NCover
 	end
 	
 	def bi
-		"//bi #{@build_id.to_s}"
+		"//bi #{Versioner.new.get.to_s}"
 	end
 	
 	def working_dir
@@ -119,7 +118,6 @@ class NCoverReporting
 		@output_path = File.join(@report_dir)
 		
 		# optional
-		@build_id = params[:build_id] || Versioner.new.get
 		@sort_order = params[:sort] || 'CoveragePercentageAscending'
 		@project_name = params[:project_name] || PRODUCT_NAME
 	end
@@ -133,7 +131,7 @@ class NCoverReporting
 	end
 	
 	def build_id
-		"//bi #{@build_id.to_s}"
+		"//bi #{Versioner.new.get.to_s}"
 	end
 	
 	def output_reports
