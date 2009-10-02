@@ -1,63 +1,61 @@
-module Rake
-	class NCoverTask < TaskLib
-		attr_accessor :profile_options, :reporting_options
-		def initialize(params={})
-			@product_name = params[:product_name] || PRODUCT_NAME
-			@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
-			@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
-			@deps = params[:deps] || []
-			tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
-			@profile_options = tool_defaults.merge(params[:profile_options] || {})
-			@reporting_options = tool_defaults.merge(params[:reporting_options] || {})
+class NCoverTask < TaskLib
+	attr_accessor :profile_options, :reporting_options
+	def initialize(params={})
+		@product_name = params[:product_name] || PRODUCT_NAME
+		@bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
+		@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
+		@deps = params[:deps] || []
+		tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
+		@profile_options = tool_defaults.merge(params[:profile_options] || {})
+		@reporting_options = tool_defaults.merge(params[:reporting_options] || {})
 
-			yield self if block_given?
-			define
+		yield self if block_given?
+		define
+	end
+	
+	def define
+		@deps.each do |d|
+			task :ncover_profile => d
 		end
 		
-		def define
-			@deps.each do |d|
-				task :ncover_profile => d
-			end
-			
-			directory @report_dir
-			
-			reports_dir_regex = regexify(@report_dir)
-			rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
-				dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
-				nc = NCover.new(@report_dir, dll_to_execute, @profile_options)
-				nc.run
-			end
-			
-			desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
-			task :ncover_profile,[:dlls_to_run] => [@report_dir] do |t, args|
-				dlls_to_run_list = FileList.new
-				dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.dll")
-				dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.exe")
-				args.with_defaults(:dlls_to_run => dlls_to_run_list)
-				args.dlls_to_run.each do |d|
-					dll_to_run = Pathname.new(d)
-					cf_name = dll_to_run.basename.sub(dll_to_run.extname, '.coverage.xml')
-					coverage_file = File.join(@report_dir, cf_name)
-					Rake::FileTask[coverage_file].invoke
-				end
-				
-			end
-						
-			desc "Generate ncover coverage report(s), on all coverage files, merged together"
-			task :ncover_reports => [:ncover_profile] do
-				# ncover lets us use *.coverage.xml to merge together files
-				include = [File.join(@report_dir, '*.coverage.xml')]
-				@reporting_options[:name] = 'merged'
-				ncr = NCoverReporting.new(@report_dir, include, @reporting_options)
-				ncr.run
-			end
-			
-			task :clobber_ncover do
-				rm_rf @report_dir
-			end
-			
-			self
+		directory @report_dir
+		
+		reports_dir_regex = regexify(@report_dir)
+		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
+			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
+			nc = NCover.new(@report_dir, dll_to_execute, @profile_options)
+			nc.run
 		end
+		
+		desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
+		task :ncover_profile,[:dlls_to_run] => [@report_dir] do |t, args|
+			dlls_to_run_list = FileList.new
+			dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.dll")
+			dlls_to_run_list.include("#{@bin_dir}/**/*#{@product_name}*Tests*.exe")
+			args.with_defaults(:dlls_to_run => dlls_to_run_list)
+			args.dlls_to_run.each do |d|
+				dll_to_run = Pathname.new(d)
+				cf_name = dll_to_run.basename.sub(dll_to_run.extname, '.coverage.xml')
+				coverage_file = File.join(@report_dir, cf_name)
+				Rake::FileTask[coverage_file].invoke
+			end
+			
+		end
+					
+		desc "Generate ncover coverage report(s), on all coverage files, merged together"
+		task :ncover_reports => [:ncover_profile] do
+			# ncover lets us use *.coverage.xml to merge together files
+			include = [File.join(@report_dir, '*.coverage.xml')]
+			@reporting_options[:name] = 'merged'
+			ncr = NCoverReporting.new(@report_dir, include, @reporting_options)
+			ncr.run
+		end
+		
+		task :clobber_ncover do
+			rm_rf @report_dir
+		end
+		
+		self
 	end
 end
 

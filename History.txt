@@ -1,3 +1,17 @@
+=== 0.1.16 / 2009-10-04
+
+BREAKING CHANGE: Moved all classes that were in the Rake module, into the RakeDotNet module.  So, change your Rakefile from (eg)
+
+`Rake::AssemblyInfoTask.new
+
+to
+
+`RakeDotNet:AssemblyInfoTask.new
+
+CHANGE: Made it the RDNPackageTask's responsibility to name directories and packages with the configuration & version information, if configured to.  This means that intermediate-build-output is put into directories without this information in the naming.
+NEW: sqlcmd.exe wrapper
+
+
 === 0.1.15 / 2009-09-23
 
 CHANGE: Xunit.NET - cope with v1.5 release which packages an x86 console runner as well as x64 one, in combination with wanting to run x86 one if it exists because of WatiN seeming to not be happy running under x64.

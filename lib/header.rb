@@ -34,3 +34,5 @@ require 'rake'
 require 'rake/tasklib'
 require 'rake/clean'
 require 'pathname'
+
+module RakeDotNet
