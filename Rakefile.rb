@@ -21,7 +21,7 @@ generated_library = File.join('lib','rake_dotnet.rb')
 CLOBBER.include generated_library
 file generated_library do |f|
 	text = ''
-	files = ['header.rb','defaults.rb','cli.rb','sqlcmd.rb','assemblyinfo.rb','fxcop.rb','harvester.rb','msbuild.rb','ncover.rb','package.rb','sevenzip.rb','svn.rb','version.rb','xunit.rb','footer.rb']
+	files = ['header.rb','defaults.rb','cli.rb','bcpcmd.rb','sqlcmd.rb','assemblyinfo.rb','fxcop.rb','harvester.rb','msbuild.rb','ncover.rb','package.rb','sevenzip.rb','svn.rb','version.rb','xunit.rb','footer.rb']
 	gl = File.open(generated_library, 'a')
 	files.each do |file|
 		text = File.read(File.join('lib', file))
