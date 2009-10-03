@@ -1,4 +1,4 @@
-class MsBuildTask < TaskLib
+class MsBuildTask < Rake::TaskLib
 	attr_accessor :src_dir, :verbosity, :working_dir
 
 	def initialize(params={})
@@ -54,7 +54,7 @@ class MsBuildTask < TaskLib
 	end
 	
 	def src_dir_regex
-		regexify(@src_dir)
+		RakeDotNet::regexify(@src_dir)
 	end
 	
 	def figure_out_project_type(project_pathname)

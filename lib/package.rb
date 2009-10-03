@@ -1,4 +1,4 @@
-class RDNPackageTask < TaskLib
+class RDNPackageTask < Rake::TaskLib
 	attr_accessor :targets
 
 	def initialize(name, params={})
@@ -21,14 +21,14 @@ class RDNPackageTask < TaskLib
 		directory pkg_root # out/pkg/bin
 		
 		package_file = pkg_root + '.zip'
-		package_file_regex = regexify(package_file)
+		package_file_regex = RakeDotNet::regexify(package_file)
 		
 		@deps.each do |d|
 			file package_file => d
 			task :package => d
 		end
 		
-		pkg_root_regex = regexify(pkg_root)
+		pkg_root_regex = RakeDotNet::regexify(pkg_root)
 		rule(/#{pkg_root_regex}\.zip/) do |r|
 			run_package
 		end

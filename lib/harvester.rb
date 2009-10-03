@@ -1,6 +1,7 @@
-class HarvestOutputTask < TaskLib
+class HarvestOutputTask < Rake::TaskLib
 	def initialize(params={})
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
+		@target_path = params[:target_path] || File.join(OUT_DIR, 'bin')
 		@deps = params[:deps] || []
 		@configuration = params[:configuration] || CONFIGURATION
 		@glob = params[:glob] || "#{@src_path}/*"
@@ -47,7 +48,7 @@ class HarvestOutputTask < TaskLib
 	end
 end
 
-class HarvestWebApplicationTask < TaskLib
+class HarvestWebApplicationTask < Rake::TaskLib
 	def initialize(params={})
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
 		@target_path = params[:target_path] || OUT_DIR
@@ -60,7 +61,7 @@ class HarvestWebApplicationTask < TaskLib
 	end
 	
 	def define
-		out_dir_regex = regexify(@target_path)
+		out_dir_regex = RakeDotNet::regexify(@target_path)
 		
 		desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
 		task :harvest_webapps,[:web_app_list] => @target_path do |t, args|

@@ -8,7 +8,7 @@ class AssemblyInfoTask < Rake::TaskLib
 	end
 
 	def define
-		src_dir_regex = regexify(@src_dir)
+		src_dir_regex = RakeDotNet::regexify(@src_dir)
 		rule(/#{src_dir_regex}\/[\w\.\d]+\/Properties\/AssemblyInfo.cs/) do |r|
 			dir = Pathname.new(r.name).dirname
 			mkdir_p dir

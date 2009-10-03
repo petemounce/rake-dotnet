@@ -1,4 +1,4 @@
-class FxCopTask < TaskLib
+class FxCopTask < Rake::TaskLib
 	attr_accessor :dll_list, :suites_dir
 	
 	def initialize(params={})

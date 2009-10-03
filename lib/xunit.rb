@@ -1,4 +1,4 @@
-class XUnitTask < TaskLib
+class XUnitTask < Rake::TaskLib
 	attr_accessor :suites_dir, :reports_dir, :options
 
 	def initialize(params={}) # :yield: self

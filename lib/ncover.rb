@@ -1,4 +1,4 @@
-class NCoverTask < TaskLib
+class NCoverTask < Rake::TaskLib
 	attr_accessor :profile_options, :reporting_options
 	def initialize(params={})
 		@product_name = params[:product_name] || PRODUCT_NAME
@@ -20,7 +20,7 @@ class NCoverTask < TaskLib
 		
 		directory @report_dir
 		
-		reports_dir_regex = regexify(@report_dir)
+		reports_dir_regex = RakeDotNet::regexify(@report_dir)
 		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
 			nc = NCover.new(@report_dir, dll_to_execute, @profile_options)
