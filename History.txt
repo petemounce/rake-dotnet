@@ -9,7 +9,8 @@ to
 `RakeDotNet:AssemblyInfoTask.new
 
 CHANGE: Made it the RDNPackageTask's responsibility to name directories and packages with the configuration & version information, if configured to.  This means that intermediate-build-output is put into directories without this information in the naming.
-NEW: sqlcmd.exe wrapper
+NEW: sqlcmd.exe wrapper (SQL client tools' execute-sql-command from command-line)
+NEW: bcp.exe wrapper (SQL client tools' bulk copy)
 
 
 === 0.1.15 / 2009-09-23

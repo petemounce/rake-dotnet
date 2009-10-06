@@ -1,5 +1,5 @@
 class BcpCmd < Cli
-	attr_accessor :keep_identity_values, :wide_character_type, :field_terminator, :native_type
+	attr_accessor :keep_identity_values, :keep_null_values, :wide_character_type, :field_terminator, :native_type
 	attr_accessor :direction, :database, :table, :schema, :file
 	
 	def initialize(params={})
@@ -22,7 +22,7 @@ class BcpCmd < Cli
 	
 	def credentials
 		if @trusted
-			return '-E'
+			return '-T'
 		else
 			return "-U#{@user} -P#{@password}"
 		end
@@ -32,7 +32,7 @@ class BcpCmd < Cli
 		return "-S#{@server}"
 	end
 	
-	def dir
+	def direction
 		return @direction.to_s
 	end
 	
@@ -41,11 +41,15 @@ class BcpCmd < Cli
 	end
 	
 	def path
-		return File.expand_path(@file).gsub('/','\\')
+		return '"' + File.expand_path(@file).gsub('/','\\') + '"'
 	end
 	
 	def keep_identity_values
 		return '-E' unless @keep_identity_values.nil?
+	end
+	
+	def keep_null_values
+		return '-k' unless @keep_null_values.nil?
 	end
 	
 	def wide_character_type
@@ -56,14 +60,20 @@ class BcpCmd < Cli
 		return "-t '#{@field_terminator}'" unless @field_terminator.nil?
 	end
 	
+	def native_type
+		return '-n' unless @native_type.nil?
+	end
+	
 	def cmd
-		return "#{exe} #{db_object} #{dir} #{path} #{server} #{credentials} #{keep_identity_values} #{wide_character_type} #{field_terminator}"
+		return "#{exe} #{db_object} #{direction} #{path} #{server} #{credentials} #{keep_identity_values} #{keep_null_values} #{wide_character_type} #{field_terminator} #{native_type}"
 	end
 	
 	def revert_optionals
 		@keep_identity_values = nil
+		@keep_null_values = nil
 		@wide_character_type = nil
 		@field_terminator = nil
+		@native_type = nil
 		@direction = nil
 	end
 	
