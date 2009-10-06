@@ -2,6 +2,7 @@ class Cli
 	attr_accessor :exe, :search_paths
 	
 	def initialize(params={})
+		@exe = params[:exe] || nil
 		@exe_name = params[:exe_name] #required for inferring path
 		
 		# guessable / defaultable
@@ -10,6 +11,9 @@ class Cli
 	end
 	
 	def exe
+		unless @exe.nil?
+			@exe = '"' + @exe + '"' unless @exe[0] == '"'
+		end
 		return @exe unless @exe.nil?
 		
 		@exe = "\"#{search_for_exe}\""
