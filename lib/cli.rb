@@ -1,5 +1,5 @@
 class Cli
-	attr_accessor :exe
+	attr_accessor :exe, :search_paths
 	
 	def initialize(params={})
 		@exe_name = params[:exe_name] #required for inferring path
@@ -19,18 +19,11 @@ class Cli
 	
 	def search_for_exe
 		@search_paths.each do |sp|
-			puts 'sp: ' +sp.to_s
 			if sp.nil?
 				return @exe_name #because we add bare exe as last element in array
 			else
-				path = File.join(sp, @exe_name).to_s
-				puts 'path: ' + path
-				exists = File.exist? path
-				puts "checking #{path}, got #{exists.to_s}"
-				if exists
-					puts 'returning '+ File.expand_path(path)
-					return File.expand_path(path)
-				end
+				path = File.join(sp, @exe_name)
+				return File.expand_path(path) if File.exist? path
 			end
 		end
 	end
