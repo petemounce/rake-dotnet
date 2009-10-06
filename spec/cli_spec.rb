@@ -29,13 +29,13 @@ describe Cli do
 		cli.exe.should include('support/cli/foo.exe')
 	end
 	it "should return fully qualified path to exe at first find when search-path is tried and exe is found" do
-		cli = Cli.new({:exe_name => 'foo.exe', :search_paths=>['support/cli/bar','support/cli']})
+		cli = Cli.new({:exe_name => 'foo.exe', :search_paths=>['support/cli/bar', 'support/cli']})
 		here = File.expand_path(File.dirname(__FILE__))
 		cli.exe.should match(/#{here}.*/)
 		cli.exe.should include('support/cli/bar/foo.exe')
 	end
 	it "should return fq path to exe at first find, skipping non-finds" do
-		cli = Cli.new({:exe_name => 'foo.exe', :search_paths=>['support/cli/notexist','support/cli']})
+		cli = Cli.new({:exe_name => 'foo.exe', :search_paths=>['support/cli/notexist', 'support/cli']})
 		here = File.expand_path(File.dirname(__FILE__))
 		cli.exe.should match(/#{here}.*/)
 		cli.exe.should include('support/cli/foo.exe')

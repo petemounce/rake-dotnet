@@ -1,6 +1,6 @@
 class FxCopTask < Rake::TaskLib
 	attr_accessor :dll_list, :suites_dir
-	
+
 	def initialize(params={})
 		@product_name = params[:product_name] || PRODUCT_NAME
 		@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports')
@@ -10,29 +10,29 @@ class FxCopTask < Rake::TaskLib
 		@deps = params[:deps] || []
 		@fxcop_options = params[:fxcop_options] || {}
 		if @fxcop_options[:apply_out_xsl].nil? || @fxcop_options[:apply_out_xsl] == false
-			@name += '.xml' 
+			@name += '.xml'
 		else
 			@name += '.html'
 		end
 		@fxcop_options[:out_file] = @name if @fxcop_options[:out_file].nil?
-		
+
 		yield self if block_given?
 		define
 	end
-	
+
 	def define
 		@deps.each do |d|
 			task :fxcop => d
 		end
-		
+
 		directory @report_dir
 
 		file @name => [@report_dir] do |f|
 			runner = FxCop.new(@dll_list, @fxcop_options)
 			runner.run
 		end
-		
-		task :fxcop,[:include_globs, :exclude_globs] do |t, args|
+
+		task :fxcop, [:include_globs, :exclude_globs] do |t, args|
 			args.with_defaults(:include_globs => ["#{@suites_dir}/**/*#{@product_name}*.dll", "#{@suites_dir}/**/*#{@product_name}*.exe"])
 			args.include_globs.each do |g|
 				@dll_list.include g
@@ -43,14 +43,14 @@ class FxCopTask < Rake::TaskLib
 			end
 			Rake::FileTask[@name].invoke
 		end
-		
-		task :clobber_fxcop,[:globs] do |t, args|
+
+		task :clobber_fxcop, [:globs] do |t, args|
 			rm_rf @report_dir
 		end
-		
+
 		self
 	end
-	
+
 	self
 end
 
@@ -73,10 +73,10 @@ class FxCop
 		@summary = params[:summary]
 		@verbose = params[:verbose]
 		@xsl_echo_to_console = params[:xsl_echo_to_console]
-		
+
 		yield self if block_given?
 	end
-	
+
 	def console
 		'/console' if @echo_to_console || @out_file.nil?
 	end
@@ -100,7 +100,7 @@ class FxCop
 	def apply_out_xsl
 		"/applyoutxsl" if @apply_out_xsl
 	end
-	
+
 	def cmd
 		"\"#{@exe}\" #{files_to_analyse} #{console} #{out_file} #{out_xsl} #{apply_out_xsl}"
 	end

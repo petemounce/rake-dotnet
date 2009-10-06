@@ -3,7 +3,7 @@ require 'rake'
 CONFIGURATION = ENV['CONFIGURATION'] || 'Debug'
 
 msbuild = File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe')
-solution = File.join('..','DemoRoot','Demo','Demo.sln')
+solution = File.join('..', 'DemoRoot', 'Demo', 'Demo.sln')
 
 task :echo do
 	puts CONFIGURATION

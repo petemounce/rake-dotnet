@@ -8,38 +8,38 @@ class RDNPackageTask < Rake::TaskLib
 		@configuration = params[:configuration] || CONFIGURATION
 		globs = params[:globs] || []
 		@targets = FileList.new globs
-		
+
 		yield self if block_given?
 		define
 	end
-	
+
 	def define
 		pkg = File.join(@out_dir, 'pkg')
 		pkg_root = File.join(pkg, @name)
-		
+
 		directory pkg # out/pkg
 		directory pkg_root # out/pkg/bin
-		
+
 		package_file = pkg_root + '.zip'
 		package_file_regex = RakeDotNet::regexify(package_file)
-		
+
 		@deps.each do |d|
 			file package_file => d
 			task :package => d
 		end
-		
+
 		pkg_root_regex = RakeDotNet::regexify(pkg_root)
 		rule(/#{pkg_root_regex}\.zip/) do |r|
 			run_package
 		end
-		
+
 		rule(/#{pkg_root_regex}-#{@configuration}\.zip/) do |r|
 			run_package
 		end
 		rule(/#{pkg_root_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
 			run_package
 		end
-		
+
 		def run_package(configuration, version)
 			@targets.each do |t|
 				f = Pathname.new(t)
@@ -55,25 +55,25 @@ class RDNPackageTask < Rake::TaskLib
 				sz.run_add
 			end
 		end
-		
+
 		directory @out_dir
-		
+
 		desc "Generate zip'd packages for all package-tasks"
 		task :package => [@out_dir, pkg, pkg_root, package_file]
-		
+
 		desc "Generate zip'd package for #{@name}"
 		task "package_#{@name}".to_sym => [@out_dir, pkg, pkg_root, package_file]
-		
+
 		desc "Delete all packages"
 		task :clobber_package do
 			rm_rf pkg
 		end
-		
+
 		task :clobber => :clobber_package
-		
+
 		desc "Delete all packages and recreate them"
 		task :repackage => [:clobber_package, :package]
-		
+
 		self
 	end
 end

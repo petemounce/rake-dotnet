@@ -7,7 +7,7 @@ VERBOSE = ENV['VERBOSE'] || false
 verbose(VERBOSE)
 
 msbuild = File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe')
-solution = File.join('..','DemoRoot','Demo','Demo.sln')
+solution = File.join('..', 'DemoRoot', 'Demo', 'Demo.sln')
 
 foo = 'foo.intermediate'
 bar = 'bar.end_result'

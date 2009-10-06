@@ -8,13 +8,13 @@ class MsBuildTask < Rake::TaskLib
 		@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 		@working_dir = params[:working_dir] || '.'
 		@deps = params[:deps] || []
-		@buildable_projects = ['.csproj','.vbproj','.wixproj']
+		@buildable_projects = ['.csproj', '.vbproj', '.wixproj']
 		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
-		
+
 		yield self if block_given?
 		define
 	end
-	
+
 	def define
 		# most project types put output into bin/{configuration}
 		rule(/#{src_dir_regex}\/[\w\.]+\/bin\/#{@configuration}\/[\w\.]+\.(?:dll|exe)/) do |r|
@@ -24,7 +24,7 @@ class MsBuildTask < Rake::TaskLib
 			mb = MsBuild.new(project, @properties, ['Build'], verbosity, @working_dir)
 			mb.run
 		end
-		
+
 		# web application projects put output into /bin
 		rule(/#{src_dir_regex}\/[\w\.]+\/bin\/[\w\.]+\.dll/) do |r|
 			pn = Pathname.new(r.name)
@@ -35,7 +35,7 @@ class MsBuildTask < Rake::TaskLib
 		end
 
 		desc "Compile the specified projects (give relative paths) (otherwise, all matching src/**/*.*proj)"
-		task :compile,[:projects] do |t, args|
+		task :compile, [:projects] do |t, args|
 			project_list = FileList.new("#{src_dir}/**/*.*proj")
 			args.with_defaults(:projects => project_list)
 			args.projects.each do |p|
@@ -49,14 +49,14 @@ class MsBuildTask < Rake::TaskLib
 		@deps.each do |d|
 			task :compile => d
 		end
-		
+
 		self
 	end
-	
+
 	def src_dir_regex
 		RakeDotNet::regexify(@src_dir)
 	end
-	
+
 	def figure_out_project_type(project_pathname)
 		# TODO.
 	end
@@ -64,7 +64,7 @@ end
 
 class MsBuild
 	attr_accessor :project, :properties, :targets, :verbosity
-	
+
 	def initialize(project='default.proj', properties={}, targets=[], verbosity='n', working_dir=nil)
 		@project = project
 		@properties = properties
@@ -73,11 +73,11 @@ class MsBuild
 		@working_dir = working_dir
 		@exe = '"' + File.join(ENV['windir'].dup, 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe') + '"'
 	end
-	
+
 	def cmd
 		"#{@exe} #{project} /maxcpucount /v:#{@verbosity} /p:#{properties} /t:#{targets}"
 	end
-	
+
 	def run
 		if @working_dir
 			chdir(@working_dir) do
@@ -86,15 +86,15 @@ class MsBuild
 			end
 		end
 	end
-	
+
 	def project
 		"\"#{@project}\""
 	end
-	
+
 	def targets
 		@targets.join(';')
 	end
-	
+
 	def properties
 		p = []
 		@properties.each {|key, value| p.push("#{key}=#{value}") }

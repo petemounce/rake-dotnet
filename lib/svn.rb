@@ -5,7 +5,7 @@ class Svn
 		@svn = opts[:svn] || File.join(TOOLS_DIR, 'svn', 'bin', 'svn.exe')
 		yield self if block_given?
 	end
-	
+
 	def exe
 		"\"#{@svn}\""
 	end
@@ -17,34 +17,34 @@ class SvnExport < Svn
 		@src = src
 		@dest = dest
 	end
-	
+
 	def cmd
 		"#{exe} export #{src} #{dest}"
 	end
-	
+
 	def export
 		puts cmd if VERBOSE
 		sh cmd
 	end
-	
+
 	def src
 		"\"#{@src}\""
 	end
-	
+
 	def dest
 		"\"#{@dest}\""
-	end	
+	end
 end
 
 class SvnInfo < Svn
 	attr_accessor :svn
-	
+
 	def initialize(opts)
 		super(opts)
 		@path = opts[:path] || '.'
 		yield self if block_given?
 	end
-	
+
 	def cmd
 		"#{exe} info #{path}"
 	end
@@ -54,7 +54,7 @@ class SvnInfo < Svn
 		out = `#{cmd}`
 		out.match(/Revision: (\d+)/)[1]
 	end
-	
+
 	def path
 		"\"#{@path}\""
 	end

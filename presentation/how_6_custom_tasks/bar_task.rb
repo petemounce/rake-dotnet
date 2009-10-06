@@ -3,6 +3,7 @@ require 'rake/tasklib'
 
 class BarTask < Rake::TaskLib
 	attr_accessor :message
+
 	def initialize
 		@message = 'ouch!'
 		yield self if block_given?
