@@ -1,38 +1,43 @@
-class Svn
-	attr_accessor :svn
-
-	def initialize(opts={})
-		@svn = opts[:svn] || File.join(TOOLS_DIR, 'svn', 'bin', 'svn.exe')
-		yield self if block_given?
+class Svn < Cli
+	def initialize(params={})
+		sps = params[:search_paths] || []
+		sps << File.join(TOOLS_DIR, 'svn', 'bin')
+		sps << File.join(ENV['PROGRAMFILES'], 'subversion', 'bin')
+		sps << File.join(ENV['PROGRAMFILES'], 'svn', 'bin')
+		super(params.merge(:search_paths=>sps))
 	end
 
-	def exe
-		"\"#{@svn}\""
+	def cmd
+		return super
 	end
 end
 
 class SvnExport < Svn
-	def initialize(src, dest, opts={})
-		super(opts)
-		@src = src
-		@dest = dest
-	end
-
-	def cmd
-		"#{exe} export #{src} #{dest}"
-	end
-
-	def export
-		puts cmd if VERBOSE
-		sh cmd
+	def initialize(params={})
+		super(params)
+		raise(ArgumentError, "src parameter was missing", caller) if params[:src].nil?
+		raise(ArgumentError, "dest parameter was missing", caller) if params[:dest].nil?
+		@src = params[:src]
+		@dest = params[:dest]
 	end
 
 	def src
-		"\"#{@src}\""
+		return "\"#{File.expand_path(@src)}\""
 	end
 
 	def dest
-		"\"#{@dest}\""
+		return "\"#{File.expand_path(@dest)}\""
+	end
+
+	def cmd
+		puts super
+		#s = super
+		#return "#{s} export #{src} #{dest}"
+	end
+
+	def run
+		puts cmd if VERBOSE==true
+		sh cmd
 	end
 end
 

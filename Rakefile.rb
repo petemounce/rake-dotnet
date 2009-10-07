@@ -46,7 +46,14 @@ end
 
 require 'spec/rake/spectask'
 
-desc "Run all examples with RCov"
+desc 'Run all examples and report'
+Spec::Rake::SpecTask.new('examples_with_report') do |t|
+	t.spec_files = FileList['spec/**/*.rb']
+	t.spec_opts = ["--format", "html:doc/reports/failing_examples.html", "--diff"]
+	t.fail_on_error = false
+end
+
+desc "Run all specs with RCov"
 Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
 	t.spec_files = FileList['spec/**/*.rb']
 	t.rcov = true
