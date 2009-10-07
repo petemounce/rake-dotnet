@@ -86,7 +86,7 @@ class HarvestWebApplicationTask < Rake::TaskLib
 		src = File.join(@src_path, web_app_name)
 		if (File.exist?("#{src}/.svn"))
 			svn = SvnExport.new(src, path)
-			svn.export
+			svn.run
 			cp_r(File.join(src, 'bin'), path)
 		else
 			cp_r src, path

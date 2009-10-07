@@ -32,20 +32,33 @@ describe SvnExport do
 	end
 	it "export should generate correct command line when run" do
 		svn = SvnExport.new({:src=>'support/svn/src',:dest=>'support/svn/dest'})
-		puts svn.exe
-		puts 'cmd: ' + svn.cmd
-		svn.cmd.should match(/".*svn\.exe.*/)
-		svn.cmd.should match(/".* export.*/)
-		svn.cmd.should match(/".* ".*support\/svn\/src".*/)
-		svn.cmd.should match(/".* ".*support\/svn\/dest"/)
+		cmd = svn.cmd
+		cmd.should_not be_nil
+		cmd.should match(/".*svn\.exe.*/)
+		cmd.should match(/".* export.*/)
+		cmd.should match(/".* ".*support\/svn\/src".*/)
+		cmd.should match(/".* ".*support\/svn\/dest"/)
 	end
 end
 
 describe SvnInfo do
 	before :all do
+		@here = File.dirname(__FILE__)
 		Dir.chdir('spec')
 	end
 	after :all do
 		Dir.chdir('..')
+	end
+	it "should default to using current directory when path not specified" do
+		si = SvnInfo.new
+		si.cmd.should match(/".*svn\.exe.*/)
+		si.cmd.should match(/".* info.*"/)
+		si.cmd.should match(/.* info "."/)
+	end
+	it "should specify path when supplied as argument" do
+		si = SvnInfo.new({:path=>'support/svn'})
+		si.cmd.should match(/".*svn\.exe.*/)
+		si.cmd.should match(/".* info.*"/)
+		si.cmd.should match(/.* info "support\/svn"/)
 	end
 end

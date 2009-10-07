@@ -4,7 +4,7 @@ class Svn < Cli
 		sps << File.join(TOOLS_DIR, 'svn', 'bin')
 		sps << File.join(ENV['PROGRAMFILES'], 'subversion', 'bin')
 		sps << File.join(ENV['PROGRAMFILES'], 'svn', 'bin')
-		super(params.merge(:search_paths=>sps))
+		super(params.merge({:exe_name=>'svn.exe',:search_paths=>sps}))
 	end
 
 	def cmd
@@ -14,7 +14,7 @@ end
 
 class SvnExport < Svn
 	def initialize(params={})
-		super(params)
+		super
 		raise(ArgumentError, "src parameter was missing", caller) if params[:src].nil?
 		raise(ArgumentError, "dest parameter was missing", caller) if params[:dest].nil?
 		@src = params[:src]
@@ -30,9 +30,7 @@ class SvnExport < Svn
 	end
 
 	def cmd
-		puts super
-		#s = super
-		#return "#{s} export #{src} #{dest}"
+		return "#{super} export #{src} #{dest}"
 	end
 
 	def run
@@ -42,16 +40,13 @@ class SvnExport < Svn
 end
 
 class SvnInfo < Svn
-	attr_accessor :svn
-
-	def initialize(opts)
-		super(opts)
-		@path = opts[:path] || '.'
-		yield self if block_given?
+	def initialize(params={})
+		super
+		@path = params[:path] || '.'
 	end
 
 	def cmd
-		"#{exe} info #{path}"
+		"#{super} info #{path}"
 	end
 
 	def revision
