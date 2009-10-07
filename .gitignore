@@ -18,3 +18,8 @@ presentation/*/*.[ab]
 *.intermediate
 *.end_result
 *.cache
+
+doc
+coverage
+.idea
+version.txt
