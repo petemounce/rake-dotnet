@@ -17,7 +17,7 @@ class BcpCmd < Cli
 
 		@server = params[:server] || DB_SERVER
 
-		@schema = params[:default_schema] || 'dbo'
+		@schema = params[:schema] || 'dbo'
 	end
 
 	def credentials

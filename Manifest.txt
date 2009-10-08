@@ -4,4 +4,5 @@ README.markdown
 README.txt
 Rakefile.rb
 lib/rake_dotnet.rb
-test/test_rake_dotnet.rb
+spec/cli_spec.rb
+spec/svn_spec.rb
