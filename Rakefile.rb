@@ -60,3 +60,7 @@ Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
 	t.rcov_opts = ['--exclude', 'spec']
 end
 # vim: syntax=Ruby
+
+task :spec => generated_library
+task :install_gem => [:spec, :examples_with_rcov, :examples_with_report]
+task :release => [:examples_with_rcov, :examples_with_report]

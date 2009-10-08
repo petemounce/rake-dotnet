@@ -3,6 +3,14 @@ Manifest.txt
 README.markdown
 README.txt
 Rakefile.rb
+coverage/index.html
+coverage/lib-assemblyinfo_rb.html
+coverage/lib-bcpcmd_rb.html
+coverage/lib-cli_rb.html
+coverage/lib-fxcop_rb.html
+coverage/lib-harvester_rb.html
+doc/examples.html
 lib/rake_dotnet.rb
+lib/rake_dotnet/default_rakefile.rb
 spec/cli_spec.rb
 spec/svn_spec.rb

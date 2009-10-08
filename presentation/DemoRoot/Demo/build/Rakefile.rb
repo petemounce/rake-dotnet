@@ -6,16 +6,15 @@ require 'rake_dotnet'
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
 
-bin_out = File.join(OUT_DIR, "bin")
-demo_site = File.join(OUT_DIR, "Demo.Site")
+demo_site = File.join(RakeDotNet::OUT_DIR, "Demo.Site")
 
 RakeDotNet::AssemblyInfoTask.new
-RakeDotNet::MsBuildTask.new({:verbosity=>MSBUILD_VERBOSITY, :deps=>[bin_out, :assembly_info]})
+RakeDotNet::MsBuildTask.new({:deps=>[RakeDotNet::Bin_out, :assembly_info]})
 RakeDotNet::XUnitTask.new({:options=>{:html=>true}})
 RakeDotNet::HarvestOutputTask.new({:deps => [:compile]})
 RakeDotNet::HarvestWebApplicationTask.new({:deps=>[:compile]})
 RakeDotNet::RDNPackageTask.new(name='bin', {:deps=>[:compile, :harvest_output, :xunit]}) do |p|
-	p.targets.include("#{bin_out}")
+	p.targets.include("#{RakeDotNet::Bin_out}")
 end
 RakeDotNet::RDNPackageTask.new(name='Demo.Site', {:deps=>[:compile, :harvest_webapps, :xunit]}) do |p|
 	p.targets.include("#{demo_site}")

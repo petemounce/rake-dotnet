@@ -1,7 +1,9 @@
+Bin_out = File.join(OUT_DIR, 'bin')
+
 class HarvestOutputTask < Rake::TaskLib
 	def initialize(params={})
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
-		@target_path = params[:target_path] || File.join(OUT_DIR, 'bin')
+		@target_path = params[:target_path] || Bin_out
 		@deps = params[:deps] || []
 		@configuration = params[:configuration] || CONFIGURATION
 		@glob = params[:glob] || "#{@src_path}/*"
