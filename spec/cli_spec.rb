@@ -1,4 +1,5 @@
 #cli spec
+require 'spec'
 require 'fileutils'
 require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
 

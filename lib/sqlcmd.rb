@@ -1,14 +1,19 @@
 class SqlCmd < Cli
 	attr_accessor :input_file, :query, :database
-
+	
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps.push(File.join(TOOLS_DIR, 'sql'))
 		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '100', 'tools', 'binn'))
-		params = {:exe_name=>'sqlcmd.exe', :search_paths=>sps}.merge(params)
-		super(params)
+		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '90', 'tools', 'binn'))
+		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '80', 'tools', 'binn'))
+		super(params.merge({:exe_name=>'sqlcmd.exe', :search_paths=>sps}))
 
-		@trusted = params[:trusted] || true
+		unless params[:trusted].nil?
+			@trusted = params[:trusted]
+		else
+			@trusted = true
+		end
 		unless @trusted
 			@user = params[:user] || DB_USER
 			@password = params[:password] || DB_PASSWORD
@@ -38,14 +43,14 @@ class SqlCmd < Cli
 
 	def input_file
 		unless @input_file.nil?
-			path = File.expand_path(@input_file).gsub('/', '\\')
+			path = File.expand_path(@input_file).gsub('/', "\\")
 			return "-i \"#{path}\""
 		end
 		return ''
 	end
 
 	def query
-		return "-Q#{@query}" unless @query.nil?
+		return "-Q \"#{@query}\"" unless @query.nil?
 	end
 
 	def cmd
