@@ -32,11 +32,21 @@ describe SqlCmd do
 	it "should use an input file with an expanded path with forward slashes replaced with backslashes when told to" do
 		sql = SqlCmd.new
 		sql.input_file = 'support/sqlcmd/foo.sql'
-		sql.cmd.should match(/.*-i "\w\:.*\\support\\sqlcmd\\foo\.sql".*/)
+		sql.cmd.should match(/.*-i "\w:\\.*\\support\\sqlcmd\\foo\.sql".*/)
 	end
 	it "should use a supplied query" do
 		sql = SqlCmd.new
 		sql.query = 'SELECT bar FROM dbo.foo'
 		sql.cmd.should match(/.*-Q "SELECT bar FROM dbo\.foo".*/)
+	end
+	it "should revert optional attributes when told to" do
+		sql = SqlCmd.new
+		sql.query = 'SELECT foo FROM bar'
+		sql.input_file = 'foo.sql'
+
+		sql.revert_optionals
+
+		sql.query.should be_nil
+		sql.input_file.should == ''
 	end
 end

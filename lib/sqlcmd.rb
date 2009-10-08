@@ -3,10 +3,10 @@ class SqlCmd < Cli
 	
 	def initialize(params={})
 		sps = params[:search_paths] || []
-		sps.push(File.join(TOOLS_DIR, 'sql'))
-		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '100', 'tools', 'binn'))
-		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '90', 'tools', 'binn'))
-		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '80', 'tools', 'binn'))
+		sps << File.join(TOOLS_DIR, 'sql')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '100', 'tools', 'binn')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '90', 'tools', 'binn')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '80', 'tools', 'binn')
 		super(params.merge({:exe_name=>'sqlcmd.exe', :search_paths=>sps}))
 
 		unless params[:trusted].nil?
@@ -64,7 +64,7 @@ class SqlCmd < Cli
 	end
 
 	def revert_optionals
-		@input_file = nil
 		@query = nil
+		@input_file = nil
 	end
 end

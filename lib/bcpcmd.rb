@@ -4,12 +4,17 @@ class BcpCmd < Cli
 
 	def initialize(params={})
 		sps = params[:search_paths] || []
-		sps.push(File.join(TOOLS_DIR, 'sql'))
-		sps.push(File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '100', 'tools', 'binn'))
-		params = {:exe_name=>'bcp.exe', :search_paths=>sps}.merge(params)
-		super(params)
+		sps << File.join(TOOLS_DIR, 'sql')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '100', 'tools', 'binn')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '90', 'tools', 'binn')
+		sps << File.join(ENV['PROGRAMFILES'], 'Microsoft SQL Server', '80', 'tools', 'binn')
+		super(params.merge({:exe_name=>'bcp.exe', :search_paths=>sps}))
 
-		@trusted = params[:trusted] || true
+		unless params[:trusted].nil?
+			@trusted = params[:trusted]
+		else
+			@trusted = true
+		end
 		unless @trusted
 			@user = params[:user] || DB_USER
 			@password = params[:password] || DB_PASSWORD
@@ -17,19 +22,23 @@ class BcpCmd < Cli
 
 		@server = params[:server] || DB_SERVER
 
+		@database = params[:database] unless params[:database].nil?
 		@schema = params[:schema] || 'dbo'
+		@table = params[:table] unless params[:table].nil?
+		@direction = params[:direction] unless params[:direction].nil?
+		@file = params[:file] unless params[:file].nil?
 	end
 
 	def credentials
 		if @trusted
 			return '-T'
 		else
-			return "-U#{@user} -P#{@password}"
+			return "-U \"#{@user}\" -P \"#{@password}\""
 		end
 	end
 
 	def server
-		return "-S#{@server}"
+		return "-S \"#{@server}\""
 	end
 
 	def direction
@@ -37,7 +46,7 @@ class BcpCmd < Cli
 	end
 
 	def db_object
-		return "#{@database}.#{@schema}.#{@table}"
+		return "[#{@database}].[#{@schema}].[#{@table}]"
 	end
 
 	def path
