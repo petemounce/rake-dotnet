@@ -1,5 +1,3 @@
-Bin_out = File.join(OUT_DIR, 'bin')
-
 class HarvestOutputTask < Rake::TaskLib
 	def initialize(params={})
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
@@ -55,7 +53,6 @@ class HarvestWebApplicationTask < Rake::TaskLib
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
 		@target_path = params[:target_path] || OUT_DIR
 		@deps = params[:deps] || []
-		@configuration = params[:configuration] || CONFIGURATION
 		@glob = params[:glob] || "**/*.Site"
 
 		yield self if block_given?
@@ -65,6 +62,11 @@ class HarvestWebApplicationTask < Rake::TaskLib
 	def define
 		out_dir_regex = RakeDotNet::regexify(@target_path)
 
+		odr = /#{out_dir_regex}\/([\w\.-_ ]*Site)\//
+		rule(odr) do |r|
+			harvest(r.name, odr)
+		end
+		
 		desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
 		task :harvest_webapps, [:web_app_list] => @target_path do |t, args|
 			list = FileList.new("#{@src_path}/#{@glob}")
@@ -87,7 +89,7 @@ class HarvestWebApplicationTask < Rake::TaskLib
 		web_app_name = path.match(regex)[1]
 		src = File.join(@src_path, web_app_name)
 		if (File.exist?("#{src}/.svn"))
-			svn = SvnExport.new(src, path)
+			svn = SvnExport.new({:src=>src, :dest=>path})
 			svn.run
 			cp_r(File.join(src, 'bin'), path)
 		else

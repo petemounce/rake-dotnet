@@ -1,9 +1,9 @@
 require 'spec'
 require File.join(File.dirname(__FILE__), '..','lib','svn.rb')
 
-describe Svn do
+describe SvnCmd do
 	it "should know 3 sensible default search paths" do
-		svn = Svn.new
+		svn = SvnCmd.new
 		svn.search_paths[0].should include(TOOLS_DIR)
 		svn.search_paths[1].should include(ENV['PROGRAMFILES'])
 		svn.search_paths[2].should include(ENV['PROGRAMFILES'])
