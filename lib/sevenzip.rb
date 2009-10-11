@@ -1,4 +1,4 @@
-class SevenZip
+class SevenZipCmd
 	def initialize(archive_name, opts={})
 		arch = ENV['PROCESSOR_ARCHITECTURE'] || 'AMD64'
 		bin = arch == 'x86' ? '7za.exe' : '7z.exe'

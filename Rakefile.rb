@@ -62,5 +62,8 @@ end
 # vim: syntax=Ruby
 
 task :spec => generated_library
-task :install_gem => [:spec, :examples_with_rcov, :examples_with_report]
+file 'coverage/index.html'  => [:examples_with_rcov]
+file 'doc/examples.html'  => [:examples_with_report]
+
+task :package => [:spec, :examples_with_rcov, :examples_with_report]
 task :release => [:examples_with_rcov, :examples_with_report]

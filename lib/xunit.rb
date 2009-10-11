@@ -23,7 +23,7 @@ class XUnitTask < Rake::TaskLib
 			out_dir = File.join(@reports_dir, suite)
 			unless File.exist?(out_dir) && uptodate?(testsDll, out_dir)
 				mkdir_p(out_dir) unless File.exist?(out_dir)
-				x = XUnit.new(testsDll, out_dir, nil, options=@options)
+				x = XUnitConsoleCmd.new(testsDll, out_dir, nil, options=@options)
 				x.run
 			end
 		end
@@ -47,7 +47,7 @@ class XUnitTask < Rake::TaskLib
 	end
 end
 
-class XUnit
+class XUnitConsoleCmd
 	attr_accessor :xunit, :test_dll, :reports_dir, :options
 
 	def initialize(test_dll, reports_dir, xunit=nil, options={})

@@ -24,7 +24,7 @@ class NCoverTask < Rake::TaskLib
 		reports_dir_regex = RakeDotNet::regexify(@report_dir)
 		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
-			nc = NCover.new(@report_dir, dll_to_execute, @profile_options)
+			nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
 			nc.run
 		end
 
@@ -48,7 +48,7 @@ class NCoverTask < Rake::TaskLib
 			# ncover lets us use *.coverage.xml to merge together files
 			include = [File.join(@report_dir, '*.coverage.xml')]
 			@reporting_options[:name] = 'merged'
-			ncr = NCoverReporting.new(@report_dir, include, @reporting_options)
+			ncr = NCoverReportingCmd.new(@report_dir, include, @reporting_options)
 			ncr.run
 		end
 
@@ -60,7 +60,7 @@ class NCoverTask < Rake::TaskLib
 	end
 end
 
-class NCover
+class NCoverConsoleCmd
 	def initialize(report_dir, dll_to_execute, params)
 		params ||= {}
 		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
@@ -74,7 +74,7 @@ class NCover
 	end
 
 	def cmdToRun
-		x = XUnit.new(@dll_to_execute, '', nil, {})
+		x = XUnitConsoleCmd.new(@dll_to_execute, '', nil, {})
 		x.cmd
 	end
 
@@ -103,7 +103,7 @@ class NCover
 	end
 end
 
-class NCoverReporting
+class NCoverReportingCmd
 	def initialize(report_dir, coverage_files, params)
 		@report_dir = report_dir
 		@coverage_files = coverage_files || []

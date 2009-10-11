@@ -1,6 +1,6 @@
 require 'Pathname'
 
-class XUnit
+class XUnitConsoleCmd
 	attr_accessor :xunit, :test_dll, :reports_dir, :options
 
 	def initialize(test_dll, reports_dir, xunit=nil, options={})

@@ -50,7 +50,7 @@ class RDNPackageTask < Rake::TaskLib
 				end
 			end
 			snipped = pkg_root.sub(pkg + '/', '')
-			sz = SevenZip.new(package_file)
+			sz = SevenZipCmd.new(package_file)
 			chdir pkg_root do
 				sz.run_add
 			end

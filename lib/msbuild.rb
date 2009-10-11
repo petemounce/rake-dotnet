@@ -21,7 +21,7 @@ class MsBuildTask < Rake::TaskLib
 			pn = Pathname.new(r.name)
 			name = pn.basename.to_s.sub('.dll', '')
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-			mb = MsBuild.new(project, @properties, ['Build'], verbosity, @working_dir)
+			mb = MsBuildCmd.new(project, @properties, ['Build'], verbosity, @working_dir)
 			mb.run
 		end
 
@@ -30,7 +30,7 @@ class MsBuildTask < Rake::TaskLib
 			pn = Pathname.new(r.name)
 			name = pn.basename.to_s.sub('.dll', '')
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-			mb = MsBuild.new(project, @properties, ['Build'], verbosity, @working_dir)
+			mb = MsBuildCmd.new(project, @properties, ['Build'], verbosity, @working_dir)
 			mb.run
 		end
 
@@ -62,7 +62,7 @@ class MsBuildTask < Rake::TaskLib
 	end
 end
 
-class MsBuild
+class MsBuildCmd
 	attr_accessor :project, :properties, :targets, :verbosity
 
 	def initialize(project='default.proj', properties={}, targets=[], verbosity='n', working_dir=nil)

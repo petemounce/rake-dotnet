@@ -1,4 +1,4 @@
-class Svn < Cli
+class SvnCmd < Cli
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'svn', 'bin')
@@ -12,7 +12,7 @@ class Svn < Cli
 	end
 end
 
-class SvnExport < Svn
+class SvnExport < SvnCmd
 	def initialize(params={})
 		super
 		raise(ArgumentError, "src parameter was missing", caller) if params[:src].nil?
@@ -39,7 +39,7 @@ class SvnExport < Svn
 	end
 end
 
-class SvnInfo < Svn
+class SvnInfo < SvnCmd
 	def initialize(params={})
 		super
 		@path = params[:path] || '.'

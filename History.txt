@@ -1,4 +1,4 @@
-=== 0.1.16 / 2009-10-04
+=== 0.2.0 / 2009-10-12
 
 BREAKING CHANGE: Moved all classes that were in the Rake module, into the RakeDotNet module.  So, change your Rakefile from (eg)
 
@@ -8,9 +8,16 @@ to
 
 `RakeDotNet:AssemblyInfoTask.new
 
+BREAKING CHANGE: Renamed all command-line wrappers to end with Cmd indicating inheritance from Cmd base class which does path inference
+
+CHANGE: Addition of unit-tests via spec
+CHANGE: Added unit-test report to the gem
+CHANGE: Added rcov reports to the gem
 CHANGE: Made it the RDNPackageTask's responsibility to name directories and packages with the configuration & version information, if configured to.  This means that intermediate-build-output is put into directories without this information in the naming.
+
 NEW: sqlcmd.exe wrapper (SQL client tools' execute-sql-command from command-line)
 NEW: bcp.exe wrapper (SQL client tools' bulk copy)
+NEW: IIS7 appcmd.exe wrapper (control IIS7 from the command line)
 
 
 === 0.1.15 / 2009-09-23

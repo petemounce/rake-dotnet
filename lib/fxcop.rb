@@ -54,7 +54,7 @@ class FxCopTask < Rake::TaskLib
 	self
 end
 
-class FxCop
+class FxCopCmd
 	attr_accessor :dlls, :out_file, :out_xsl, :apply_out_xsl, :dependencies_path, :summary, :verbose, :echo_to_console, :xsl_echo_to_console, :ignore_autogen, :culture
 
 	def initialize(dlls, params={})

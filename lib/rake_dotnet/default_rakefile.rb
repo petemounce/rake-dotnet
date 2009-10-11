@@ -1,6 +1,8 @@
 require 'rake'
 require 'rake_dotnet'
 
+Bin_out = File.join(RakeDotNet::OUT_DIR, 'bin')
+
 RakeDotNet::AssemblyInfoTask.new
 
 RakeDotNet::MsBuildTask.new({:deps=>[RakeDotNet::Bin_out, :assembly_info]})
