@@ -34,3 +34,5 @@ CLOBBER.include(OUT_DIR)
 
 VERBOSE = ENV['VERBOSE'] ? ENV['VERBOSE'] : false
 verbose(VERBOSE)
+
+Bin_out = File.join(RakeDotNet::OUT_DIR, 'bin')

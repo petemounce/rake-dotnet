@@ -7,7 +7,7 @@ class MsBuildTask < Rake::TaskLib
 		@src_dir = params[:src_dir] || SRC_DIR
 		@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 		@working_dir = params[:working_dir] || '.'
-		@deps = params[:deps] || []
+		@deps = params[:deps] || [Bin_out]
 		@buildable_projects = ['.csproj', '.vbproj', '.wixproj']
 		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
 

@@ -1,7 +1,5 @@
 require 'rake'
-require 'rake_dotnet'
-
-Bin_out = File.join(RakeDotNet::OUT_DIR, 'bin')
+require '../rake_dotnet'
 
 RakeDotNet::AssemblyInfoTask.new
 
