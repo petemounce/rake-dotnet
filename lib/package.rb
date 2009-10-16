@@ -30,17 +30,18 @@ class RDNPackageTask < Rake::TaskLib
 
 		pkg_root_regex = RakeDotNet::regexify(pkg_root)
 		rule(/#{pkg_root_regex}\.zip/) do |r|
-			run_package
+			run_package(pkg_root, package_file)
 		end
 
 		rule(/#{pkg_root_regex}-#{@configuration}\.zip/) do |r|
-			run_package
+			run_package(pkg_root, package_file)
 		end
+		
 		rule(/#{pkg_root_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
-			run_package
+			run_package(pkg_root, package_file)
 		end
 
-		def run_package(configuration, version)
+		def run_package(pkg_root, package_file)
 			@targets.each do |t|
 				f = Pathname.new(t)
 				if f.directory?
@@ -49,7 +50,6 @@ class RDNPackageTask < Rake::TaskLib
 					cp f, pkg_root
 				end
 			end
-			snipped = pkg_root.sub(pkg + '/', '')
 			sz = SevenZipCmd.new(package_file)
 			chdir pkg_root do
 				sz.run_add
