@@ -85,22 +85,22 @@ class XUnitConsoleCmd
 	end
 
 	def test_dll
-		"\"#{@test_dll}\""
+		"\"#{@test_dll}\"".gsub('/', '\\')
 	end
 
 	def html
 		path = "#{@reports_dir}/#{suite}.test-results.html".gsub('/', '\\')
-		"/html #{path}" if @options.has_key?(:html)
+		"/html \"#{path}\"" if @options.has_key?(:html)
 	end
 
 	def xml
 		path = "#{@reports_dir}/#{suite}.test-results.xml".gsub('/', '\\')
-		"/xml #{path}" if @options.has_key?(:xml)
+		"/xml \"#{path}\"" if @options.has_key?(:xml)
 	end
 
 	def nunit
 		path = "#{@reports_dir}/#{suite}.test-results.nunit.xml".gsub('/', '\\')
-		"/nunit #{path}" if @options.has_key?(:nunit)
+		"/nunit \"#{path}\"" if @options.has_key?(:nunit)
 	end
 
 	def wait
