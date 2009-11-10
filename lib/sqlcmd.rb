@@ -54,7 +54,7 @@ class SqlCmd < Cli
 	end
 
 	def cmd
-		return "#{cmd} #{server} #{credentials} #{database} #{input_file} #{query}"
+		return "#{super} #{server} #{credentials} #{database} #{input_file} #{query}"
 	end
 
 	def run
