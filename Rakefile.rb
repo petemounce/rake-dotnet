@@ -6,7 +6,7 @@ require 'Pathname'
 require 'rake/clean'
 
 Hoe.spec 'rake-dotnet' do |p|
-	p.version = '0.1.16'
+	p.version = '0.1.17'
 	p.author = 'Peter Mounce'
 	p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
 	p.email = 'public@neverrunwithscissors.com'
@@ -15,6 +15,9 @@ Hoe.spec 'rake-dotnet' do |p|
 	p.developer('Peter Mounce', 'public@neverrunwithscissors.com')
 	p.remote_rdoc_dir = ''
 	p.extra_deps << ['rake', '>= 0.8.3']
+	p.extra_deps << ['rspec', '>= 1.2.9']
+	p.extra_deps << ['rcov', '>= 0.8.1']
+	p.extra_deps << ['diff-lcs', '>= 1.1.2']
 	p.url = 'http://blog.neverrunwithscissors.com/tag/rake-dotnet'
 end
 

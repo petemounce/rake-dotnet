@@ -1,4 +1,8 @@
-=== 0.2.0 / 2009-10-12
+=== 0.1.17 / 2009-11-10
+
+FIX: Typos :-(
+
+=== 0.1.16 / 2009-11-10
 
 BREAKING CHANGE: Moved all classes that were in the Rake module, into the RakeDotNet module.  So, change your Rakefile from (eg)
 
