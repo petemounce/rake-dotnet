@@ -40,16 +40,26 @@ class NCoverTask < Rake::TaskLib
 				coverage_file = File.join(@report_dir, cf_name)
 				Rake::FileTask[coverage_file].invoke
 			end
-
 		end
 
+		rule(/#{reports_dir_regex}\/.*\.coverage\.report\.html/) do |r|
+			cov_report_pn = Pathname.new(r.name)
+			coverage_name = cov_report_pn.basename.sub('.coverage.report.html', '')
+			coverage_to_report_on = cov_report_pn.sub('.report.html', '.xml')
+			coverage_report_dir = File.join(@report_dir, coverage_name)
+			mkdir_p coverage_report_dir
+			@reporting_options[:project_name] = coverage_name
+			ncr = NCoverReportingCmd.new(coverage_report_dir, coverage_to_report_on, @reporting_options)
+			ncr.run
+		end
+		
 		desc "Generate ncover coverage report(s), on all coverage files, merged together"
 		task :ncover_reports => [:ncover_profile] do
-			# ncover lets us use *.coverage.xml to merge together files
-			include = [File.join(@report_dir, '*.coverage.xml')]
-			@reporting_options[:name] = 'merged'
-			ncr = NCoverReportingCmd.new(@report_dir, include, @reporting_options)
-			ncr.run
+			reports = FileList.new("#{report_dir}/**/*.coverage.xml")
+			reports.each do |r|
+				cov_report = r.sub('.xml', '.report.html')
+				Rake::FileTask[cov_report].invoke
+			end
 		end
 
 		task :clobber_ncover do
@@ -68,8 +78,7 @@ class NCoverConsoleCmd
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_dir, ofname)
-		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
-		@exclude_assemblies_regex.push('ISymWrapper')
+		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || []
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
 	end
 
