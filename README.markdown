@@ -71,17 +71,9 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 (In no particular order)
 
 *	rdoc documentation to supplement blog'd about
-*	unit-tests
 *	Support other test-runners - nunit, mbunit, gallio
-*	unit-tests!
-*	Support code-coverage runner(s) - ncover 1.68 (?), ncover 3, partcover
-*	unit-tests!!
-*	Support clone-detective...?
-*	unit-tests!!!
 *	Support other source-controls to get build version number - mercurial, cvs(?), TFS.  Or just read it from an environment variable that assumes we're within a CI build.
-*	unit-tests!!!!
 *	Support changing the conventions to allow users to specify their own source structure
-*	unit-tests
 *	Provide an InstallPad for the 3rdparty bits
 
 ## Requirements:
@@ -97,6 +89,10 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 	* if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
 3. Fetch the 3rdparty dependencies listed in [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/)
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
+
+## Build from source:
+1. `gem install rcov rspec diff-lcs` (again, prepend `sudo` if you're not on Windows)
+2. `rake 
 
 ## License:
 

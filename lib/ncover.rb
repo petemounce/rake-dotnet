@@ -96,10 +96,11 @@ class NCoverConsoleCmd
 	end
 
 	def exclude_assemblies
-		if @exclude_assemblies_regex.instance_of?(Array)
+		if @exclude_assemblies_regex.instance_of?(Array) && @exclude_assemblies_regex.length > 0
 			return '//eas ' + @exclude_assemblies_regex.join(';')
 		end
 		return '//eas ' + @exclude_assemblies_regex if @exclude_assemblies_regex.instance_of?(String)
+		return ''
 	end
 
 	def cmd
