@@ -24,8 +24,20 @@ class NCoverTask < Rake::TaskLib
 		reports_dir_regex = RakeDotNet::regexify(@report_dir)
 		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
+			if (shouldProfileIis(dll_to_execute))
+				@profile_options[:profile_iis] = true
+			end
 			nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
 			nc.run
+		end
+
+		def shouldProfileIis(dll)
+			dll = dll.downcase
+			return true if dll.include? 'functional'
+			return true if dll.include? 'browser'
+			return true if dll.include? 'selenium'
+			return true if dll.include? 'watin'
+			return false
 		end
 
 		desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
@@ -42,22 +54,20 @@ class NCoverTask < Rake::TaskLib
 			end
 		end
 
-		rule(/#{reports_dir_regex}\/.*\.coverage\.report\.html/) do |r|
-			cov_report_pn = Pathname.new(r.name)
-			coverage_name = cov_report_pn.basename.sub('.coverage.report.html', '')
-			coverage_to_report_on = cov_report_pn.sub('.report.html', '.xml')
-			coverage_report_dir = File.join(@report_dir, coverage_name)
-			mkdir_p coverage_report_dir
-			@reporting_options[:project_name] = coverage_name
-			ncr = NCoverReportingCmd.new(coverage_report_dir, coverage_to_report_on, @reporting_options)
+		rule(/#{reports_dir_regex}\/.*\//) do |report_set|
+			set_name = report_set.name.match(/#{reports_dir_regex}\/(.*)\//)[1]
+			profile_xml = File.join(@report_dir, "#{set_name}.coverage.xml")
+			mkdir_p report_set.name
+			@reporting_options[:project_name] = set_name
+			ncr = NCoverReportingCmd.new(report_set.name, profile_xml, @reporting_options)
 			ncr.run
 		end
-		
-		desc "Generate ncover coverage report(s), on all coverage files, merged together"
+
+		desc "Generate ncover coverage report(s), on all coverage files"
 		task :ncover_reports => [:ncover_profile] do
-			reports = FileList.new("#{report_dir}/**/*.coverage.xml")
-			reports.each do |r|
-				cov_report = r.sub('.xml', '.report.html')
+			report_sets = FileList.new("#{@report_dir}/**/*.coverage.xml")
+			report_sets.each do |set|
+				cov_report = set.sub('.coverage.xml', '/')
 				Rake::FileTask[cov_report].invoke
 			end
 		end
@@ -78,8 +88,14 @@ class NCoverConsoleCmd
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_dir, ofname)
-		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || []
+
+		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
+		@exclude_assemblies_regex.push('ISymWrapper')
+		
+		@profile_iis = params[:profile_iis] || false
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
+
+		@is_complete_version = `#{@exe}`.include?('NCover Complete v')
 	end
 
 	def cmdToRun
@@ -88,14 +104,20 @@ class NCoverConsoleCmd
 	end
 
 	def bi
-		"//bi #{Versioner.new.get.to_s}"
+		return "//bi #{Versioner.new.get.to_s}"
 	end
 
 	def working_dir
-		"//w #{@working_dir}"
+		return "//w #{@working_dir}"
+	end
+
+	def iis
+		return '' unless @is_complete_version
+		return "//iis" if @profile_iis
 	end
 
 	def exclude_assemblies
+		return '' unless @is_complete_version
 		if @exclude_assemblies_regex.instance_of?(Array) && @exclude_assemblies_regex.length > 0
 			return '//eas ' + @exclude_assemblies_regex.join(';')
 		end
@@ -104,7 +126,7 @@ class NCoverConsoleCmd
 	end
 
 	def cmd
-		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{exclude_assemblies} #{bi} #{working_dir}"
+		"\"#{@exe}\" #{cmdToRun} //x #{@output_file} #{exclude_assemblies} #{bi} #{working_dir} #{iis}"
 	end
 
 	def run
@@ -122,6 +144,7 @@ class NCoverReportingCmd
 		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
 
+		@is_complete_version = `#{@exe}`.include?('NCover Reporting Complete v')
 		# required
 		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections', 'FullCoverageReport']
 		@output_path = File.join(@report_dir)
@@ -136,38 +159,46 @@ class NCoverReportingCmd
 		@coverage_files.each do |cf|
 			list += "\"#{cf}\" "
 		end
-		list
+		return list
 	end
 
 	def build_id
-		"//bi #{Versioner.new.get.to_s}"
+		return "//bi #{Versioner.new.get.to_s}"
 	end
 
 	def output_reports
 		cmd = ''
-		@reports.each do |r|
-			cmd += "//or #{r} "
+		if @is_complete_version
+			@reports.each do |r|
+				cmd += "//or #{r}"
+			end
+		else
+			classic_version_reports_allowed = ['Summary', 'SymbolModule', 'SymbolModuleNamespace', 'SymbolModuleNamespaceClass', 'SymbolModuleNamespaceClassMethod']
+			@reports.each do |r|
+				cmd += "//or #{r} " if classic_version_reports_allowed.include?(r)
+			end
 		end
 		return cmd
 	end
 
 	def output_path
-		"//op \"#{@output_path}\""
+		return "//op \"#{@output_path}\""
 	end
 
 	def sort_order
-		"//so #{@sort_order}"
+		return "//so #{@sort_order}"
 	end
 
 	def project_name
-		"//p #{@project_name}" unless @project_name.nil?
+		return "//p #{@project_name}" unless @project_name.nil?
 	end
 
 	def cmd
-		"\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name}"
+		return "\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name}"
 	end
 
 	def run
+		puts cmd if VERBOSE
 		sh cmd
 	end
 end

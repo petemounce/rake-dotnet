@@ -1,7 +1,9 @@
-=== 0.1.18 /
+=== 0.1.18 / 2009-11-26
 
 CHANGE: NCover - support regular license-holders by removing automatic use of features that require complete license
+ADD: NCover - add ability to profile IIS
 CHANGE: Remove install dependencies on rcov, rspec but update documentation with build-from-source
+ADD: Xunit - can now run eg `rake xunit['xt-Foo.Unit.Tests']` to run xunit against Foo.Unit.Tests project, instead of needing to run `rake xunit['out/reports/Foo.Unit.Tests/']`
 
 === 0.1.17 / 2009-11-10
 
