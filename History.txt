@@ -1,3 +1,7 @@
+=== 0.1.19 / 2009-11-26
+
+CHANGE: NCover - Don't allow NCover to profile IIS by default-auto-detection
+
 === 0.1.18 / 2009-11-26
 
 CHANGE: NCover - support regular license-holders by removing automatic use of features that require complete license

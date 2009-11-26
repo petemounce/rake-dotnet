@@ -7,6 +7,7 @@ class NCoverTask < Rake::TaskLib
 		@report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
 		@deps = params[:deps] || []
 		tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
+		@allow_iis_profiling = params[:allow_iis_profiling] || false
 		@profile_options = tool_defaults.merge(params[:profile_options] || {})
 		@reporting_options = tool_defaults.merge(params[:reporting_options] || {})
 
@@ -25,7 +26,7 @@ class NCoverTask < Rake::TaskLib
 		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
 			if (shouldProfileIis(dll_to_execute))
-				@profile_options[:profile_iis] = true
+				@profile_options[:profile_iis] = @allow_iis_profiling
 			end
 			nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
 			nc.run
