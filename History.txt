@@ -1,3 +1,7 @@
+=== 0.1.20 / 
+
+FIX: NCover reports - Typo for handling complete version command line
+
 === 0.1.19 / 2009-11-26
 
 CHANGE: NCover - Don't allow NCover to profile IIS by default-auto-detection

@@ -171,7 +171,7 @@ class NCoverReportingCmd
 		cmd = ''
 		if @is_complete_version
 			@reports.each do |r|
-				cmd += "//or #{r}"
+				cmd += "//or #{r} "
 			end
 		else
 			classic_version_reports_allowed = ['Summary', 'SymbolModule', 'SymbolModuleNamespace', 'SymbolModuleNamespaceClass', 'SymbolModuleNamespaceClassMethod']

@@ -6,7 +6,7 @@ require 'Pathname'
 require 'rake/clean'
 
 Hoe.spec 'rake-dotnet' do |p|
-	p.version = '0.1.19'
+	p.version = '0.1.20'
 	p.author = 'Peter Mounce'
 	p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
 	p.email = 'public@neverrunwithscissors.com'
