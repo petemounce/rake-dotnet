@@ -8,6 +8,7 @@ class RDNPackageTask < Rake::TaskLib
 		@configuration = params[:configuration] || CONFIGURATION
 		globs = params[:globs] || []
 		@targets = FileList.new globs
+		@add_to_main_task = params[:add_to_main_task] || true
 
 		yield self if block_given?
 		define
@@ -21,7 +22,7 @@ class RDNPackageTask < Rake::TaskLib
 		directory out_pkg_name
 
 		@deps.each do |d|
-			task :package => d
+			task :package => d if @add_to_main_task
 		end
 
 		out_pkg_name_regex = RakeDotNet::regexify(out_pkg_name)
@@ -34,10 +35,12 @@ class RDNPackageTask < Rake::TaskLib
 
 		directory @out_dir
 
-		desc "Generate zip'd packages for all package-tasks"
-		task :package => [@out_dir, out_pkg, out_pkg_name] do
-			version = Versioner.new.get
-			Rake::Task["#{out_pkg_name}-#{@configuration}-v#{version}.zip"].invoke
+		if @add_to_main_task
+			desc "Generate zip'd packages for all package-tasks"
+			task :package => [@out_dir, out_pkg, out_pkg_name] do
+				version = Versioner.new.get
+				Rake::Task["#{out_pkg_name}-#{@configuration}-v#{version}.zip"].invoke
+			end
 		end
 
 		desc "Generate zip'd package for #{@name}"

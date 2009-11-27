@@ -1,6 +1,7 @@
 === 0.1.20 / 
 
 FIX: NCover reports - Typo for handling complete version command line
+CHANGE: Package - add a property (turned on by default) to say whether to add that particular package task to the main :package rake-task.
 
 === 0.1.19 / 2009-11-26
 
