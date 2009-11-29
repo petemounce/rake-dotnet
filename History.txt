@@ -1,4 +1,24 @@
-=== 0.2.0 / 2009-10-12
+=== 0.1.20 / 
+
+FIX: NCover reports - Typo for handling complete version command line
+CHANGE: Package - add a property (turned on by default) to say whether to add that particular package task to the main :package rake-task.
+
+=== 0.1.19 / 2009-11-26
+
+CHANGE: NCover - Don't allow NCover to profile IIS by default-auto-detection
+
+=== 0.1.18 / 2009-11-26
+
+CHANGE: NCover - support regular license-holders by removing automatic use of features that require complete license
+ADD: NCover - add ability to profile IIS
+CHANGE: Remove install dependencies on rcov, rspec but update documentation with build-from-source
+ADD: Xunit - can now run eg `rake xunit['xt-Foo.Unit.Tests']` to run xunit against Foo.Unit.Tests project, instead of needing to run `rake xunit['out/reports/Foo.Unit.Tests/']`
+
+=== 0.1.17 / 2009-11-10
+
+FIX: Typos :-(
+
+=== 0.1.16 / 2009-11-10
 
 BREAKING CHANGE: Moved all classes that were in the Rake module, into the RakeDotNet module.  So, change your Rakefile from (eg)
 

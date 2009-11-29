@@ -8,65 +8,50 @@ class RDNPackageTask < Rake::TaskLib
 		@configuration = params[:configuration] || CONFIGURATION
 		globs = params[:globs] || []
 		@targets = FileList.new globs
+		@add_to_main_task = params[:add_to_main_task] || true
 
 		yield self if block_given?
 		define
 	end
 
 	def define
-		pkg = File.join(@out_dir, 'pkg')
-		pkg_root = File.join(pkg, @name)
+		out_pkg = File.join(@out_dir, 'pkg')
+		out_pkg_name = File.join(out_pkg, @name)
 
-		directory pkg # out/pkg
-		directory pkg_root # out/pkg/bin
-
-		package_file = pkg_root + '.zip'
-		package_file_regex = RakeDotNet::regexify(package_file)
+		directory out_pkg
+		directory out_pkg_name
 
 		@deps.each do |d|
-			file package_file => d
-			task :package => d
+			task :package => d if @add_to_main_task
 		end
 
-		pkg_root_regex = RakeDotNet::regexify(pkg_root)
-		rule(/#{pkg_root_regex}\.zip/) do |r|
-			run_package
-		end
+		out_pkg_name_regex = RakeDotNet::regexify(out_pkg_name)
 
-		rule(/#{pkg_root_regex}-#{@configuration}\.zip/) do |r|
-			run_package
-		end
-		rule(/#{pkg_root_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
-			run_package
-		end
-
-		def run_package(configuration, version)
-			@targets.each do |t|
-				f = Pathname.new(t)
-				if f.directory?
-					cp_r f, pkg_root
-				else
-					cp f, pkg_root
-				end
-			end
-			snipped = pkg_root.sub(pkg + '/', '')
-			sz = SevenZipCmd.new(package_file)
-			chdir pkg_root do
-				sz.run_add
-			end
+		rule(/#{out_pkg_name_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
+			file_name = r.name.match(/(#{out_pkg_name_regex}).*/)[1].sub(out_pkg, '').sub('/','')
+			version = r.name.match(/.*v(\d+\.\d+\.\d+\.\d+)\.zip/)[1]
+			run_package(out_pkg, file_name, version)
 		end
 
 		directory @out_dir
 
-		desc "Generate zip'd packages for all package-tasks"
-		task :package => [@out_dir, pkg, pkg_root, package_file]
+		if @add_to_main_task
+			desc "Generate zip'd packages for all package-tasks"
+			task :package => [@out_dir, out_pkg, out_pkg_name] do
+				version = Versioner.new.get
+				Rake::Task["#{out_pkg_name}-#{@configuration}-v#{version}.zip"].invoke
+			end
+		end
 
 		desc "Generate zip'd package for #{@name}"
-		task "package_#{@name}".to_sym => [@out_dir, pkg, pkg_root, package_file]
+		task "package_#{@name}".to_sym => [@out_dir, out_pkg, out_pkg_name] do
+			version = Versioner.new.get
+			Rake::Task["#{out_pkg_name}-#{@configuration}-v#{version}.zip"].invoke
+		end
 
 		desc "Delete all packages"
 		task :clobber_package do
-			rm_rf pkg
+			rm_rf out_pkg
 		end
 
 		task :clobber => :clobber_package
@@ -75,5 +60,25 @@ class RDNPackageTask < Rake::TaskLib
 		task :repackage => [:clobber_package, :package]
 
 		self
+	end
+
+	def run_package(root_dir, package_name, version)
+		assembly_dir = File.join(root_dir, package_name)
+		mkdir_p assembly_dir
+		@targets.each do |t|
+			f = Pathname.new(t)
+			if f.directory?
+				cp_r f, File.join(assembly_dir, "#{f.basename}-#{@configuration}-v#{version}")
+			else
+				cp f, assembly_dir
+			end
+		end
+		versioned_assembly_dir = File.join(root_dir, "#{package_name}-#{@configuration}-v#{version}")
+		mv assembly_dir, versioned_assembly_dir
+		vzip = versioned_assembly_dir + '.zip'
+		sz = SevenZipCmd.new(vzip)
+		chdir versioned_assembly_dir do
+			sz.run_add
+		end
 	end
 end

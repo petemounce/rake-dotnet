@@ -74,7 +74,7 @@ class BcpCmd < Cli
 	end
 
 	def cmd
-		return "#{exe} #{db_object} #{direction} #{path} #{server} #{credentials} #{keep_identity_values} #{keep_null_values} #{wide_character_type} #{field_terminator} #{native_type}"
+		return "#{super} #{db_object} #{direction} #{path} #{server} #{credentials} #{keep_identity_values} #{keep_null_values} #{wide_character_type} #{field_terminator} #{native_type}"
 	end
 
 	def revert_optionals
