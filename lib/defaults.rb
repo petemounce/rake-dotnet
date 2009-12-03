@@ -21,6 +21,8 @@ TOOLS_DIR = ENV['TOOLS_DIR'] ? ENV['TOOLS_DIR'] : find_tools_dir
 CONFIGURATION = ENV['CONFIGURATION'] ? ENV['CONFIGURATION'] : 'Debug'
 MSBUILD_VERBOSITY = ENV['MSBUILD_VERBOSITY'] ? ENV['MSBUILD_VERBOSITY'] : 'm'
 OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
+DB_DIR = ENV['DB_DIR'] ? ENV['DB_DIR'] : File.join(PRODUCT_ROOT, 'db')
+ENVIRONMENT = ENV['ENVIRONMENT'] ? ENV['ENVIRONMENT'] : 'dev'.to_sym
 
 # clean will remove intermediate files (like the output of msbuild; things in the src tree)
 # clobber will remove build-output files (which will all live under the build tree)

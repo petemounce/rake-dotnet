@@ -1,5 +1,5 @@
 class RDNPackageTask < Rake::TaskLib
-	attr_accessor :targets
+	attr_accessor :targets, :add_to_main_task
 
 	def initialize(name, params={})
 		@name = name
@@ -35,7 +35,7 @@ class RDNPackageTask < Rake::TaskLib
 
 		directory @out_dir
 
-		if @add_to_main_task
+		if @add_to_main_task == true
 			desc "Generate zip'd packages for all package-tasks"
 			task :package => [@out_dir, out_pkg, out_pkg_name] do
 				version = Versioner.new.get
