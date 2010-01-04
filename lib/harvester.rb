@@ -4,7 +4,7 @@ class HarvestOutputTask < Rake::TaskLib
 		@target_path = params[:target_path] || Bin_out
 		@deps = params[:deps] || []
 		@configuration = params[:configuration] || CONFIGURATION
-		@glob = params[:glob] || "#{@src_path}/*"
+		@glob = params[:glob] || ["#{@src_path}/*"]
 
 		yield self if block_given?
 		define
