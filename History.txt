@@ -2,6 +2,8 @@
 
 FIX: Update documentation to include how to build
 FIX: Update to allow use with Hoe 2.4.0 (latest)
+FIX: 7-zip x86 installer does not name the 7z executable 7za like the x64 one does.  Therefore the test I was using to pick which executable won't work.
+CHANGE: 7-zip is now looked for in 3RD_PARTY/7-zip instead of 3RD_PARTY/7zip because this is how the installer installs it; no need to rename the directory if pushing into source-control.
 
 === 0.1.20 / 2009-11-30
 
