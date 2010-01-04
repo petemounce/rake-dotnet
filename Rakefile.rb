@@ -5,17 +5,13 @@ require 'hoe'
 require 'Pathname'
 require 'rake/clean'
 
-Hoe.spec 'rake-dotnet' do |p|
-	p.version = '0.1.20'
-	p.author = 'Peter Mounce'
-	p.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
-	p.email = 'public@neverrunwithscissors.com'
-	p.summary = 'Build automation for .NET builds'
-	p.rubyforge_name = 'rake-dotnet' # if different than lowercase project name
-	p.developer('Peter Mounce', 'public@neverrunwithscissors.com')
-	p.remote_rdoc_dir = ''
-	p.extra_deps << ['rake', '>= 0.8.3']
-	p.url = 'http://blog.neverrunwithscissors.com/tag/rake-dotnet'
+Hoe.spec 'rake-dotnet' do
+  developer('Peter Mounce', 'public@neverrunwithscissors.com')
+  self.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
+
+  self.extra_deps << ['rake', '>= 0.8.3']
+  self.history_file = 'History.txt'
+  self.rubyforge_name = 'rake-dotnet'
 end
 
 generated_library = File.join('lib', 'rake_dotnet.rb')
