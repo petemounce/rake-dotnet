@@ -1,3 +1,8 @@
+=== 0.1.21 / 
+
+FIX: Update documentation to include how to build
+FIX: Update to allow use with Hoe 2.4.0 (latest)
+
 === 0.1.20 / 2009-11-30
 
 FIX: NCover reports - Typo for handling complete version command line

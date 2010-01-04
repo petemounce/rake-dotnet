@@ -83,6 +83,7 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 
 ## Install:
 
+0. Install Ruby using the ruby one-click installer to (eg) `c:\ruby`
 1. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 2. Create a directory to hold 3rdparty dependencies
 	* if you follow the instructions in  [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/) you'll get default paths that rake-dotnet expects
@@ -91,8 +92,9 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## Build from source:
-1. `gem install rcov rspec diff-lcs` (again, prepend `sudo` if you're not on Windows)
-2. `rake 
+1. `gem install hoe rcov rspec diff-lcs --include-dependencies` (again, prepend `sudo` if you're not on Windows)
+2. Edit c:\Ruby\lib\ruby\gems\1.9.1\gems\hoe-2.4.0\lib\hoe.rb [per here](http://blog.emson.co.uk/2008/06/an-almost-fix-for-creating-rubygems-on-windows/)
+3. `rake clobber spec` and/or `rake clobber rcov` to run specifications and coverage respectively
 
 ## License:
 
