@@ -3,21 +3,25 @@
 require 'rubygems'
 require 'hoe'
 require 'Pathname'
+require 'rake'
 require 'rake/clean'
 
 Hoe.spec 'rake-dotnet' do
   developer('Peter Mounce', 'public@neverrunwithscissors.com')
-  self.description = 'Making a .NET build-automation dev\'s life easier, one angle-bracket at a time'
-
+  self.summary = 'A collection of custom-tasks to make a .NET project easily buildable via command-line automation'
+  self.version = '0.1.21'
   self.extra_deps << ['rake', '>= 0.8.3']
+  self.extra_dev_deps << ['rspec', '>= 1.2.9']
+  self.extra_dev_deps << ['rcov', '>= 0.8.1.2.0']
+  self.extra_dev_deps << ['hoe', '>= 2.4.0']
+  self.extra_dev_deps << ['diff-lcs', '>= 1.1.2']
+  self.extra_dev_deps << ['syntax', '>= 1.0.0']
   self.history_file = 'History.txt'
-  self.rubyforge_name = 'rake-dotnet'
 end
 
 generated_library = File.join('lib', 'rake_dotnet.rb')
 CLOBBER.include generated_library
 file generated_library do |f|
-	text = ''
 	files = ['header.rb', 'defaults.rb', 'cli.rb', 'bcpcmd.rb', 'sqlcmd.rb', 'assemblyinfo.rb', 'fxcop.rb', 'harvester.rb', 'msbuild.rb', 'ncover.rb', 'package.rb', 'sevenzip.rb', 'svn.rb', 'version.rb', 'xunit.rb', 'footer.rb']
 	gl = File.open(generated_library, 'a')
 	files.each do |file|
@@ -46,7 +50,7 @@ desc 'Run all examples and report'
 Spec::Rake::SpecTask.new('examples_with_report') do |t|
 	t.spec_files = FileList['spec/**/*.rb']
 	t.spec_opts = ["--format", "html:doc/examples.html", "--diff"]
-	t.fail_on_error = false
+	t.fail_on_error = true
 end
 
 desc "Run all specs with RCov"
@@ -55,11 +59,11 @@ Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
 	t.rcov = true
 	t.rcov_opts = ['--exclude', 'spec']
 end
-# vim: syntax=Ruby
 
 task :spec => generated_library
 file 'coverage/index.html'  => [:examples_with_rcov]
 file 'doc/examples.html'  => [:examples_with_report]
 
-task :package => [:spec, :examples_with_rcov, :examples_with_report]
-task :release => [:examples_with_rcov, :examples_with_report]
+task :package => [:examples_with_report, :examples_with_rcov]
+
+# vim: syntax=Ruby

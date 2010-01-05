@@ -83,7 +83,7 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 
 ## Install:
 
-0. Install Ruby using the ruby one-click installer to (eg) `c:\ruby`
+0. Install Ruby 1.8.6 using the (ruby one-click installer)[http://rubyinstaller.org] to (eg) `c:\ruby`
 1. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 2. Create a directory to hold 3rdparty dependencies
 	* if you follow the instructions in  [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/) you'll get default paths that rake-dotnet expects
@@ -92,9 +92,16 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## Build from source:
-1. `gem install hoe rcov rspec diff-lcs --include-dependencies` (again, prepend `sudo` if you're not on Windows)
-2. Edit c:\Ruby\lib\ruby\gems\1.9.1\gems\hoe-2.4.0\lib\hoe.rb [per here](http://blog.emson.co.uk/2008/06/an-almost-fix-for-creating-rubygems-on-windows/)
-3. `rake clobber spec` and/or `rake clobber rcov` to run specifications and coverage respectively
+1. You have a choice:
+	* Install `rcov` from a (specific win32 version)[http://gemcutter.org/gems/rcov/versions/0.8.1.2.0-mswin32] 
+		* download it
+		* `gem install gem install rcov-0.8.1.2.0-mswin32.gem`
+	* install from gem source
+		* get a C-compilation toolchain installed for the `rcov` gem; (cygwin should work)[http://cygwin.com] (`make`, `gcc`).
+		* `gem install rcov`
+2. `gem install hoe rspec diff-lcs --include-dependencies` (again, prepend `sudo` if you're not on Windows)
+3. Edit `c:\Ruby\lib\ruby\gems\1.9.1\gems\hoe-2.4.0\lib\hoe.rb` [per here](http://blog.emson.co.uk/2008/06/an-almost-fix-for-creating-rubygems-on-windows/)
+4. `rake clobber examples_with_report` and/or `rake clobber examples_with_rcov` to run specifications and coverage respectively; library itself will be generated to `lib/rake_dotnet.rb` by cat'ing files together.
 
 ## License:
 
