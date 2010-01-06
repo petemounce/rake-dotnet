@@ -1,5 +1,8 @@
 === 0.1.21 / 
 
+CHANGE: Support writing NCover3 coverage data to TeamCity v5 as service message
+NEW: NUnitTask and NUnitCmd (based on NUnit 2.5)
+CHANGE: The test-tasks now create a task called after themselves (eg :xunit and :nunit) but there's now also a :test task to abstract the choice of test framework in the build script
 FIX: Update documentation to include how to build
 FIX: Update to allow use with Hoe 2.4.0 (latest)
 FIX: 7-zip x86 installer does not name the 7z executable 7za like the x64 one does.  Therefore the test I was using to pick which executable won't work.

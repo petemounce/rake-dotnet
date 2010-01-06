@@ -4,6 +4,8 @@ README.markdown
 README.txt
 Rakefile.rb
 coverage/index.html
+coverage/jquery.tablesorter.min.js
+coverage/jquery-1.3.2.min.js
 coverage/lib-assemblyinfo_rb.html
 coverage/lib-bcpcmd_rb.html
 coverage/lib-cli_rb.html
@@ -12,12 +14,17 @@ coverage/lib-harvester_rb.html
 coverage/lib-iisappcmd_rb.html
 coverage/lib-msbuild_rb.html
 coverage/lib-ncover_rb.html
+coverage/lib-nunitcmd_rb.html
+coverage/lib-nunittask_rb.html
 coverage/lib-package_rb.html
 coverage/lib-sevenzip_rb.html
 coverage/lib-sqlcmd_rb.html
 coverage/lib-svn_rb.html
 coverage/lib-version_rb.html
 coverage/lib-xunit_rb.html
+coverage/print.css
+coverage/rcov.js
+coverage/screen.css
 doc/examples.html
 lib/rake_dotnet.rb
 lib/rake_dotnet/default_rakefile.rb
@@ -36,6 +43,8 @@ spec/msbuildtask_spec.rb
 spec/ncoverconsolecmd_spec.rb
 spec/ncoverreportingcmd_spec.rb
 spec/ncovertask_spec.rb
+spec/nunitcmd_spec.rb
+spec/nunittask_spec.rb
 spec/rdnpackagetask_spec.rb
 spec/sevenzipcmd_spec.rb
 spec/sqlcmd_spec.rb
