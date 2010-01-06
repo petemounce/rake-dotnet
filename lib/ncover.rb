@@ -133,6 +133,7 @@ class NCoverConsoleCmd
 	def run
 		puts cmd if VERBOSE
 		sh cmd
+        puts "##teamcity[importData type='dotNetCoverage' tool='ncover3' path='#{File.expand_path(@output_file)}']" if ENV['BUILD_NUMBER']
 	end
 end
 
