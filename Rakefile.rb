@@ -6,23 +6,26 @@ require 'Pathname'
 require 'rake'
 require 'rake/clean'
 
+VERSION = ENV['VERSION']
+
 Hoe.spec 'rake-dotnet' do
   developer('Peter Mounce', 'public@neverrunwithscissors.com')
   self.summary = 'A collection of custom-tasks to make a .NET project easily buildable via command-line automation'
-  self.version = '0.1.21'
+  self.description = 'Removing angle brackets from a .NET build-guy\'s life one at a time...'
+  #self.homepage = 'http://github.com/petemounce/rake-dotnet'
+  self.version = VERSION
   self.extra_deps << ['rake', '>= 0.8.3']
   self.extra_dev_deps << ['rspec', '>= 1.2.9']
   self.extra_dev_deps << ['rcov', '>= 0.8.1.2.0']
   self.extra_dev_deps << ['hoe', '>= 2.4.0']
   self.extra_dev_deps << ['diff-lcs', '>= 1.1.2']
   self.extra_dev_deps << ['syntax', '>= 1.0.0']
-  self.history_file = 'History.txt'
 end
 
 generated_library = File.join('lib', 'rake_dotnet.rb')
 CLOBBER.include generated_library
 file generated_library do |f|
-	files = ['header.rb', 'defaults.rb', 'cli.rb', 'bcpcmd.rb', 'sqlcmd.rb', 'assemblyinfo.rb', 'fxcop.rb', 'harvester.rb', 'msbuild.rb', 'ncover.rb', 'package.rb', 'sevenzip.rb', 'svn.rb', 'version.rb', 'xunit.rb', 'footer.rb']
+	files = ['header.rb', 'defaults.rb', 'cli.rb', 'bcpcmd.rb', 'sqlcmd.rb', 'assemblyinfo.rb', 'fxcop.rb', 'harvester.rb', 'msbuild.rb', 'ncover.rb', 'nunitcmd.rb', 'nunittask.rb', 'package.rb', 'sevenzip.rb', 'svn.rb', 'version.rb', 'xunit.rb', 'footer.rb']
 	gl = File.open(generated_library, 'a')
 	files.each do |file|
 		text = File.read(File.join('lib', file))
