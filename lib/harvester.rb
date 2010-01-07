@@ -66,7 +66,7 @@ class HarvestWebApplicationTask < Rake::TaskLib
 		rule(odr) do |r|
 			harvest(r.name, odr)
 		end
-		
+
 		desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
 		task :harvest_webapps, [:web_app_list] => @target_path do |t, args|
 			list = FileList.new("#{@src_path}/#{@glob}")

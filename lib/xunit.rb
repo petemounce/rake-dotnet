@@ -36,6 +36,7 @@ class XUnitTask < Rake::TaskLib
 				x.run
 			end
 		end
+
 		directory @reports_dir
 
 		desc "Generate test reports (which ones, depends on the content of XUNIT_OPTS) inside of each directory specified, where each directory matches a test-suite name (give relative paths) (otherwise, all matching #{@suites_dir}/*Tests.*.dll) and write reports to #{@reports_dir}"

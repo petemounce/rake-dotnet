@@ -28,7 +28,7 @@ class AddSiteIisAppCmd < IisAppCmd
 		return @name unless @name.nil?
 		pn = Pathname.new(@path)
 		exp = File.expand_path(pn.dirname)
-		return exp.gsub('/','\\')
+		return exp.gsub('/', '\\')
 	end
 
 	def id

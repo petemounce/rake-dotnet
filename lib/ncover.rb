@@ -92,7 +92,7 @@ class NCoverConsoleCmd
 
 		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
 		@exclude_assemblies_regex.push('ISymWrapper')
-		
+
 		@profile_iis = params[:profile_iis] || false
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
 
@@ -133,7 +133,7 @@ class NCoverConsoleCmd
 	def run
 		puts cmd if VERBOSE
 		sh cmd
-        puts "##teamcity[importData type='dotNetCoverage' tool='ncover3' path='#{File.expand_path(@output_file)}']" if ENV['BUILD_NUMBER']
+		puts "##teamcity[importData type='dotNetCoverage' tool='ncover3' path='#{File.expand_path(@output_file)}']" if ENV['BUILD_NUMBER']
 	end
 end
 

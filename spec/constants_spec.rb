@@ -7,5 +7,5 @@ PRODUCT_NAME = 'Foo'
 OUT_DIR = 'out'
 
 def re(str)
-  return str.gsub('/', '\/').gsub('.', '\.')
+	return str.gsub('/', '\/').gsub('.', '\.')
 end
