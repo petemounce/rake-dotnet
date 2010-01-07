@@ -27,10 +27,18 @@ CLOBBER.include generated_library
 file generated_library do |f|
 	files = ['header.rb', 'defaults.rb', 'cli.rb',
 	         'bcpcmd.rb', 'sqlcmd.rb', 'assemblyinfo.rb',
-	         'fxcop.rb', 'harvester.rb', 'msbuild.rb',
-	         'ncover.rb', 'nunitcmd.rb', 'nunittask.rb',
-	         'package.rb', 'sevenzip.rb', 'svn.rb',
-	         'version.rb', 'xunit.rb', 'footer.rb']
+	         'fxcop.rb',
+	         'harvester.rb',
+	         'msbuild.rb',
+	         'ncover.rb',
+	         'ndependconsolecmd.rb', 'ndependtask.rb',
+	         'nunitcmd.rb', 'nunittask.rb',
+	         'package.rb',
+	         'sevenzip.rb',
+	         'svn.rb',
+	         'version.rb',
+	         'xunit.rb',
+	         'footer.rb']
 	gl = File.open(generated_library, 'a')
 	files.each do |file|
 		text = File.read(File.join('lib', file))

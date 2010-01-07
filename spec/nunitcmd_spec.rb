@@ -10,7 +10,6 @@ describe NUnitCmd, 'When no dll is given' do
 end
 
 describe NUnitCmd, 'By default' do
-	attr_accessor :nc
 	before :all do
 		@nc = NUnitCmd.new({:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll'})
 	end

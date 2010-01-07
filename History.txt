@@ -1,5 +1,7 @@
-=== 0.1.21 / 
+=== 0.2.0 / 2010-01-
 
+NEW: Increased test coverage
+NEW: NDepend support
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
 CHANGE: Support writing NCover3 coverage data to TeamCity v5 as service message
 NEW: NUnitTask and NUnitCmd (based on NUnit 2.5)

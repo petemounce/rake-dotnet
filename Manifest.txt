@@ -14,6 +14,8 @@ coverage/lib-harvester_rb.html
 coverage/lib-iisappcmd_rb.html
 coverage/lib-msbuild_rb.html
 coverage/lib-ncover_rb.html
+coverage/lib-ndependconsolecmd_rb.html
+coverage/lib-ndependtask_rb.html
 coverage/lib-nunitcmd_rb.html
 coverage/lib-nunittask_rb.html
 coverage/lib-package_rb.html
@@ -43,6 +45,8 @@ spec/msbuildtask_spec.rb
 spec/ncoverconsolecmd_spec.rb
 spec/ncoverreportingcmd_spec.rb
 spec/ncovertask_spec.rb
+spec/ndependconsolecmd_spec.rb
+spec/ndependtask_spec.rb
 spec/nunitcmd_spec.rb
 spec/nunittask_spec.rb
 spec/rdnpackagetask_spec.rb

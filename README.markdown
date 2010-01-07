@@ -13,17 +13,20 @@ Rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 ## Features
 
 *	Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
-	*	major.minor.build.svn-revision version number
+	*	major.minor.build.svn-revision version number (git is handled differently) (build number is 0 when built outside of CI)
 	*	product-name
 	*	company-name
 	*	build configuration
 *	Build the project files to produce said DLLs (call msbuild against the project file(s))
-*	Run XUnit.NET unit tests against said DLLs, and output reports (wrap xunit.console.exe)
+*	Run NUnit tests against said DLLs, and output an XML report (wrap nunit.console.exe)
+*	Run XUnit.NET tests against said DLLs, and output reports (wrap xunit.console.exe)
 *	Run FxCop against said DLLs, and output reports (wrap fxcopcmd.exe)
 *	Run NCover against build output to generate coverage metrics
 *	Run NCover against coverage to generate coverage reports
-*	Harvest build output
+*	Run NDepend against build output to generate reports (based on an ndepend project file)
+*	Harvest build output to a single directory tree for ease of working with it
 *	Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
+*	Integrates well with TeamCity continuous integration
 
 ## Problems:
 
