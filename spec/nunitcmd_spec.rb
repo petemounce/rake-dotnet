@@ -27,13 +27,24 @@ describe NUnitCmd, 'By default' do
 	it "should use correct exe_name" do
 		@nc.exe.should match(/.*nunit-console.exe/)
 	end
+end
 
+describe NUnitCmd, 'When told to write a report' do
+	before :all do
+		@nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll', :options=>{:xml=>true})
+	end
+	it 'should pick a sensible name for the report' do
+		@nc.cmd.should include('Foo.Unit.Tests.nunit.xml')
+	end
 	it 'should write xml to a sensible place' do
 		file = File.expand_path("#{OUT_DIR}/reports/nunit/Foo.Unit.Tests.nunit.xml")
 		@nc.cmd.should include(file.gsub('/', '\\'))
 	end
+end
 
-	it 'should pick a sensible name for the report' do
-		@nc.cmd.should include('Foo.Unit.Tests.nunit.xml')
+describe NUnitCmd, 'When told not to write xml' do
+	it 'should not have /xml=whatever in the command' do
+		nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll', :options=>{:xml=>false})
+		nc.cmd.should_not match(/\/xml=.*\.nunit\.xml/)
 	end
 end

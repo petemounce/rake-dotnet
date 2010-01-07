@@ -21,11 +21,14 @@ class NUnitCmd < Cli
 
 		rd = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'nunit')
 		@reports_dir = File.expand_path(rd)
-		@xml_out = params[:xml] || true
+		@options = params[:options] || {}
 	end
 
 	def xml
-		return "/xml=#{@reports_dir.gsub('/', '\\')}\\#{@name}.nunit.xml" unless @xml_out.nil? || !@xml_out
+		if @options[:xml].nil? || @options[:xml] == false
+			return ''
+		end
+		return "/xml=#{@reports_dir.gsub('/', '\\')}\\#{@name}.nunit.xml"
 	end
 
 	def dll
