@@ -1,7 +1,8 @@
-NCover Complete Trial v3.0.22 x64 (Administrator)
-Code Coverage for .NET
+NCover Complete Trial v3.3.2 x86 (Administrator)
 Copyright (c) 2007 - 2009 Gnoso Inc.
-http://www.ncover.com
+License Key: WUCBI1C095O2X2WJ
+Registered to Customer #: 34022 for 1 Machine
+21 days left in the trial period.
 
 Usage: ncover.console [<application to start> [<application args>]]
                       [//svc <service name>]
@@ -86,9 +87,13 @@ Include and Exclude rules
  //l  <filename>
     - Write coverage messages to the given log file.
       CHANGE FROM 2.1: Messages will not be written unless //ll is used
+ //expertmode
+    - Turn usability mode off and expert mode on.
  //ll <log level>
     - Specify profiler log level
       Values: "None"[default], "Normal", "Verbose"
+ //oaws
+    - Only gather coverage data from assemblies with source code.
  //p  <project name>
     - Provide a project name to display in the html report
       Default: "New Project"
