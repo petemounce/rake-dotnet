@@ -2,7 +2,7 @@ require 'spec'
 require File.join(File.dirname(__FILE__), '..','lib','cli.rb')
 require File.join(File.dirname(__FILE__), '..','lib','ncover.rb')
 
-describe NCoverConsoleCmd do
+describe NCoverConsoleCmd, 'When initialised with no options' do
   it "should have sensible search paths"
   it "should require a assembly to profile"
   it "should have a default for exclude_assemblies"
