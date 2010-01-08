@@ -1,5 +1,5 @@
 class NUnitTask < Rake::TaskLib
-	attr_accessor :suites_dir, :reports_dir, :runner_options, :dependencies
+	attr_accessor :suites_dir, :reports_dir, :runner_options, :dependencies, :include, :exclude
 
 	def initialize(params={})
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
@@ -34,16 +34,21 @@ class NUnitTask < Rake::TaskLib
 			out_dir = File.join(@reports_dir, suite)
 			unless File.exist?(out_dir) && uptodate?(tests_dll, out_dir)
 				mkdir_p(out_dir) unless File.exist?(out_dir)
-				n = NUnitCmd.new({:input_files=>tests_dll, :options=>{:xml=>true}})
+				n = NUnitCmd.new({:input_files=>tests_dll,
+				                  :options=>{:xml=>true,
+				                             :include=>@include,
+				                             :exclude=>@exclude}})
 				n.run
 			end
 		end
 
-		desc "Generate test reports (which ones, depends on the content of XUNIT_OPTS) inside of each directory specified, where each directory matches a test-suite name (give relative paths) (otherwise, all matching #{@suites_dir}/*Tests.*.dll) and write reports to #{@reports_dir}"
-		task :nunit, [:reports] => [@reports_dir] do |t, args|
-			reports_list = FileList.new("#{@suites_dir}/**/*Tests*.dll").pathmap("#{@reports_dir}/%n/")
-			args.with_defaults(:reports => reports_list)
-			args.reports.each do |r|
+		desc "Generate xml test reports from nunit and write reports to #{@reports_dir}"
+		task :nunit, :exclude, :include do |t, args|
+			suites = FileList.new("#{@suites_dir}/**/*Tests*.dll").pathmap("#{@reports_dir}/%n/")
+			args.with_defaults(:exclude => '', :include => '')
+			@exclude = args[:exclude].split(';')
+			@include = args[:include].split(';')
+			suites.each do |r|
 				Rake::FileTask[r].invoke
 			end
 		end

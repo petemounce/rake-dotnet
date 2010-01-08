@@ -6,14 +6,12 @@ require 'Pathname'
 require 'rake'
 require 'rake/clean'
 
-VERSION = ENV['VERSION']
-
 Hoe.spec 'rake-dotnet' do
 	developer('Peter Mounce', 'public@neverrunwithscissors.com')
 	self.summary = 'A collection of custom-tasks to make a .NET project easily buildable via command-line automation'
 	self.description = 'Removing angle brackets from a .NET build-guy\'s life one at a time...'
 	#self.homepage = 'http://github.com/petemounce/rake-dotnet'
-	self.version = VERSION
+	self.version = '0.2.0'
 	self.extra_deps << ['rake', '>= 0.8.3']
 	self.extra_dev_deps << ['rspec', '>= 1.2.9']
 	self.extra_dev_deps << ['rcov', '>= 0.8.1.2.0']
