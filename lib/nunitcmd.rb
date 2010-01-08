@@ -1,6 +1,4 @@
 class NUnitCmd < Cli
-	attr_accessor :xml_out
-
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'nunit', 'bin', 'net-2.0')
@@ -35,8 +33,22 @@ class NUnitCmd < Cli
 		return "#{@input_files.gsub('/', '\\')}"
 	end
 
+	def include
+		inc = @options[:include]
+		return '' if inc.nil? || inc == '' || inc == []
+		return "/include=#{inc.join(',')}" if inc.is_a?(Array)
+		return "/include=#{inc}" if inc.is_a?(String)
+	end
+
+	def exclude
+		exc = @options[:exclude]
+		return '' if exc.nil? || exc == '' || exc == []
+		return "/exclude=#{exc.join(',')}" if exc.is_a?(Array)
+		return "/exclude=#{exc}" if exc.is_a?(String)
+	end
+
 	def cmd
-		return "#{super} #{dll} #{xml}"
+		return "#{super} #{dll} #{xml} #{include} #{exclude}"
 	end
 
 	def run

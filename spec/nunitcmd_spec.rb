@@ -26,11 +26,20 @@ describe NUnitCmd, 'By default' do
 	it "should use correct exe_name" do
 		@nc.exe.should match(/.*nunit-console.exe/)
 	end
+
+	it 'should have no includes specified' do
+		@nc.include.should be_empty
+	end
+
+	it 'should have no excludes specified' do
+		@nc.exclude.should be_empty
+	end
 end
 
 describe NUnitCmd, 'When told to write a report' do
 	before :all do
-		@nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll', :options=>{:xml=>true})
+		@nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+		                   :options=>{:xml=>true})
 	end
 	it 'should pick a sensible name for the report' do
 		@nc.cmd.should include('Foo.Unit.Tests.nunit.xml')
@@ -43,7 +52,28 @@ end
 
 describe NUnitCmd, 'When told not to write xml' do
 	it 'should not have /xml=whatever in the command' do
-		nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll', :options=>{:xml=>false})
+		nc = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+		                  :options=>{:xml=>false})
 		nc.cmd.should_not match(/\/xml=.*\.nunit\.xml/)
+	end
+end
+
+describe NUnitCmd, 'When includes are specified' do
+	it 'should use them' do
+		nc = NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+		                  :options => {:include=>['unit', 'integration']})
+		nc.cmd.should include('/include=')
+		nc.cmd.should include('unit')
+		nc.cmd.should include('integration')
+	end
+end
+
+describe NUnitCmd, 'When excludes are specified' do
+	it 'should use them' do
+		nc = NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+		                  :options => {:exclude=>['integration', 'unit']})
+		nc.cmd.should include('/exclude=')
+		nc.cmd.should include('integration')
+		nc.cmd.should include('unit')
 	end
 end

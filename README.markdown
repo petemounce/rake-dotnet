@@ -16,7 +16,8 @@ Rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 	*	major.minor.build.svn-revision version number (git is handled differently) (build number is 0 when built outside of CI)
 	*	product-name
 	*	company-name
-	*	build configuration
+	*	build configuration (Release/Debug etc)
+	*	build-date
 *	Build the project files to produce said DLLs (call msbuild against the project file(s))
 *	Run NUnit tests against said DLLs, and output an XML report (wrap nunit.console.exe)
 *	Run XUnit.NET tests against said DLLs, and output reports (wrap xunit.console.exe)
