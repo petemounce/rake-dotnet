@@ -34,6 +34,10 @@ describe NUnitCmd, 'By default' do
 	it 'should have no excludes specified' do
 		@nc.exclude.should be_empty
 	end
+
+	it 'should quote the input_file parameter' do
+		@nc.cmd.should match(/\.exe\w*".*dll"/)
+	end
 end
 
 describe NUnitCmd, 'When told to write a report' do
@@ -47,6 +51,7 @@ describe NUnitCmd, 'When told to write a report' do
 	it 'should write xml to a sensible place' do
 		file = File.expand_path("#{OUT_DIR}/reports/nunit/Foo.Unit.Tests.nunit.xml")
 		@nc.cmd.should include(file.gsub('/', '\\'))
+		@nc.cmd.should match(/\/xml=".*\.nunit\.xml"/)
 	end
 end
 

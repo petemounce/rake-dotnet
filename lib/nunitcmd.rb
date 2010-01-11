@@ -26,11 +26,11 @@ class NUnitCmd < Cli
 		if @options[:xml].nil? || @options[:xml] == false
 			return ''
 		end
-		return "/xml=#{@reports_dir.gsub('/', '\\')}\\#{@name}.nunit.xml"
+		return "/xml=\"#{@reports_dir.gsub('/', '\\')}\\#{@name}.nunit.xml\""
 	end
 
 	def dll
-		return "#{@input_files.gsub('/', '\\')}"
+		return "\"#{@input_files.gsub('/', '\\')}\""
 	end
 
 	def include
