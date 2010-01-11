@@ -1,6 +1,7 @@
 require 'spec'
 require 'rake'
 require 'rake/tasklib'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'dependenttask.rb')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'nunittask.rb')
 require 'constants_spec.rb'
 

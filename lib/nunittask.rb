@@ -1,24 +1,23 @@
 class NUnitTask < Rake::TaskLib
-	attr_accessor :suites_dir, :reports_dir, :runner_options, :dependencies, :include, :exclude
+	include DependentTask
+	
+	attr_accessor :suites_dir, :reports_dir, :runner_options, :include, :exclude
 
 	def initialize(params={})
+		@main_task_name = :nunit
+		super(params)
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 		@reports_dir = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'nunit')
 		@runner_options = params[:runner_options] || {}
-		@dependencies = params[:dependencies] || []
 
 		yield self if block_given?
 		define
 	end
 
 	def define
-		@dependencies.to_a.each do |d|
-			task :nunit => d
-		end
-
 		directory @reports_dir
 
-		task :nunit => [@reports_dir]
+		task @main_task_name => [@reports_dir]
 
 		task :clobber_nunit do
 			rm_rf @reports_dir
@@ -43,7 +42,7 @@ class NUnitTask < Rake::TaskLib
 		end
 
 		desc "Generate xml test reports from nunit and write reports to #{@reports_dir}"
-		task :nunit, :exclude, :include do |t, args|
+		task @main_task_name, :exclude, :include do |t, args|
 			suites = FileList.new("#{@suites_dir}/**/*Tests*.dll").pathmap("#{@reports_dir}/%n/")
 			args.with_defaults(:exclude => '', :include => '')
 			@exclude = args[:exclude].split(';')
