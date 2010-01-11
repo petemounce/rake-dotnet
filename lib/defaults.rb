@@ -30,7 +30,10 @@ CLEAN.include("#{SRC_DIR}/**/bin")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.vb")
 CLEAN.include('version.txt')
-CLOBBER.include(OUT_DIR)
+
+task :clobber do
+	rm_rf OUT_DIR
+end
 
 VERBOSE = ENV['VERBOSE'] ? ENV['VERBOSE'] : false
 verbose(VERBOSE)
