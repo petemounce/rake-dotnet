@@ -47,9 +47,6 @@ describe NDependTask, 'When initialised with dependencies' do
 		@ndt = NDependTask.new(:dependencies=>[:foo])
 		@ndepend = Rake::Task[:ndepend]
 	end
-	it 'should read those dependencies' do
-		@ndt.dependencies.should include(:foo)
-	end
 	it 'should make :ndepend task depend on those' do
 		@ndepend.prerequisites.should include('foo')
 	end

@@ -1,9 +1,10 @@
 class NDependTask < Rake::TaskLib
+	include DependentTask
+
 	attr_accessor :options, :reports_dir, :dependencies
 
 	def initialize(params={})
 		@reports_dir = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'ndepend')
-		@dependencies = params[:dependencies] || []
 
 		@options = params[:options] || {}
 		@options[:reports_dir] = @reports_dir
@@ -13,10 +14,6 @@ class NDependTask < Rake::TaskLib
 	end
 
 	def define
-		@dependencies.each do |d|
-			task :ndepend => d
-		end
-
 		directory @reports_dir
 
 		task :ndepend => [@reports_dir] do

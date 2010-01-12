@@ -5,6 +5,7 @@ DB_PASSWORD = 'youREALLYdontwanttousethispasswordassa!'
 PRODUCT_NAME = 'Foo'
 
 OUT_DIR = 'out'
+PRODUCT_ROOT = '.'
 
 
 def re(str)
