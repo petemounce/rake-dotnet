@@ -49,10 +49,11 @@ describe NUnitCmd, 'When told to write a report' do
 		@nc.cmd.should include('Foo.Unit.Tests.nunit.xml')
 	end
 	it 'should write xml to a sensible place' do
-		file = File.expand_path("#{OUT_DIR}/reports/nunit/Foo.Unit.Tests.nunit.xml")
+		file = File.expand_path("#{OUT_DIR}/reports/nunit/Foo.Unit.Tests/Foo.Unit.Tests.nunit.xml")
 		@nc.cmd.should include(file.gsub('/', '\\'))
 		@nc.cmd.should match(/\/xml=".*\.nunit\.xml"/)
 	end
+	it 'should output a teamcity service message correctly'
 end
 
 describe NUnitCmd, 'When told not to write xml' do

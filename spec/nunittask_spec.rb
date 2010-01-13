@@ -15,7 +15,7 @@ describe NUnitTask, 'When initialised with no settings' do
 	end
 	it 'should have a sensible reports directory to write to' do
 		d = File.join(OUT_DIR, 'reports', 'nunit')
-		@nut.reports_dir.should match(/#{re(d)}/)
+		@nut.out_dir.should match(/#{re(d)}/)
 	end
 	it 'should have no nunit runner options set' do
 		@nut.runner_options.should be_empty
@@ -54,11 +54,11 @@ describe NUnitTask, 'When initialised with suites dir' do
 	end
 end
 
-describe NUnitTask, 'When initialised with reports dir' do
+describe NUnitTask, 'When initialised with out_dir' do
 	it 'should use that dir' do
 		d = File.join(OUT_DIR, 'junk')
-		nut = NUnitTask.new(:reports_dir => d)
-		nut.reports_dir.should match(/#{re(d)}/)
+		nut = NUnitTask.new(:out_dir => d)
+		nut.out_dir.should match(/#{re(d)}/)
 	end
 end
 

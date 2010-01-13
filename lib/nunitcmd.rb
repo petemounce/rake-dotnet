@@ -17,16 +17,18 @@ class NUnitCmd < Cli
 			@input_files = File.expand_path(in_files)
 		end
 
-		rd = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'nunit')
-		@reports_dir = File.expand_path(rd)
+		od = params[:out_dir] || File.join(OUT_DIR, 'reports', 'nunit', @name)
+		@out_dir = File.expand_path(od)
 		@options = params[:options] || {}
 	end
 
+	def no_xml
+		return @options[:xml].nil? || @options[:xml] == false
+	end
+
 	def xml
-		if @options[:xml].nil? || @options[:xml] == false
-			return ''
-		end
-		return "/xml=\"#{@reports_dir.gsub('/', '\\')}\\#{@name}.nunit.xml\""
+		return '' if no_xml
+		return "/xml=\"#{@out_dir.gsub('/', '\\')}\\#{@name}.nunit.xml\""
 	end
 
 	def dll
@@ -54,6 +56,8 @@ class NUnitCmd < Cli
 	def run
 		puts cmd if VERBOSE
 		sh cmd
+		if (ENV['BUILD_NUMBER'])
+			puts "##teamcity[importData type='nunit' path='#{xml}']" unless no_xml
+		end
 	end
-
 end
