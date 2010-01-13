@@ -4,6 +4,8 @@ class NDependTask < Rake::TaskLib
 	attr_accessor :options, :reports_dir, :dependencies
 
 	def initialize(params={})
+		@main_task_name = :ndepend
+		super(params)
 		@reports_dir = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'ndepend')
 
 		@options = params[:options] || {}
