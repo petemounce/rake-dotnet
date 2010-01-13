@@ -1,20 +1,22 @@
 class HarvestOutputTask < Rake::TaskLib
+	attr_accessor :src_dir, :out_dir, :configuration, :glob
+	
 	def initialize(params={})
-		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
-		@target_path = params[:target_path] || Bin_out
+		@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
+		@out_dir = params[:out_dir] || Bin_out
 		@deps = params[:deps] || []
 		@configuration = params[:configuration] || CONFIGURATION
-		@glob = params[:glob] || ["#{@src_path}/*"]
+		@glob = params[:glob] || ["#{@src_dir}/*"]
 
 		yield self if block_given?
 		define
 	end
 
 	def define
-		directory @target_path
+		directory @out_dir
 
-		desc "Harvest specified libraries (or all matching #{@glob}) to #{@target_path}"
-		task :harvest_output, [:to_harvest_list] => @target_path do |t, args|
+		desc "Harvest specified libraries (or all matching #{@glob}) to #{@out_dir}"
+		task :harvest_output, [:to_harvest_list] => @out_dir do |t, args|
 			list = FileList.new
 			@glob.each do |g|
 				list.include(g)
@@ -29,7 +31,7 @@ class HarvestOutputTask < Rake::TaskLib
 					output.include("#{entry}/bin/*")
 					output.each do |o|
 						o_pn = Pathname.new(o)
-						to_pn = Pathname.new("#{@target_path}")
+						to_pn = Pathname.new("#{@out_dir}")
 						if (o_pn.directory?)
 							cp_r(o, to_pn) unless o_pn.to_s.match(/#{@configuration}$/)
 						else
@@ -41,18 +43,24 @@ class HarvestOutputTask < Rake::TaskLib
 		end
 
 		@deps.each do |d|
-			task :harvest => d
+			task :harvest_output => d
 		end
 
-		self
+		desc 'Perform all harvest tasks'
+		task :harvest => :harvest_output
 	end
 end
 
 class HarvestWebApplicationTask < Rake::TaskLib
+	include DependentTask
+
+	attr_accessor :out_dir
+
 	def initialize(params={})
+		@main_task_name = :harvest_webapps
+		super(params)
 		@src_path = params[:src_path] || File.join(PRODUCT_ROOT, 'src')
-		@target_path = params[:target_path] || OUT_DIR
-		@deps = params[:deps] || []
+		@out_dir = params[:target_path] || OUT_DIR
 		@glob = params[:glob] || "**/*.Site"
 
 		yield self if block_given?
@@ -60,29 +68,26 @@ class HarvestWebApplicationTask < Rake::TaskLib
 	end
 
 	def define
-		out_dir_regex = RakeDotNet::regexify(@target_path)
+		out_dir_regex = regexify(@out_dir)
 
 		odr = /#{out_dir_regex}\/([\w\.-_ ]*Site)\//
 		rule(odr) do |r|
 			harvest(r.name, odr)
 		end
 
-		desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@target_path}"
-		task :harvest_webapps, [:web_app_list] => @target_path do |t, args|
+		directory @out_dir
+		task :harvest_webapps => @out_dir
+
+		desc "Harvest specified web-applications (or all matching #{@src_path}/#{@glob}) to #{@out_dir}"
+		task :harvest_webapps, :web_app_list do |t, args|
 			list = FileList.new("#{@src_path}/#{@glob}")
 			args.with_defaults(:web_app_list => list)
 			args.web_app_list.each do |w|
 				pn = Pathname.new(w)
-				out = File.join(@target_path, pn.basename) + '/'
+				out = File.join(@out_dir, pn.basename) + '/'
 				Rake::FileTask[out].invoke
 			end
 		end
-
-		@deps.each do |d|
-			task :harvest_webapps => d
-		end
-
-		self
 	end
 
 	def harvest(path, regex)
