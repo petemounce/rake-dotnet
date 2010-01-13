@@ -5,13 +5,17 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'helpers.rb')
 require 'constants_spec.rb'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'dependenttask.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'harvester.rb')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'harvestoutputtask.rb')
 
 describe HarvestOutputTask, 'When initialised with defaults' do
 	before :all do
 		@hot = HarvestOutputTask.new
 		@task = Rake::Task[:harvest_output]
 		@harvest = Rake::Task[:harvest]
+	end
+	after :all do
+		Rake::Task.clear
+		Rake::FileTask.clear
 	end
 	it 'should have a sensible src_dir' do
 		@hot.src_dir.should eql(File.join(PRODUCT_ROOT, 'src'))
@@ -48,10 +52,15 @@ describe HarvestOutputTask, 'When initialised with defaults' do
 end
 
 describe HarvestOutputTask, 'When initialised with a dependency' do
+	before :all do
+		@hot = HarvestOutputTask.new(:dependencies=>[:foo])
+		@task = Rake::Task[:harvest_output]
+	end
+	it 'should read those dependencies' do
+		@hot.dependencies.should include(:foo)
+	end
 	it 'should make :harvest_output depend on that' do
-		HarvestOutputTask.new(:deps=>[:foo])
-		task = Rake::Task[:harvest_output]
-		task.should have(2).prerequisites
-		task.prerequisites.should include('foo')
+		@task.should have(2).prerequisites
+		@task.prerequisites.should include('foo')
 	end
 end

@@ -1,56 +1,3 @@
-class HarvestOutputTask < Rake::TaskLib
-	attr_accessor :src_dir, :out_dir, :configuration, :glob
-	
-	def initialize(params={})
-		@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
-		@out_dir = params[:out_dir] || Bin_out
-		@deps = params[:deps] || []
-		@configuration = params[:configuration] || CONFIGURATION
-		@glob = params[:glob] || ["#{@src_dir}/*"]
-
-		yield self if block_given?
-		define
-	end
-
-	def define
-		directory @out_dir
-
-		desc "Harvest specified libraries (or all matching #{@glob}) to #{@out_dir}"
-		task :harvest_output, [:to_harvest_list] => @out_dir do |t, args|
-			list = FileList.new
-			@glob.each do |g|
-				list.include(g)
-			end
-			args.with_defaults(:to_harvest_list => list)
-			args.to_harvest_list.each do |entry|
-				pn = Pathname.new(entry)
-				if pn.directory?
-					output = FileList.new
-					#TODO: distinguish between web and class and console output
-					output.include("#{entry}/bin/#{@configuration}/*")
-					output.include("#{entry}/bin/*")
-					output.each do |o|
-						o_pn = Pathname.new(o)
-						to_pn = Pathname.new("#{@out_dir}")
-						if (o_pn.directory?)
-							cp_r(o, to_pn) unless o_pn.to_s.match(/#{@configuration}$/)
-						else
-							cp(o, to_pn)
-						end
-					end
-				end
-			end
-		end
-
-		@deps.each do |d|
-			task :harvest_output => d
-		end
-
-		desc 'Perform all harvest tasks'
-		task :harvest => :harvest_output
-	end
-end
-
 class HarvestWebApplicationTask < Rake::TaskLib
 	include DependentTask
 
@@ -88,6 +35,8 @@ class HarvestWebApplicationTask < Rake::TaskLib
 				Rake::FileTask[out].invoke
 			end
 		end
+
+		task :harvest => :harvest_webapps
 	end
 
 	def harvest(path, regex)

@@ -5,12 +5,16 @@ require File.join(File.dirname(__FILE__), '..', 'lib', 'helpers.rb')
 require 'constants_spec.rb'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'dependenttask.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'harvester.rb')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'harvestwebapplicationtask.rb')
 
 describe HarvestWebApplicationTask, 'When initialised with defaults' do
 	before :all do
 		@hwat = HarvestWebApplicationTask.new
 		@task = Rake::Task[:harvest_webapps]
+	end
+	after :all do
+		Rake::Task.clear
+		Rake::FileTask.clear
 	end
 	it 'should create a rule to harvest web-applications whose name matches conventions'
 	it 'should write output to a sensible place' do

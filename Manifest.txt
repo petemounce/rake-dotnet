@@ -11,7 +11,8 @@ coverage/lib-bcpcmd_rb.html
 coverage/lib-cli_rb.html
 coverage/lib-dependenttask_rb.html
 coverage/lib-fxcop_rb.html
-coverage/lib-harvester_rb.html
+coverage/lib-harvestoutputtask_rb.html
+coverage/lib-harvestwebapplicationtask_rb.html
 coverage/lib-iisappcmd_rb.html
 coverage/lib-msbuild_rb.html
 coverage/lib-ncover_rb.html
