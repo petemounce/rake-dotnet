@@ -1,7 +1,6 @@
 require 'spec'
 require 'rake/tasklib'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'fxcop.rb')
+require 'lib/rake_dotnet.rb'
 
 describe FxCopCmd do
 

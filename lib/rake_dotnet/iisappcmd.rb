@@ -5,6 +5,7 @@ class IisAppCmd < Cli
 		super(params.merge({:exe_name=>'appcmd.exe', :search_paths=>sps}))
 	end
 end
+
 class AddSiteIisAppCmd < IisAppCmd
 	def initialize(params={})
 		super

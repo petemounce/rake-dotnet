@@ -1,8 +1,7 @@
 require 'spec'
 require 'rake'
 require 'rake/tasklib'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'ndependconsolecmd.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'ndependtask.rb')
+require 'lib/rake_dotnet.rb'
 require 'constants_spec.rb'
 
 describe NDependTask, 'When initialised with no settings' do

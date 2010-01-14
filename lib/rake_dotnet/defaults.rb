@@ -1,3 +1,14 @@
+def find_tools_dir
+	shared = File.join(PRODUCT_ROOT, '..', '3rdparty')
+	owned = File.join(PRODUCT_ROOT, '3rdparty')
+	if File.exist?(shared)
+		return shared
+	end
+	if File.exist?(owned)
+		return owned
+	end
+end
+
 # Setting constants like this allows you to do things like 'rake compile CONFIGURATION=Release' to specify their values
 # By default, we assume that this Rakefile lives in {PRODUCT_ROOT}/build, and that this is the working directory
 PRODUCT_ROOT = ENV['PRODUCT_ROOT'] ? ENV['PRODUCT_ROOT'] : '..'
@@ -23,4 +34,4 @@ end
 VERBOSE = ENV['VERBOSE'] ? ENV['VERBOSE'] : false
 verbose(VERBOSE)
 
-Bin_out = File.join(RakeDotNet::OUT_DIR, 'bin')
+Bin_out = File.join(OUT_DIR, 'bin')

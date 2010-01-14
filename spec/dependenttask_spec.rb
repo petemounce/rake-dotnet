@@ -1,7 +1,7 @@
 require 'spec'
 require 'rake'
 require 'rake/tasklib'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'dependenttask.rb')
+require 'lib/rake_dotnet.rb'
 
 describe DependentTask, 'When initialiasing with no main_task_name' do
 	it 'should throw ArgumentError' do

@@ -54,7 +54,7 @@ class MsBuildTask < Rake::TaskLib
 	end
 
 	def src_dir_regex
-		RakeDotNet::regexify(@src_dir)
+		regexify(@src_dir)
 	end
 
 	def figure_out_project_type(project_pathname)

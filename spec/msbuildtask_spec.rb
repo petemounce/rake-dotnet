@@ -1,6 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'msbuild.rb')
+require 'lib/rake_dotnet.rb'
 
 describe MsBuildTask do
 

@@ -1,6 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'nunitcmd.rb')
+require 'lib/rake_dotnet.rb'
 require 'constants_spec.rb'
 
 describe NUnitCmd, 'When no dll is given' do

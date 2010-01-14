@@ -25,7 +25,7 @@ class RDNPackageTask < Rake::TaskLib
 			task :package => d if @add_to_main_task
 		end
 
-		out_pkg_name_regex = RakeDotNet::regexify(out_pkg_name)
+		out_pkg_name_regex = regexify(out_pkg_name)
 
 		rule(/#{out_pkg_name_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
 			file_name = r.name.match(/(#{out_pkg_name_regex}).*/)[1].sub(out_pkg, '').sub('/', '')

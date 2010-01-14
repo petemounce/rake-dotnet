@@ -1,5 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'package.rb')
+require 'lib/rake_dotnet.rb'
 
 describe RDNPackageTask do
 

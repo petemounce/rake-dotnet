@@ -1,11 +1,8 @@
 require 'spec'
 require 'rake'
 require 'rake/tasklib'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'helpers.rb')
+require 'lib/rake_dotnet.rb'
 require 'constants_spec.rb'
-
-require File.join(File.dirname(__FILE__), '..', 'lib', 'dependenttask.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'harvestwebapplicationtask.rb')
 
 describe HarvestWebApplicationTask, 'When initialised with defaults' do
 	before :all do

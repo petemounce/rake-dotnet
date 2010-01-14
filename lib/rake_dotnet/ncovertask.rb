@@ -22,7 +22,7 @@ class NCoverTask < Rake::TaskLib
 
 		directory @report_dir
 
-		reports_dir_regex = RakeDotNet::regexify(@report_dir)
+		reports_dir_regex = regexify(@report_dir)
 		rule(/#{reports_dir_regex}\/.*\.coverage\.xml/) do |r|
 			dll_to_execute = r.name.sub(/#{@report_dir}\/(.*)\.coverage\.xml/, "#{@bin_dir}/\\1.dll")
 			if (should_profile_iis(dll_to_execute))

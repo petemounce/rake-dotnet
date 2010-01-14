@@ -1,7 +1,7 @@
 #cli spec
 require 'spec'
 require 'fileutils'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
+require 'lib/rake_dotnet.rb'
 
 describe Cli do
 	it "should push nil onto the array of search paths" do

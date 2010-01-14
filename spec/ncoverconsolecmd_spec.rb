@@ -1,6 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'ncoverconsolecmd.rb')
+require 'lib/rake_dotnet.rb'
 
 describe NCoverConsoleCmd, 'When initialised with no options' do
 	it 'should have sensible search paths'

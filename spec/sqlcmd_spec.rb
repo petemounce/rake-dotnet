@@ -1,6 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'sqlcmd.rb')
+require 'lib/rake_dotnet.rb'
 
 describe SqlCmd do
 	it "should have sensible default search_paths when constructed" do

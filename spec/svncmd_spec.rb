@@ -1,5 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'svn.rb')
+require 'lib/rake_dotnet.rb'
 
 describe SvnCmd do
 	it "should know 3 sensible default search paths" do
