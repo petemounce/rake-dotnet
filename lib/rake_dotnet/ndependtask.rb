@@ -52,8 +52,8 @@ class NDependProject
 	attr_accessor :out_dir, :bin_dir
 
 	def initialize(out_dir, bin_dir)
-		@out_dir = out_dir
-		@bin_dir = bin_dir
+		@out_dir = File.expand_path(out_dir).gsub('/', '\\')
+		@bin_dir = File.expand_path(bin_dir).gsub('/', '\\')
 	end
 
 	def get_binding
