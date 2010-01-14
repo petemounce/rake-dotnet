@@ -15,7 +15,9 @@ coverage/lib-harvestoutputtask_rb.html
 coverage/lib-harvestwebapplicationtask_rb.html
 coverage/lib-iisappcmd_rb.html
 coverage/lib-msbuild_rb.html
-coverage/lib-ncover_rb.html
+coverage/lib-ncoverconsolecmd_rb.html
+coverage/lib-ncoverreportingcmd_rb.html
+coverage/lib-ncovertask_rb.html
 coverage/lib-ndependconsolecmd_rb.html
 coverage/lib-ndependtask_rb.html
 coverage/lib-nunitcmd_rb.html
