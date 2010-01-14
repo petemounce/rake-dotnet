@@ -14,8 +14,8 @@ describe NDependTask, 'When initialised with no settings' do
 	end
 
 	it 'should pass reports_dir to options for console runner' do
-		@ndt.options.should include(:reports_dir)
-		@ndt.reports_dir.should eql(@ndt.options[:reports_dir])
+		@ndt.options.should include(:out_dir)
+		@ndt.out_dir.should eql(@ndt.options[:out_dir])
 	end
 	it 'should define a directory for reports' do
 		@reports_dir.should_not be_nil
@@ -37,8 +37,8 @@ end
 
 describe NDependTask, 'When initialised with reports_dir specified' do
 	it 'should use it' do
-		ndt = NDependTask.new(:reports_dir=>'foo')
-		ndt.reports_dir.should eql('foo')
+		ndt = NDependTask.new(:out_dir=>'foo')
+		ndt.out_dir.should eql('foo')
 	end
 end
 
