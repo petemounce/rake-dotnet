@@ -30,7 +30,7 @@ class NUnitTask < Rake::TaskLib
 
 		def run(suite)
 			tests_dll = File.join(@suites_dir, suite + '.dll')
-			out_dir = File.join(@reports_dir, suite)
+			out_dir = File.join(@out_dir, suite)
 			unless File.exist?(out_dir) && uptodate?(tests_dll, out_dir)
 				mkdir_p(out_dir) unless File.exist?(out_dir)
 				n = NUnitCmd.new({:input_files=>tests_dll,
