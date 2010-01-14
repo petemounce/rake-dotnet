@@ -6,6 +6,7 @@ class NCoverConsoleCmd
 		@dll_to_execute = dll_to_execute
 		ofname = File.split(dll_to_execute)[1].sub(/(\.dll)/, '') + '.coverage.xml'
 		@output_file = File.join(report_dir, ofname)
+		@trend_file = params[:trend_file] || File.join(report_dir, ofname.sub('.coverage.xml', '.coverage.trend.xml'))
 
 		@exclude_assemblies_regex = params[:exclude_assemblies_regex] || ['.*Tests.*']
 		@exclude_assemblies_regex.push('ISymWrapper')
@@ -24,7 +25,7 @@ class NCoverConsoleCmd
 	end
 
 	def working_dir
-		return "//w #{@working_dir}"
+		return "//w \"#{@working_dir}\""
 	end
 
 	def iis
@@ -50,8 +51,15 @@ class NCoverConsoleCmd
 		return ''
 	end
 
+	def trend_file
+		return '' unless @is_complete_version
+		return '' if @trend_file.nil? || @trend_file == false
+		t = File.expand_path(@trend_file).gsub('/','\\')
+		return "//at \"#{t}\""
+	end
+
 	def cmd
-		"\"#{@exe}\" #{@cmd_to_run} //x #{@output_file} #{exclude_assemblies} #{exclude_files} #{bi} #{working_dir} #{iis}"
+		"\"#{@exe}\" #{@cmd_to_run} //x #{@output_file} #{trend_file} #{exclude_assemblies} #{exclude_files} #{bi} #{working_dir} #{iis}"
 	end
 
 	def run

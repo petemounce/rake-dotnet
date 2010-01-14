@@ -3,8 +3,9 @@
 NEW: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 NEW: GH-3 - NDepend support - supports specifying project file and output directory
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
-CHANGE: Support writing NCover3 coverage data to TeamCity v5 as service message
-NEW: GH-1 NUnitTask and NUnitCmd (based on NUnit 2.5).  Support for include, exclude, and xml command-line switches.
+NEW: NCover - added trend output via ncover.console
+CHANGE: NCover - Support writing NCover3 coverage data to TeamCity v5 as service message
+NEW: GH-1 NUnitTask and NUnitCmd (based on NUnit 2.5.3).  Support for include, exclude, and xml command-line switches.
 CHANGE: The test-tasks now create a task called after themselves (eg :xunit and :nunit) but there's now also a :test task to abstract the choice of test framework in the build script
 FIX: Update documentation to include how to build
 FIX: Update to allow use with Hoe 2.4.0 (latest)
