@@ -11,6 +11,11 @@ presentation/DemoRoot/Demo/_ReSharper.Demo/
 *proj.user
 AssemblyInfo.cs
 out/
+_ReSharper*
+bin
+obj
+lib/RakeDotNet/src/**/*.dll
+lib/RakeDotNet/src/**/*.pdb
 
 # Stuff I don't want to shove into the git repository by accident
 presentation/DemoRoot/3rdparty/*/
