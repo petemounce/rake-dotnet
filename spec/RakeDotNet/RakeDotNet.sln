@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakeDotNet", "src\RakeDotNet\RakeDotNet.csproj", "{C86B461D-4CC1-4450-A544-6C1E4E3123DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakeDotNet.Tests", "src\RakeDotNet.Tests\RakeDotNet.Tests.csproj", "{87DB2C93-FD36-44B8-ACB6-672F685D28AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakeDotNet.Example", "src\RakeDotNet.Example\RakeDotNet.Example.csproj", "{18A2F21E-7E2D-4401-B499-6F56B7001FFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakeDotNet.WebApp.Site", "src\RakeDotNet.WebApp.Site\RakeDotNet.WebApp.Site.csproj", "{2950082B-F1AC-4A40-A2C9-355D3298801F}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RakeDotNet.Website", "src\RakeDotNet.Website\", "{7AE35691-BC17-42FA-9849-E18D2B2A3609}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFramework = "3.5"
+		Debug.AspNetCompiler.VirtualPath = "/RakeDotNet.Website"
+		Debug.AspNetCompiler.PhysicalPath = "src\RakeDotNet.Website\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\RakeDotNet.Website\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/RakeDotNet.Website"
+		Release.AspNetCompiler.PhysicalPath = "src\RakeDotNet.Website\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\RakeDotNet.Website\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "57752"
+		DefaultWebSiteLanguage = "Visual C#"
+	EndProjectSection
+EndProject
+Project("{2CFEAB61-6A3B-4EB8-B523-560B4BEEF521}") = "RakeDotNet.WdpSite", "src\RakeDotNet.WdpSite\RakeDotNet.WdpSite.wdproj", "{6B97BFFE-32B8-4504-B500-744E47E82218}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C86B461D-4CC1-4450-A544-6C1E4E3123DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C86B461D-4CC1-4450-A544-6C1E4E3123DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C86B461D-4CC1-4450-A544-6C1E4E3123DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C86B461D-4CC1-4450-A544-6C1E4E3123DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87DB2C93-FD36-44B8-ACB6-672F685D28AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87DB2C93-FD36-44B8-ACB6-672F685D28AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87DB2C93-FD36-44B8-ACB6-672F685D28AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87DB2C93-FD36-44B8-ACB6-672F685D28AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18A2F21E-7E2D-4401-B499-6F56B7001FFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18A2F21E-7E2D-4401-B499-6F56B7001FFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18A2F21E-7E2D-4401-B499-6F56B7001FFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18A2F21E-7E2D-4401-B499-6F56B7001FFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2950082B-F1AC-4A40-A2C9-355D3298801F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2950082B-F1AC-4A40-A2C9-355D3298801F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2950082B-F1AC-4A40-A2C9-355D3298801F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2950082B-F1AC-4A40-A2C9-355D3298801F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AE35691-BC17-42FA-9849-E18D2B2A3609}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE35691-BC17-42FA-9849-E18D2B2A3609}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AE35691-BC17-42FA-9849-E18D2B2A3609}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AE35691-BC17-42FA-9849-E18D2B2A3609}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{6B97BFFE-32B8-4504-B500-744E47E82218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B97BFFE-32B8-4504-B500-744E47E82218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B97BFFE-32B8-4504-B500-744E47E82218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B97BFFE-32B8-4504-B500-744E47E82218}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
