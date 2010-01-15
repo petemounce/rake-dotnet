@@ -87,9 +87,8 @@ class NCoverTask < Rake::TaskLib
 			rm_rf @report_dir
 		end
 
+		desc 'Clobber coverage reports'
 		task :clobber_coverage => :clobber_ncover
-
-		self
 	end
 end
 

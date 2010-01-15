@@ -10,24 +10,28 @@ class AssemblyInfoTask < Rake::TaskLib
 	def define
 		src_dir_regex = regexify(@src_dir)
 		rule(/#{src_dir_regex}\/[\w\.\d]+\/Properties\/AssemblyInfo.cs/) do |r|
-			dir = Pathname.new(r.name).dirname
-			mkdir_p dir
-			nextdoor = Pathname.new(r.name + '.template')
-			common = Pathname.new(File.join(@src_dir, 'AssemblyInfo.cs.template'))
-			if (nextdoor.exist?)
-				generate(nextdoor, r.name)
-			elsif (common.exist?)
-				generate(common, r.name)
-			end
+			generate_for(r, 'cs')
+		end
+
+		rule(/#{src_dir_regex}\/[\w\.\d]+\/App_Code\/AssemblyInfo.cs/) do |r|
+			generate_for(r, 'cs')
 		end
 
 		rule(/#{src_dir_regex}\/[\w\.\d]+\/My Project\/AssemblyInfo.vb/) do |r|
-			dir = Pathname.new(r.name).dirname
+			generate_for(r, 'vb')
+		end
+
+		rule(/#{src_dir_regex}\/[\w\.\d]+\/App_Code\/AssemblyInfo.vb/) do |r|
+			generate_for(r, 'vb')
+		end
+
+		def generate_for(target, language)
+			dir = Pathname.new(target.name).dirname
 			mkdir_p dir
-			nextdoor = Pathname.new(r.name + '.template')
-			common = Pathname.new(File.join(@src_dir, 'AssemblyInfo.vb.template'))
-			if (nextdoor.exist?)
-				generate(nextdoor, r.name)
+			neighbour = Pathname.new(target.name + '.template')
+			common = Pathname.new(File.join(@src_dir, "AssemblyInfo.#{language}.template"))
+			if (neighbour.exist?)
+				generate(neighbour, r.name)
 			elsif (common.exist?)
 				generate(common, r.name)
 			end
@@ -41,7 +45,8 @@ class AssemblyInfoTask < Rake::TaskLib
 			end
 		end
 
-		self
+		desc 'Generate all output from templates'
+		task :templates => :assembly_info
 	end
 
 	def generate(template_file, destination)

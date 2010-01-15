@@ -1,5 +1,6 @@
 === 0.2.0 / 2010-01-
 
+NEW: AssemblyInfo now supports generating to websites' App_Code directory
 NEW: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 NEW: GH-3 - NDepend support - supports specifying project file and output directory
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
