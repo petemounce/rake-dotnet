@@ -78,9 +78,16 @@ class NCoverTask < Rake::TaskLib
 			end
 		end
 
+		task :ncover => [:ncover_profile, :ncover_reports]
+
+		desc 'Generate coverage data and run ncover reports based on it'
+		task :coverage => :ncover
+
 		task :clobber_ncover do
 			rm_rf @report_dir
 		end
+
+		task :clobber_coverage => :clobber_ncover
 
 		self
 	end
