@@ -1,6 +1,19 @@
-=== 0.1.20 / 
+=== 0.2.0 / 2010-01-
+
+NEW: NDepend support
+NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
+CHANGE: Support writing NCover3 coverage data to TeamCity v5 as service message
+NEW: NUnitTask and NUnitCmd (based on NUnit 2.5)
+CHANGE: The test-tasks now create a task called after themselves (eg :xunit and :nunit) but there's now also a :test task to abstract the choice of test framework in the build script
+FIX: Update documentation to include how to build
+FIX: Update to allow use with Hoe 2.4.0 (latest)
+FIX: 7-zip x86 installer does not name the 7z executable 7za like the x64 one does.  Therefore the test I was using to pick which executable won't work.
+CHANGE: 7-zip is now looked for in 3RD_PARTY/7-zip instead of 3RD_PARTY/7zip because this is how the installer installs it; no need to rename the directory if pushing into source-control.
+
+=== 0.1.20 / 2009-11-30
 
 FIX: NCover reports - Typo for handling complete version command line
+FIX: Versioner - takes svn revision from the product-root, not the build's working directory
 CHANGE: Package - add a property (turned on by default) to say whether to add that particular package task to the main :package rake-task.
 
 === 0.1.19 / 2009-11-26

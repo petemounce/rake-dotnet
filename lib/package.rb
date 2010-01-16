@@ -28,7 +28,7 @@ class RDNPackageTask < Rake::TaskLib
 		out_pkg_name_regex = RakeDotNet::regexify(out_pkg_name)
 
 		rule(/#{out_pkg_name_regex}-#{@configuration}-v\d+\.\d+\.\d+\.\d+\.zip/) do |r|
-			file_name = r.name.match(/(#{out_pkg_name_regex}).*/)[1].sub(out_pkg, '').sub('/','')
+			file_name = r.name.match(/(#{out_pkg_name_regex}).*/)[1].sub(out_pkg, '').sub('/', '')
 			version = r.name.match(/.*v(\d+\.\d+\.\d+\.\d+)\.zip/)[1]
 			run_package(out_pkg, file_name, version)
 		end

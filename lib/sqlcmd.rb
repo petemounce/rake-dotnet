@@ -1,6 +1,6 @@
 class SqlCmd < Cli
 	attr_accessor :input_file, :query, :database
-	
+
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'sql')

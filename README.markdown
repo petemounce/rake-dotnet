@@ -13,17 +13,21 @@ Rake-dotnet is a bunch of things that aim at doing the work of creating a featur
 ## Features
 
 *	Generate AssemblyInfo.cs file(s) for watermarking assemblies with:
-	*	major.minor.build.svn-revision version number
+	*	major.minor.build.svn-revision version number (git is handled differently) (build number is 0 when built outside of CI)
 	*	product-name
 	*	company-name
-	*	build configuration
+	*	build configuration (Release/Debug etc)
+	*	build-date
 *	Build the project files to produce said DLLs (call msbuild against the project file(s))
-*	Run XUnit.NET unit tests against said DLLs, and output reports (wrap xunit.console.exe)
+*	Run NUnit tests against said DLLs, and output an XML report (wrap nunit.console.exe)
+*	Run XUnit.NET tests against said DLLs, and output reports (wrap xunit.console.exe)
 *	Run FxCop against said DLLs, and output reports (wrap fxcopcmd.exe)
 *	Run NCover against build output to generate coverage metrics
 *	Run NCover against coverage to generate coverage reports
-*	Harvest build output
+*	Run NDepend against build output to generate reports (based on an ndepend project file)
+*	Harvest build output to a single directory tree for ease of working with it
 *	Package build output as a zip file, naming it like {product-name}-{configuration}-v{version}.zip
+*	Integrates well with TeamCity continuous integration
 
 ## Problems:
 
@@ -78,21 +82,24 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 
 ## Requirements:
 
-*	ruby 1.8.6+ [One-click Windows installer](http://rubyinstaller.rubyforge.org/wiki/wiki.pl)
+*	ruby 1.8.6+ (ruby one-click installer)[http://rubyinstaller.org]
 *	rake 0.8.3+ (but this will be installed when you do `gem install rake-dotnet`)
 
 ## Install:
 
-1. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
-2. Create a directory to hold 3rdparty dependencies
+1. Install Ruby 1.8.6 using the (ruby one-click installer)[http://rubyinstaller.org] to (eg) `c:\ruby`
+2. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
+3. Create a directory to hold 3rdparty dependencies
 	* if you follow the instructions in  [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/) you'll get default paths that rake-dotnet expects
 	* if you mirror the structure as above, you won't need to pass in a value for TOOLS_DIR when calling rake
-3. Fetch the 3rdparty dependencies listed in [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/)
+4. Fetch the 3rdparty dependencies listed in [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/)
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## Build from source:
-1. `gem install rcov rspec diff-lcs` (again, prepend `sudo` if you're not on Windows)
-2. `rake 
+1. On Windows, you need the (ruby-installer development kit)[http://wiki.github.com/oneclick/rubyinstaller/development-kit] (the `rcov` gem needs to build its native extension)
+2. `gem install rcov syntax hoe rspec diff-lcs --include-dependencies` (again, prepend `sudo` if you're not on Windows)
+3. Edit `c:\Ruby\lib\ruby\gems\1.9.1\gems\hoe-2.4.0\lib\hoe.rb` [per here](http://blog.emson.co.uk/2008/06/an-almost-fix-for-creating-rubygems-on-windows/)
+4. `rake clobber examples_with_report` and/or `rake clobber examples_with_rcov` to run specifications and coverage respectively; library itself will be generated to `lib/rake_dotnet.rb` by cat'ing files together.
 
 ## License:
 

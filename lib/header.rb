@@ -39,7 +39,7 @@ desc "Displays this message; a list of tasks"
 task :help do
 	taskHash = Hash[*(`rake.cmd -T`.split(/\n/).collect { |l| l.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |l| [l[1], l[2]] }).flatten]
 
-	indent = "                          "
+	indent = " "
 
 	puts "rake #{indent}#Runs the 'default' task"
 

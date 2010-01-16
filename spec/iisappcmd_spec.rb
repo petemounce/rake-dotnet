@@ -1,6 +1,6 @@
 require 'spec'
 require 'rake/tasklib'
-require File.join(File.dirname(__FILE__), '..','lib','iisappcmd.rb')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'iisappcmd.rb')
 
 describe IisAppCmd do
 	it "should have some sensible default paths to look for exe"

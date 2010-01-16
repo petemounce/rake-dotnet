@@ -1,8 +1,8 @@
 class SevenZipCmd
 	def initialize(archive_name, opts={})
 		arch = ENV['PROCESSOR_ARCHITECTURE'] || 'AMD64'
-		bin = arch == 'x86' ? '7za.exe' : '7z.exe'
-		@exe = opts[:sevenzip] || File.expand_path(File.join(TOOLS_DIR, '7zip', arch, bin))
+		bin = '7z.exe'
+		@exe = opts[:sevenzip] || File.expand_path(File.join(TOOLS_DIR, '7-zip', arch, bin))
 		@archive_name = File.expand_path(archive_name)
 		@params = opts
 

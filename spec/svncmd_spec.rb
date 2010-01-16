@@ -1,5 +1,5 @@
 require 'spec'
-require File.join(File.dirname(__FILE__), '..','lib','svn.rb')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'svn.rb')
 
 describe SvnCmd do
 	it "should know 3 sensible default search paths" do
@@ -19,7 +19,7 @@ describe SvnExport do
 		lambda { SvnExport.new({:src=>'support/svn/src'}) }.should raise_error(ArgumentError)
 	end
 	it "export should generate correct command line when run" do
-		svn = SvnExport.new({:src=>'support/svn/src',:dest=>'support/svn/dest'})
+		svn = SvnExport.new({:src=>'support/svn/src', :dest=>'support/svn/dest'})
 		cmd = svn.cmd
 		cmd.should_not be_nil
 		cmd.should match(/".*svn\.exe.*/)

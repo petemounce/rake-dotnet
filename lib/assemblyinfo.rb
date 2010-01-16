@@ -67,14 +67,14 @@ class AssemblyInfoTask < Rake::TaskLib
 
 		proj_ext = Pathname.new(proj).extname
 		path =
-				case proj_ext
-					when '.csproj' then
-						File.join(@src_dir, pn_entry, 'Properties', 'AssemblyInfo.cs')
-					when '.vbproj' then
-						File.join(@src_dir, pn_entry, 'My Project', 'AssemblyInfo.vb')
-					else
-						nil
-				end
+						case proj_ext
+							when '.csproj' then
+								File.join(@src_dir, pn_entry, 'Properties', 'AssemblyInfo.cs')
+							when '.vbproj' then
+								File.join(@src_dir, pn_entry, 'My Project', 'AssemblyInfo.vb')
+							else
+								nil
+						end
 		return path
 	end
 

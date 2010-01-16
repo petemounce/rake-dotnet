@@ -4,7 +4,7 @@ class SvnCmd < Cli
 		sps << File.join(TOOLS_DIR, 'svn', 'bin')
 		sps << File.join(ENV['PROGRAMFILES'], 'subversion', 'bin')
 		sps << File.join(ENV['PROGRAMFILES'], 'svn', 'bin')
-		super(params.merge({:exe_name=>'svn.exe',:search_paths=>sps}))
+		super(params.merge({:exe_name=>'svn.exe', :search_paths=>sps}))
 	end
 
 	def cmd

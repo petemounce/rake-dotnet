@@ -25,7 +25,7 @@ class Versioner
 
 	def revision
 		if (Pathname.new('.svn').exist?)
-			return SvnInfo.new(:path => '.').revision
+			return SvnInfo.new(:path => PRODUCT_ROOT).revision
 		else
 			# TODO: return something numeric but sane for non-numeric revision numbers (eg DVCSs)
 			return '0' # YYYYMMDD is actually invalid for a {revision} number.
