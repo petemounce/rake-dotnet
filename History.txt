@@ -1,5 +1,6 @@
 === 0.2.0 / 2010-01-
 
+NEW: Crap4n support (http://code.google.com/p/crap4n/) (trunk required)
 NEW: NDepend support
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
 CHANGE: Support writing NCover3 coverage data to TeamCity v5 as service message
