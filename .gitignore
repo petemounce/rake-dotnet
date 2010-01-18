@@ -12,7 +12,7 @@ presentation/DemoRoot/Demo/_ReSharper.Demo/
 AssemblyInfo.cs
 out/
 _ReSharper*
-bin
+[bB]in
 obj
 lib/RakeDotNet/src/**/*.dll
 lib/RakeDotNet/src/**/*.pdb
