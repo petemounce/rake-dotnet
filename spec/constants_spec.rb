@@ -10,5 +10,5 @@ Bin_out = File.join(OUT_DIR, 'bin')
 CONFIGURATION = 'Debug'
 
 def re(str)
-	return str.gsub('/', '\/').gsub('.', '\.')
+	return str.gsub('/', '\\\/').gsub('.', '\\.')
 end

@@ -5,6 +5,8 @@ NEW: MsBuild - Support for building web-deployment projects
 NEW: AssemblyInfo now supports generating to websites' App_Code directory
 NEW: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 NEW: GH-3 - NDepend support - supports specifying project file and output directory
+NEW: Crap4n support (http://code.google.com/p/crap4n/) (trunk required)
+NEW: NDepend support
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
 NEW: NCover - added trend output via ncover.console
 CHANGE: NCover - Support writing NCover3 coverage data to TeamCity v5 as service message
