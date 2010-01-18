@@ -52,5 +52,7 @@ class NUnitTask < Rake::TaskLib
 				Rake::FileTask[r].invoke
 			end
 		end
+
+		task :tests => @main_task_name
 	end
 end

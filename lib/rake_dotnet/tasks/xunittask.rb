@@ -48,10 +48,10 @@ class XUnitTask < Rake::TaskLib
 			end
 		end
 
-		task :xunit_clobber do
+		task :clobber_xunit do
 			rm_rf(@reports_dir)
 		end
 
-		self
+		task :tests => :xunit
 	end
 end
