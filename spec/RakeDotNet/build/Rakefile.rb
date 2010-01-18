@@ -16,9 +16,10 @@ HarvestOutputTask.new({:deps => [:compile]})
 HarvestWebApplicationTask.new({:deps=>[:compile]})
 HarvestWebDeploymentTask.new(:dependencies=>[:compile])
 
-RDNPackageTask.new(name='bin', {:deps=>[:compile, :harvest, :xunit]}) do |p|
+RDNPackageTask.new('bin', {:deps=>[:compile, :harvest]}) do |p|
 	p.targets.include("#{Bin_out}")
 end
+RDNPackageTask.new('RakeDotNet.WdpSite', {:deps=>[:compile, :harvest]})
 
 XUnitTask.new
 

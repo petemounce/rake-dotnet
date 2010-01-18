@@ -16,19 +16,25 @@ class HarvestWebDeploymentTask < Rake::TaskLib
 		directory @out_dir
 
 		out_dir_regex = regexify(@out_dir)
-		rule(/#{out_dir_regex}\/.*WdpSite/) do |r|
-			puts r.name
+		rule(/#{out_dir_regex}\/.*WdpSite\//) do |r|
+			puts 'rule: ' + r.name
 			harvest_to(r.name)
 		end
 
 		def harvest_to(path)
-			source = File.join(path.gsub(@out_dir, @src_dir), @configuration)
-			mkdir_p path
+			pn = Pathname.new(path)
+			name = pn.basename
+			source = File.join(@src_dir, name, @configuration)
+			puts 'path: ' + path
+			puts '****** source: ' + source
+			mkdir_p File.join(pn.dirname, name)
 			result = FileList.new
 			@include.each do |glob|
 				result.include("#{source}/#{glob}")
 			end
+			puts result.length
 			result.each do |entry|
+				puts '******* entry: ' + entry
 				pn = Pathname.new(entry)
 				cp(pn, path) unless pn.directory?
 				cp_r(pn, path) if pn.directory?
@@ -39,9 +45,9 @@ class HarvestWebDeploymentTask < Rake::TaskLib
 		task :harvest_wdps => @out_dir
 
 		task :harvest_wdps do
-			FileList.new("#{@src_dir}/*WdpSite*/").each do |wdp|
+			FileList.new("#{@src_dir}/*WdpSite").each do |wdp|
 				name = Pathname.new(wdp).basename
-				Rake::Task["#{@out_dir}/#{name}"].invoke
+				Rake::Task["#{@out_dir}/#{name}/"].invoke
 			end
 		end
 		
