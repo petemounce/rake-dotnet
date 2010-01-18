@@ -15,6 +15,8 @@ lib/rake_dotnet.rb
 lib/rake_dotnet/default_rakefile.rb
 lib/rake_dotnet/helpers.rb
 lib/rake_dotnet/defaults.rb
+lib/rake_dotnet/crap4ncmd.rb
+lib/rake_dotnet/crap4ntask.rb
 lib/rake_dotnet/cli.rb
 lib/rake_dotnet/dependenttask.rb
 lib/rake_dotnet/bcpcmd.rb
@@ -42,6 +44,8 @@ spec/assemblyinfotask_spec.rb
 spec/bcpcmd_spec.rb
 spec/cli_spec.rb
 spec/constants_spec.rb
+spec/crap4ncmd_spec.rb
+spec/crap4ntask_spec.rb
 spec/dependenttask_spec.rb
 spec/fxcopcmd_spec.rb
 spec/fxcoptask_spec.rb

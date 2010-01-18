@@ -1,7 +1,7 @@
 require 'spec'
-require 'constants_spec.rb'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'cli.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'crap4ncmd.rb')
+require 'rake'
+require 'rake/tasklib'
+require 'lib/rake_dotnet.rb'
 
 describe Crap4nCmd, 'When initialised with no name set' do
 	it 'should throw' do

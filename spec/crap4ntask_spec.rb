@@ -1,9 +1,7 @@
 require 'spec'
 require 'rake'
 require 'rake/tasklib'
-require 'constants_spec.rb'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'crap4ncmd.rb')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'crap4ntask.rb')
+require 'lib/rake_dotnet.rb'
 
 describe Crap4nTask, 'When initialised with default settings' do
 	before :all do
