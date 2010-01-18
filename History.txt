@@ -1,5 +1,7 @@
 === 0.2.0 / 2010-01-
 
+NEW: Support harvesting from web-deployment projects
+NEW: MsBuild - Support for building web-deployment projects
 NEW: AssemblyInfo now supports generating to websites' App_Code directory
 NEW: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 NEW: GH-3 - NDepend support - supports specifying project file and output directory

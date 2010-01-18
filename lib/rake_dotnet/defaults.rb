@@ -26,6 +26,9 @@ CLEAN.include("#{SRC_DIR}/**/bin")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.vb")
 CLEAN.include('version.txt')
+CLEAN.include("#{SRC_DIR}/**/#{CONFIGURATION}")
+CLEAN.include("#{SRC_DIR}/**/Debug")
+CLEAN.include("#{SRC_DIR}/**/Release")
 
 task :clobber do
 	rm_rf OUT_DIR

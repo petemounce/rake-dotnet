@@ -8,6 +8,7 @@ describe HarvestWebApplicationTask, 'When initialised with defaults' do
 	before :all do
 		@hwat = HarvestWebApplicationTask.new
 		@task = Rake::Task[:harvest_webapps]
+		@harvest = Rake::Task[:harvest]
 	end
 	after :all do
 		Rake::Task.clear
@@ -23,5 +24,12 @@ describe HarvestWebApplicationTask, 'When initialised with defaults' do
 	it ':harvest_webapps should depend on out_dir' do
 		@task.should have(1).prerequisites
 		@task.prerequisites.should include(OUT_DIR)
+	end
+	it 'should define a task called :harvest' do
+		@harvest.should_not be_nil
+	end
+	it ':harvest should depend on :harvest_webapps' do
+		puts @harvest.prerequisites.join(',')
+		@harvest.prerequisites.should include('harvest_webapps')
 	end
 end

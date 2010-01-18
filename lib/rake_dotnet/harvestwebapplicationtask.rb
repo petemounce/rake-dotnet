@@ -36,6 +36,7 @@ class HarvestWebApplicationTask < Rake::TaskLib
 			end
 		end
 
+		desc 'run all harvest-related tasks'
 		task :harvest => :harvest_webapps
 	end
 

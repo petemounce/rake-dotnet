@@ -12,6 +12,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RakeDotNet.Website", "src\RakeDotNet.Website\", "{7AE35691-BC17-42FA-9849-E18D2B2A3609}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
+		ProjectReferences = "{C86B461D-4CC1-4450-A544-6C1E4E3123DC}|RakeDotNet.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/RakeDotNet.Website"
 		Debug.AspNetCompiler.PhysicalPath = "src\RakeDotNet.Website\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\RakeDotNet.Website\"

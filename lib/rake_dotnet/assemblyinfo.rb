@@ -31,14 +31,14 @@ class AssemblyInfoTask < Rake::TaskLib
 			neighbour = Pathname.new(target.name + '.template')
 			common = Pathname.new(File.join(@src_dir, "AssemblyInfo.#{language}.template"))
 			if (neighbour.exist?)
-				generate(neighbour, r.name)
+				generate(neighbour, target.name)
 			elsif (common.exist?)
-				generate(common, r.name)
+				generate(common, target.name)
 			end
 		end
 
 		desc 'Generate the AssemblyInfo.cs file from the template closest'
-		task :assembly_info do |t|
+		task :assembly_info do
 			Pathname.new(@src_dir).entries.each do |e|
 				asm_info = asm_info_to_generate(e)
 				Rake::FileTask[asm_info].invoke unless asm_info.nil?

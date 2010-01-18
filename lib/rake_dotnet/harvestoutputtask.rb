@@ -46,7 +46,7 @@ class HarvestOutputTask < Rake::TaskLib
 			end
 		end
 
-		desc 'Perform all harvest tasks'
+		desc 'run all harvest-related tasks'
 		task :harvest => :harvest_output
 	end
 end

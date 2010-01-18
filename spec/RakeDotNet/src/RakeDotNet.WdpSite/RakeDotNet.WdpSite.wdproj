@@ -31,9 +31,15 @@
   </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RakeDotNet\RakeDotNet.csproj">
+      <Project>{C86B461D-4CC1-4450-A544-6C1E4E3123DC}</Project>
+      <Name>RakeDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v9.0\Microsoft.WebDeployment.targets" />
   <Target Name="BeforeBuild">
-	<Exec Command="rake templates" WorkingDirectory="..\..\build" />
+    <Exec Command="rake templates" WorkingDirectory="..\..\build" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.WebDeployment.targets.
