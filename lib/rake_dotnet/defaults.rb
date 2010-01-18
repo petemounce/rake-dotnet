@@ -22,7 +22,6 @@ OUT_DIR = ENV['OUT_DIR'] ? ENV['OUT_DIR'] : 'out'
 # clobber will remove build-output files (which will all live under the build tree)
 CLEAN.exclude('**/core') # core files are a Ruby/*nix thing - dotNET developers are unlikely to generate them.
 CLEAN.include("#{SRC_DIR}/**/obj")
-CLEAN.include("#{SRC_DIR}/**/bin")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.cs")
 CLEAN.include("#{SRC_DIR}/**/AssemblyInfo.vb")
 CLEAN.include('version.txt')
