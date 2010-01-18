@@ -23,6 +23,7 @@ lib/rake_dotnet/assemblyinfo.rb
 lib/rake_dotnet/fxcop.rb
 lib/rake_dotnet/harvestoutputtask.rb
 lib/rake_dotnet/harvestwebapplicationtask.rb
+lib/rake_dotnet/harvestwebdeploymenttask.rb
 lib/rake_dotnet/iisappcmd.rb
 lib/rake_dotnet/msbuild.rb
 lib/rake_dotnet/ncoverconsolecmd.rb
@@ -46,6 +47,7 @@ spec/fxcopcmd_spec.rb
 spec/fxcoptask_spec.rb
 spec/harvestoutputtask_spec.rb
 spec/harvestwebapplicationtask_spec.rb
+spec/harvestwebdeploymenttask_spec.rb
 spec/iisappcmd_spec.rb
 spec/msbuildcmd_spec.rb
 spec/msbuildtask_spec.rb
