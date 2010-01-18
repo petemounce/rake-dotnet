@@ -44,11 +44,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-    <Target Name="BeforeBuild">
+  <Target Name="BeforeBuild">
     <Exec Command="rake templates" WorkingDirectory="..\..\build" />
   </Target>
   <Target Name="BeforeBuild">
-	<Exec Command="rake templates" WorkingDirectory="..\..\build" />
+    <Exec Command="rake templates" WorkingDirectory="..\..\build" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -58,6 +58,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>rem robocopy . ..\..\..\RakeDotNet.Example RakeDotNet.dll</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
