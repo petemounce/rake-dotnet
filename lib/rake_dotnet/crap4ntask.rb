@@ -17,7 +17,7 @@ class Crap4nTask < Rake::TaskLib
 
 		out_dir_regex = regexify(@out_dir)
 		rule(/#{out_dir_regex}\/.*\.crap4n\.xml/) do |r|
-
+# TODO: Work in progress
 		end
 
 		task :crap4n do
