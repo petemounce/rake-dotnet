@@ -82,12 +82,12 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 
 ## Requirements:
 
-*	ruby 1.8.6+ (ruby one-click installer)[http://rubyinstaller.org]
+*	ruby 1.8.6+ [ruby one-click installer](http://rubyinstaller.org)
 *	rake 0.8.3+ (but this will be installed when you do `gem install rake-dotnet`)
 
 ## Install:
 
-1. Install Ruby 1.8.6 using the (ruby one-click installer)[http://rubyinstaller.org] to (eg) `c:\ruby`
+1. Install Ruby 1.8.6 using the [ruby one-click installer](http://rubyinstaller.org) to (eg) `c:\ruby`
 2. `gem install rake-dotnet` (prepend `sudo` if you're not on Windows - which doesn't seem likely considering the audience ;-) )
 3. Create a directory to hold 3rdparty dependencies
 	* if you follow the instructions in  [{github}/presentation/DemoRoot/3rdparty/readme.txt](http://github.com/petemounce/rake-dotnet/tree/master/) you'll get default paths that rake-dotnet expects
@@ -96,7 +96,7 @@ Example: [{github}/presentation/DemoRoot](http://github.com/petemounce/rake-dotn
 	* rake-dotnet uses tools within the paths taken from the default unzip'd location.  For example, svn.exe is expected to live within #{TOOLS_DIR}/svn/bin because that's how svn zip files unzip
 
 ## Build from source:
-1. On Windows, you need the (ruby-installer development kit)[http://wiki.github.com/oneclick/rubyinstaller/development-kit] (the `rcov` gem needs to build its native extension)
+1. On Windows, you need the [ruby-installer development kit](http://wiki.github.com/oneclick/rubyinstaller/development-kit) (the `rcov` gem needs to build its native extension)
 2. `gem install rcov syntax hoe rspec diff-lcs --include-dependencies` (again, prepend `sudo` if you're not on Windows)
 3. Edit `c:\Ruby\lib\ruby\gems\1.9.1\gems\hoe-2.4.0\lib\hoe.rb` [per here](http://blog.emson.co.uk/2008/06/an-almost-fix-for-creating-rubygems-on-windows/)
 4. `rake clobber examples_with_report` and/or `rake clobber examples_with_rcov` to run specifications and coverage respectively; library itself will be generated to `lib/rake_dotnet.rb` by cat'ing files together.
