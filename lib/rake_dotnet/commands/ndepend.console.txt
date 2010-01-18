@@ -1,0 +1,72 @@
+//
+//  NDepend v2.12.1.3122
+//  http://www.ndepend.com
+//  support@ndepend.com
+//  Copyright (C) SMACCHIA.COM SARL 2006/2007/2008
+//  All Rights Reserved
+//
+
+NDepend accepts these arguments:
+  _____________________________________________________________________________
+  The path to the input Xml NDepend project file.  MANDATORY
+
+    It must be specified as the first argument. If you need to specify a path 
+    that contains a space character use double quotes ".. ..". Relative paths 
+    are not supported. These remarks also apply to paths provided with options 
+    /InDirs /OutDir and /XslForReport.
+ 
+
+ Following are OPTIONAL and can be provided in any order:
+  _____________________________________________________________________________
+  /ViewReport                 to view the HTML report
+  _____________________________________________________________________________
+  /Silent                     to disable output on console
+  _____________________________________________________________________________
+  /HideConsole                to hide the console window
+  _____________________________________________________________________________
+  /XslForReport xlsFilePath   to provide your own Xsl file used to build report
+                              The path must be absolute.
+  _____________________________________________________________________________
+  /InDirs dir1 [dir2 ...]     to override input dirs specified in the NDepend
+                              project file. Dirs must be absolute.
+     
+     If you use the /InDirs option, directories specified in the Xml NDepend 
+     project file are ignored.
+  _____________________________________________________________________________
+  /OutDir dir                 to override the output dir specified in the 
+                              NDepend project file. Dir must be absolute.
+
+     VisualNDepend.exe won't work on the machine where you used 
+     NDepend.Console.exe with the option /OutDir because VisualNDepend.exe is 
+     not aware of the output dir specified and will try to use the output dir 
+     specified in your NDepend project file.
+     The same if you use the historical comparison option. It won't work
+     properly because historic analysis results will be stored in /OutDir
+     while the analysis will try to found them in the project output dir.
+  _____________________________________________________________________________
+  /EmitVisualNDependBinXml    to emit the file VisualNDepend.bin.xml
+
+     VisualNDepend.bin.xml is an xml file that contains the 
+     dependencies graph of your application. It can be used for your  
+     own purpose. VisualNDepend.exe uses VisualNDepend.bin which is
+     a GZipStream compressed version of VisualNDepend.bin.xml.
+
+     Note: We don't garantee that the stability of this option in future 
+           versions.
+
+  _____________________________________________________________________________
+  /AnalysisResultToCompareWith to provide a previous analysis result to 
+                               compare with. The path must be absolute.
+
+     Analysis results are stored in files named VisualNDepend.bin.
+     These files can be found under the NDepend project output directory.
+     The prefered option to provide a previous analysis result to 
+     compare with during an analysis is to use: 
+     VisualNDepend > Project Properties > Analysis > Analysis Comparison
+     You can use the option /AnalysisResultToCompareWith in special 
+     scenarios where using Project Properties doesn't work.
+
+  ____________________________________________________________________________
+  /Help                       to display the current help on console 
+
+

@@ -12,7 +12,7 @@ class NCoverConsoleCmd
 		@exclude_assemblies_regex.push('ISymWrapper')
 		@exclude_files_regex = params[:exclude_files_regex] || ['.*\.[Dd]esigner.cs']
 		@cmd_to_run = params[:cmd_to_run]
-		raise(ArgumentError, 'must supply a command-line string to run (eg, `NunitCmd.new(options).cmd`, `XUnitConsoleCmd.new(options).cmd`)', caller) if @cmd_to_run.nil?
+		raise(ArgumentError, 'must supply a command-line string to run (eg, `NunitCmd.new(options).cmd`, `XUnitCmd.new(options).cmd`)', caller) if @cmd_to_run.nil?
 
 		@profile_iis = params[:profile_iis] || false
 		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname

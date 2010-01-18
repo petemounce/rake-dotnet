@@ -29,7 +29,7 @@ class NCoverTask < Rake::TaskLib
 				@profile_options[:profile_iis] = @allow_iis_profiling
 			end
 			@profile_options[:cmd_to_run] = case @profile_options[:test_framework]
-				when :xunit then XUnitConsoleCmd.new(dll_to_execute, '', nil, {}).cmd
+				when :xunit then XUnitCmd.new(dll_to_execute, '', nil, {}).cmd
 				when :nunit then NUnitCmd.new(:input_files=>dll_to_execute, :options=>{:xml=>false}).cmd
 				else raise(ArgumentError, ':test_framework must be one of [:nunit,:xunit]', caller)
 			end
