@@ -31,8 +31,9 @@ class HarvestOutputTask < Rake::TaskLib
 				if pn.directory?
 					output = FileList.new
 					#TODO: distinguish between web and class and console output
-					output.include("#{entry}/bin/#{@configuration}/*")
-					output.include("#{entry}/bin/*")
+					output.include("#{entry}/bin/#{@configuration}/*") # Libraries
+					output.include("#{entry}/bin/*") # Web Application Project
+					output.include("#{entry}/#{@configuration}/bin/*") #Web Deployment Project
 					output.each do |o|
 						o_pn = Pathname.new(o)
 						to_pn = Pathname.new("#{@out_dir}")

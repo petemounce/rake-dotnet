@@ -37,7 +37,7 @@
       <Name>RakeDotNet</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\WebDeployment\v9.0\Microsoft.WebDeployment.targets" />
+  <Import Project="..\..\3rdparty\msbuild\webdeployment\Microsoft.WebDeployment.targets" />
   <Target Name="BeforeBuild">
     <Exec Command="rake templates" WorkingDirectory="..\..\build" />
   </Target>
