@@ -65,13 +65,11 @@ class RDNPackageTask < Rake::TaskLib
 	def run_package(root_dir, package_name, version)
 		assembly_dir = File.join(root_dir, package_name)
 		mkdir_p assembly_dir
+		cp 'version.txt', assembly_dir
 		@targets.each do |t|
 			f = Pathname.new(t)
-			if f.directory?
-				cp_r f, File.join(assembly_dir, "#{f.basename}-#{@configuration}-v#{version}")
-			else
-				cp f, assembly_dir
-			end
+			cp_r f, assembly_dir if f.directory?
+			cp f, assembly_dir unless f.directory?
 		end
 		versioned_assembly_dir = File.join(root_dir, "#{package_name}-#{@configuration}-v#{version}")
 		mv assembly_dir, versioned_assembly_dir

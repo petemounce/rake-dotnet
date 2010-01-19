@@ -16,14 +16,15 @@ class HarvestWebDeploymentTask < Rake::TaskLib
 		directory @out_dir
 
 		out_dir_regex = regexify(@out_dir)
-		rule(/#{out_dir_regex}\/.*WdpSite/) do |r|
-			puts r.name
+		rule(/#{out_dir_regex}\/.*\.WdpSite\//) do |r|
 			harvest_to(r.name)
 		end
 
 		def harvest_to(path)
-			source = File.join(path.gsub(@out_dir, @src_dir), @configuration)
-			mkdir_p path
+			name = path.sub(@out_dir + '/', '')
+			source = File.join(@src_dir, name, @configuration)
+			dest = File.join(@out_dir, name)
+			mkdir_p dest
 			result = FileList.new
 			@include.each do |glob|
 				result.include("#{source}/#{glob}")
@@ -39,9 +40,10 @@ class HarvestWebDeploymentTask < Rake::TaskLib
 		task :harvest_wdps => @out_dir
 
 		task :harvest_wdps do
-			FileList.new("#{@src_dir}/*WdpSite*/").each do |wdp|
+			FileList.new("#{@src_dir}/*.WdpSite/").each do |wdp|
 				name = Pathname.new(wdp).basename
-				Rake::Task["#{@out_dir}/#{name}"].invoke
+				path = File.join(@out_dir, name)
+				Rake::Task["#{path}/"].invoke
 			end
 		end
 		

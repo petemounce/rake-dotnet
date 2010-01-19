@@ -17,7 +17,7 @@ class HarvestWebApplicationTask < Rake::TaskLib
 	def define
 		out_dir_regex = regexify(@out_dir)
 
-		odr = /#{out_dir_regex}\/([\w\.-_ ]*Site)\//
+		odr = /#{out_dir_regex}\/([\w\.-_ ]*\.Site)\//
 		rule(odr) do |r|
 			harvest(r.name, odr)
 		end
