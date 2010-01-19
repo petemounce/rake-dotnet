@@ -16,8 +16,8 @@ lib/rake_dotnet/helpers.rb
 lib/rake_dotnet/defaults.rb
 lib/rake_dotnet/versioner.rb
 lib/rake_dotnet/commands/bcpcmd.rb
-lib/rake_dotnet/commands/crap4ncmd.rb
 lib/rake_dotnet/commands/cli.rb
+lib/rake_dotnet/commands/crap4ncmd.rb
 lib/rake_dotnet/commands/fxcopcmd.rb
 lib/rake_dotnet/commands/iisappcmd.rb
 lib/rake_dotnet/commands/msbuildcmd.rb
@@ -29,9 +29,9 @@ lib/rake_dotnet/commands/sevenzipcmd.rb
 lib/rake_dotnet/commands/sqlcmd.rb
 lib/rake_dotnet/commands/svn.rb
 lib/rake_dotnet/commands/xunitcmd.rb
+lib/rake_dotnet/tasks/assemblyinfo.rb
 lib/rake_dotnet/tasks/crap4ntask.rb
 lib/rake_dotnet/tasks/dependenttask.rb
-lib/rake_dotnet/tasks/assemblyinfo.rb
 lib/rake_dotnet/tasks/fxcoptask.rb
 lib/rake_dotnet/tasks/harvestoutputtask.rb
 lib/rake_dotnet/tasks/harvestwebapplicationtask.rb
@@ -42,6 +42,7 @@ lib/rake_dotnet/tasks/ndependtask.rb
 lib/rake_dotnet/tasks/nunittask.rb
 lib/rake_dotnet/tasks/rdnpackagetask.rb
 lib/rake_dotnet/tasks/xunittask.rb
+spec/rake_dotnet_spec.rb
 spec/constants_spec.rb
 spec/versioner_spec.rb
 spec/commands/bcpcmd_spec.rb
