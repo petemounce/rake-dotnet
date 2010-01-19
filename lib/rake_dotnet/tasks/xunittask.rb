@@ -1,5 +1,5 @@
 class XUnitTask < Rake::TaskLib
-	attr_accessor :suites_dir, :reports_dir, :options
+	attr_accessor :suites_dir, :reports_dir, :options, :deps
 
 	def initialize(params={}) # :yield: self
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
@@ -32,7 +32,7 @@ class XUnitTask < Rake::TaskLib
 			out_dir = File.join(@reports_dir, suite)
 			unless File.exist?(out_dir) && uptodate?(tests_dll, out_dir)
 				mkdir_p(out_dir) unless File.exist?(out_dir)
-				x = XUnitCmd.new(tests_dll, out_dir, nil, options=@options)
+				x = XUnitCmd.new(tests_dll, out_dir, nil, @options)
 				x.run
 			end
 		end
