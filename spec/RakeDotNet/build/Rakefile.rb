@@ -22,6 +22,9 @@ end
 RDNPackageTask.new('RakeDotNet.WdpSite', {:deps=>[:compile, :harvest, :tests]}) do |p|
 	p.targets.include(File.join(OUT_DIR, 'RakeDotNet.WdpSite'))
 end
+RDNPackageTask.new('RakeDotNet.WebApp.Site', {:deps=>[:compile, :harvest, :tests]}) do |p|
+	p.targets.include(File.join(OUT_DIR, 'RakeDotNet.WebApp.Site'))
+end
 
 XUnitTask.new
 
