@@ -2,6 +2,10 @@ require 'spec'
 require 'lib/rake_dotnet.rb'
 
 describe NCoverTask do
+	after :all do
+		Rake::Task.clear
+		Rake::FileTask.clear
+	end
 	it "should default the product_name"
 	it "should allow product_name to be specified"
 	it "should default bin_dir"
