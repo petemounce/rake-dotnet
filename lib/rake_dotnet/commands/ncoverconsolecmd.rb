@@ -14,7 +14,7 @@ class NCoverConsoleCmd
 		raise(ArgumentError, 'must supply a command-line string to run (eg, `NunitCmd.new(options).cmd`, `XUnitCmd.new(options).cmd`)', caller) if @cmd_to_run.nil?
 		@profile_iis = params[:profile_iis] || false
 		@service_timeout = params[:service_timeout] || nil
-		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname
+		@working_dir = params[:working_dir] || Pathname.new(@dll_to_execute).dirname.to_s
 
 		@is_complete_version = `#{File.expand_path(@exe)}`.include?('NCover Complete')
 	end
@@ -24,7 +24,7 @@ class NCoverConsoleCmd
 	end
 
 	def working_dir
-		return "//w \"#{@working_dir}\""
+		return "//w \"#{@working_dir.gsub('/','\\')}\""
 	end
 
 	def iis
