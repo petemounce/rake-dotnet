@@ -9,17 +9,17 @@ describe NUnitTask do
 		Rake::Task.clear
 		Rake::FileTask.clear
 	end
-	describe NUnitTask, 'When initialised with no settings' do
+	describe 'When initialised with no settings' do
 		before :all do
 			@nut = NUnitTask.new
+			@out_dir = File.join(OUT_DIR, 'reports', 'nunit')
 		end
 		it 'should have a sensible suites directory to look in' do
 			sd = File.join(OUT_DIR, 'bin')
 			@nut.suites_dir.should match(/#{re(sd)}/)
 		end
 		it 'should have a sensible reports directory to write to' do
-			d = File.join(OUT_DIR, 'reports', 'nunit')
-			@nut.out_dir.should match(/#{re(d)}/)
+			@nut.out_dir.should match(/#{re(@out_dir)}/)
 		end
 		it 'should have no nunit runner options set' do
 			@nut.runner_options.should be_empty
@@ -28,10 +28,10 @@ describe NUnitTask do
 			@nut.dependencies.should be_empty
 		end
 		it 'should create a directory for the reports' do
-			rd = Rake::FileTask['out/reports/nunit']
+			rd = Rake::FileTask[@out_dir]
 			rd.should_not be_nil
 			rd.should be_a(Rake::FileTask)
-			rd.name.should eql('out/reports/nunit')
+			rd.name.should eql(@out_dir)
 		end
 		it 'should create a task called :nunit' do
 			nunit = Rake::Task[:nunit]
@@ -41,7 +41,7 @@ describe NUnitTask do
 		end
 		it 'should make :nunit depend on @reports_dir' do
 			nunit = Rake::Task[:nunit]
-			nunit.prerequisites.should include('out/reports/nunit')
+			nunit.prerequisites.should include(@out_dir)
 		end
 		it 'should create a task to clobber the nunit-output' do
 			cn = Rake::Task[:clobber_nunit]
@@ -50,7 +50,7 @@ describe NUnitTask do
 		it 'should create a rule matching the reports directory that will be hit by the suite to run'
 	end
 
-	describe NUnitTask, 'When initialised with suites dir' do
+	describe 'When initialised with suites dir' do
 		it 'should use that dir' do
 			sd = File.join(OUT_DIR, 'bong')
 			nut = NUnitTask.new(:suites_dir=>sd)
@@ -58,7 +58,7 @@ describe NUnitTask do
 		end
 	end
 
-	describe NUnitTask, 'When initialised with out_dir' do
+	describe 'When initialised with out_dir' do
 		it 'should use that dir' do
 			d = File.join(OUT_DIR, 'junk')
 			nut = NUnitTask.new(:out_dir => d)
@@ -66,7 +66,7 @@ describe NUnitTask do
 		end
 	end
 
-	describe NUnitTask, 'When initialised with runner options' do
+	describe 'When initialised with runner options' do
 		it 'should use those options' do
 			o = {:exclude=>[]}
 			nut = NUnitTask.new(:runner_options => {:exclude=>'unit,integration'})

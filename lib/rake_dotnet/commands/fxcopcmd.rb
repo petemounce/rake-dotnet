@@ -3,6 +3,7 @@ class FxCopCmd
 
 	def initialize(dlls, params={})
 		@dlls = dlls
+		raise(ArgumentError, 'Must supply at least one DLL', caller) if @dlls.nil?
 
 		@exe_dir = params[:fxcop_exe_dir] || File.join(TOOLS_DIR, 'fxcop')
 		@exe = params[:fxcop_exe] || File.join(@exe_dir, 'fxcopcmd.exe')
@@ -34,7 +35,8 @@ class FxCopCmd
 	end
 
 	def out_file
-		"/out:\"#{@out_file}\"" if @out_file
+		return "/out:\"#{@out_file}\"" unless @out_file.nil?
+		return ''
 	end
 
 	def out_xsl

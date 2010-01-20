@@ -9,7 +9,7 @@ describe Crap4nTask do
 		Rake::FileTask.tasks.clear
 	end
 
-	describe Crap4nTask, 'When initialised with default settings' do
+	describe 'When initialised with default settings' do
 		before :all do
 			@c4n = Crap4nTask.new
 			@crap4n = Rake::Task[:crap4n]
@@ -44,21 +44,21 @@ describe Crap4nTask do
 		it 'should define a rule to invoke crap ( :-) ) when crap4n is run'
 	end
 
-	describe Crap4nTask, 'When initialised with an out_dir' do
+	describe 'When initialised with an out_dir' do
 		it 'should use it' do
 			c4n = Crap4nTask.new(:out_dir=>'foo')
 			c4n.out_dir.should eql('foo')
 		end
 	end
 
-	describe Crap4nTask, 'When initialised with a coverage dir' do
+	describe 'When initialised with a coverage dir' do
 		it 'should use it' do
 			c4n = Crap4nTask.new(:coverage_dir=>'foo')
 			c4n.coverage_dir.should eql('foo')
 		end
 	end
 
-	describe Crap4nTask, 'When initialised with a metrics dir' do
+	describe 'When initialised with a metrics dir' do
 		it 'should use it' do
 			c4n = Crap4nTask.new(:metrics_dir=>'foo')
 			c4n.metrics_dir.should eql('foo')

@@ -10,7 +10,7 @@ describe HarvestOutputTask do
 		Rake::FileTask.clear
 	end
 
-	describe HarvestOutputTask, 'When initialised with defaults' do
+	describe 'When initialised with defaults' do
 		before :all do
 			@hot = HarvestOutputTask.new
 			@task = Rake::Task[:harvest_output]
@@ -30,13 +30,13 @@ describe HarvestOutputTask do
 			@hot.glob.should include("#{@hot.src_dir}/*")
 		end
 		it 'should define a directory task for out_dir' do
-			Rake::FileTask['out/bin'].should_not be_nil
+			Rake::FileTask[Bin_out].should_not be_nil
 		end
 		it 'should define a task called :harvest_output' do
 			@task.should_not be_nil
 		end
 		it 'should make :harvest_output depend on out_dir' do
-			@task.prerequisites.should include('out/bin')
+			@task.prerequisites.should include(Bin_out)
 		end
 		it 'should not make :harvest_output depend on anything else' do
 			@task.should have(1).prerequisites
@@ -50,7 +50,7 @@ describe HarvestOutputTask do
 		end
 	end
 
-	describe HarvestOutputTask, 'When initialised with a dependency' do
+	describe 'When initialised with a dependency' do
 		before :all do
 			@hot = HarvestOutputTask.new(:dependencies=>[:foo])
 			@task = Rake::Task[:harvest_output]

@@ -8,7 +8,7 @@ describe HarvestWebDeploymentTask do
 		Rake::Task.clear
 		Rake::FileTask.clear
 	end
-	describe HarvestWebDeploymentTask, 'When initialised with defaults' do
+	describe 'When initialised with defaults' do
 		before :all do
 			@hwdt = HarvestWebDeploymentTask.new
 			@harvest_wdps = Rake::Task[:harvest_wdps]
@@ -45,21 +45,21 @@ describe HarvestWebDeploymentTask do
 		end
 	end
 
-	describe HarvestWebDeploymentTask, 'When given an out_dir' do
+	describe 'When given an out_dir' do
 		it 'should use it' do
 			hwdt = HarvestWebDeploymentTask.new(:out_dir=>'foo')
 			hwdt.out_dir.should eql('foo')
 		end
 	end
 
-	describe HarvestWebDeploymentTask, 'When given a src_dir' do
+	describe 'When given a src_dir' do
 		it 'should use it' do
 			hwdt = HarvestWebDeploymentTask.new(:src_dir=>'foo')
 			hwdt.src_dir.should eql('foo')
 		end
 	end
 
-	describe HarvestWebDeploymentTask, 'When given a configuration' do
+	describe 'When given a configuration' do
 		it 'should use it' do
 			hwdt = HarvestWebDeploymentTask.new(:configuration=>'Release')
 			hwdt.configuration.should eql('Release')

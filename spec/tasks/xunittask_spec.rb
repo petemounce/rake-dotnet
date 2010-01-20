@@ -7,25 +7,26 @@ describe XUnitTask do
 		Rake::FileTask.clear
 	end
 
-	describe XUnitTask, 'When initialised with default settings' do
+	describe 'When initialised with default settings' do
 		before :all do
 			@xt = XUnitTask.new
 			@xunit = Rake::Task[:xunit]
+			@out_dir = File.join(OUT_DIR, 'reports', 'tests')
 		end
 		it 'should look in a sensible place for test-suite DLLs to run' do
 			@xt.suites_dir.should eql(Bin_out)
 		end
 		it 'should dump reports to a sensible place' do
-			@xt.reports_dir.should eql(File.join(OUT_DIR, 'reports', 'tests'))
+			@xt.reports_dir.should eql(@out_dir)
 		end
 		it 'should define a directory to dump reports into' do
-			Rake::FileTask['out/reports/tests'].should_not be_nil
+			Rake::FileTask[@out_dir].should_not be_nil
 		end
 		it 'should define a task, :xunit' do
 			@xunit.should_not be_nil
 		end
 		it 'should make :xunit depend on reports dir' do
-			@xunit.prerequisites.should include('out/reports/tests')
+			@xunit.prerequisites.should include(@out_dir)
 		end
 		it 'should not have extra dependencies' do
 			@xunit.should have(1).prerequisites
@@ -40,19 +41,19 @@ describe XUnitTask do
 		end
 	end
 
-	describe XUnitTask, 'When given a suites-dir' do
+	describe 'When given a suites-dir' do
 		it 'should use it' do
 			XUnitTask.new(:suites_dir=>'foo').suites_dir.should eql('foo')
 		end
 	end
 
-	describe XUnitTask, 'When given an out-dir' do
+	describe 'When given an out-dir' do
 		it 'should use it' do
 			XUnitTask.new(:reports_dir=>'foo').reports_dir.should eql('foo')
 		end
 	end
 
-	describe XUnitTask, 'When given dependencies' do
+	describe 'When given dependencies' do
 		it 'should use them' do
 			xt = XUnitTask.new(:deps=>[:dooby])
 			xt.deps.should include(:dooby)

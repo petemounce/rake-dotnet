@@ -9,7 +9,7 @@ describe HarvestWebApplicationTask do
 		Rake::Task.clear
 		Rake::FileTask.clear
 	end
-	describe HarvestWebApplicationTask, 'When initialised with defaults' do
+	describe 'When initialised with defaults' do
 		before :all do
 			@hwat = HarvestWebApplicationTask.new
 			@task = Rake::Task[:harvest_webapps]
@@ -30,7 +30,6 @@ describe HarvestWebApplicationTask do
 			@harvest.should_not be_nil
 		end
 		it ':harvest should depend on :harvest_webapps' do
-			puts @harvest.prerequisites.join(',')
 			@harvest.prerequisites.should include('harvest_webapps')
 		end
 	end

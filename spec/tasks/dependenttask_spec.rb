@@ -22,7 +22,7 @@ describe DependentTask do
 		end
 	end
 
-	describe DependentTask, 'When initialising with no dependencies' do
+	describe 'When initialising with no dependencies' do
 		before :all do
 			DepTask.new
 			@foo = Rake::Task[:foo]
@@ -36,7 +36,7 @@ describe DependentTask do
 		end
 	end
 
-	describe DependentTask, 'When initialised with some dependencies from an array' do
+	describe 'When initialised with some dependencies from an array' do
 		before :all do
 			task :foo
 			@foo = Rake::Task[:foo]
@@ -51,7 +51,7 @@ describe DependentTask do
 		end
 	end
 
-	describe DependentTask, 'When initialised with some dependencies from a CSV string' do
+	describe 'When initialised with some dependencies from a CSV string' do
 		before :all do
 			task :a
 			task :b
@@ -68,7 +68,7 @@ describe DependentTask do
 		end
 	end
 
-	describe DependentTask, 'When initialised with no dependencies during a CI build' do
+	describe 'When initialised with no dependencies during a CI build' do
 		before :all do
 			task :foo
 			@foo = Rake::Task[:foo]
@@ -79,7 +79,7 @@ describe DependentTask do
 		end
 	end
 
-	describe DependentTask, 'When initialised with some dependencies during a CI build' do
+	describe 'When initialised with some dependencies during a CI build' do
 		before :all do
 			task :a
 			task :b

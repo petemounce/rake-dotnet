@@ -1,5 +1,5 @@
 class FxCopTask < Rake::TaskLib
-	attr_accessor :dll_list, :suites_dir
+	attr_accessor :dll_list, :suites_dir, :product_name, :report_dir, :name
 
 	def initialize(params={})
 		@product_name = params[:product_name] || PRODUCT_NAME
@@ -32,6 +32,7 @@ class FxCopTask < Rake::TaskLib
 			runner.run
 		end
 
+		task :fxcop => @name
 		task :fxcop, [:include_globs, :exclude_globs] do |t, args|
 			args.with_defaults(:include_globs => ["#{@suites_dir}/**/*#{@product_name}*.dll", "#{@suites_dir}/**/*#{@product_name}*.exe"])
 			args.include_globs.each do |g|
@@ -44,12 +45,8 @@ class FxCopTask < Rake::TaskLib
 			Rake::FileTask[@name].invoke
 		end
 
-		task :clobber_fxcop, [:globs] do |t, args|
+		task :clobber_fxcop, [:globs] do
 			rm_rf @report_dir
 		end
-
-		self
 	end
-
-	self
 end

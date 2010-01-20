@@ -9,11 +9,12 @@ describe NDependTask do
 		Rake::Task.clear
 		Rake::FileTask.clear
 	end
-	describe NDependTask, 'When initialised with no settings' do
+	describe 'When initialised with no settings' do
 		before :all do
 			@ndt = NDependTask.new
 			@ndepend = Rake::Task[:ndepend]
-			@reports_dir = Rake::FileTask['out/reports/ndepend']
+			@out_dir = File.join(OUT_DIR, 'reports', 'ndepend')
+			@reports_dir = Rake::FileTask[@out_dir]
 			@clobber_ndepend = Rake::Task[:clobber_ndepend]
 		end
 
@@ -24,14 +25,14 @@ describe NDependTask do
 		it 'should define a directory for reports' do
 			@reports_dir.should_not be_nil
 			@reports_dir.should be_a(Rake::FileTask)
-			@reports_dir.name.should eql('out/reports/ndepend')
+			@reports_dir.name.should eql(@out_dir)
 		end
 		it 'should define an :ndepend task' do
 			@ndepend.should_not be_nil
 			@ndepend.should be_a(Rake::Task)
 		end
 		it 'should make :ndepend depend on @reports_dir' do
-			@ndepend.prerequisites.should include('out/reports/ndepend')
+			@ndepend.prerequisites.should include(@out_dir)
 		end
 		it 'should define a :clobber_ndepend task' do
 			@clobber_ndepend.should_not be_nil
@@ -39,14 +40,14 @@ describe NDependTask do
 		end
 	end
 
-	describe NDependTask, 'When initialised with reports_dir specified' do
+	describe 'When initialised with reports_dir specified' do
 		it 'should use it' do
 			ndt = NDependTask.new(:out_dir=>'foo')
 			ndt.out_dir.should eql('foo')
 		end
 	end
 
-	describe NDependTask, 'When initialised with dependencies' do
+	describe 'When initialised with dependencies' do
 		before :all do
 			@ndt = NDependTask.new(:dependencies=>[:foo])
 			@ndepend = Rake::Task[:ndepend]

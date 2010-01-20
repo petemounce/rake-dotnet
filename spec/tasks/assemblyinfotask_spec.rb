@@ -9,7 +9,7 @@ describe AssemblyInfoTask do
 		Rake::FileTask.clear
 	end
 
-	describe AssemblyInfoTask, 'When initialised with default settings' do
+	describe 'When initialised with default settings' do
 		before :all do
 			@at = AssemblyInfoTask.new
 			@templates = Rake::Task[:templates]
