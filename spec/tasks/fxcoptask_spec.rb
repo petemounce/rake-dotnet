@@ -28,8 +28,8 @@ describe FxCopTask do
 		it 'should create a file-task for the report file' do
 			@report.should_not be_nil
 		end
-		it 'should make :fxcop depend on the report file' do
-			@fxcop.prerequisites.should include(@report.name)
+		it 'should not make :fxcop depend on the report file because otherwise the arguments are not processed' do
+			@fxcop.prerequisites.should_not include(@report.name)
 		end
 		it 'should make out-dir task dependent on the report file' do
 			@report.prerequisites.should include(@out_dir)
@@ -41,7 +41,7 @@ describe FxCopTask do
 			@ft.suites_dir.should eql(Bin_out)
 		end
 		it 'should not define any extra dependencies for :fxcop' do
-			@fxcop.should have(1).prerequisites
+			@fxcop.should have(0).prerequisites
 		end
 		it 'should define a :clobber_fxcop task' do
 			Rake::Task[:clobber_fxcop].should_not be_nil
