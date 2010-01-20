@@ -32,7 +32,6 @@ class FxCopTask < Rake::TaskLib
 			runner.run
 		end
 
-		task :fxcop => @name
 		task :fxcop, [:include_globs, :exclude_globs] do |t, args|
 			args.with_defaults(:include_globs => ["#{@suites_dir}/**/*#{@product_name}*.dll", "#{@suites_dir}/**/*#{@product_name}*.exe"])
 			args.include_globs.each do |g|

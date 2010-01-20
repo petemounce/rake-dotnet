@@ -28,9 +28,7 @@ end
 
 XUnitTask.new
 
-FxCopTask.new do |fxc|
-	fxc.dll_list.exclude("#{fxc.suites_dir}/**/*Tests.dll")
-end
+FxCopTask.new
 
 NCoverTask.new do |nc|
 	nc.profile_options[:test_framework] = :xunit

@@ -3,7 +3,7 @@ class FxCopCmd
 
 	def initialize(dlls, params={})
 		@dlls = dlls
-		raise(ArgumentError, 'Must supply at least one DLL', caller) if @dlls.nil?
+#		raise(ArgumentError, 'Must supply at least one DLL', caller) if @dlls.nil?
 
 		@exe_dir = params[:fxcop_exe_dir] || File.join(TOOLS_DIR, 'fxcop')
 		@exe = params[:fxcop_exe] || File.join(@exe_dir, 'fxcopcmd.exe')
