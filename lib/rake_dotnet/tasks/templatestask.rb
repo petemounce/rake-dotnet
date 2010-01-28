@@ -9,6 +9,7 @@ class TemplatesTask < Rake::TaskLib
 
   def define
     CLEAN.include("#{SRC_DIR}/**/*.erb")
+
     erbs = FileList.new("#{SRC_DIR}/**/*.erb")
     erbs.each do |erb_file|
       output = erb_file.sub('.erb','')
@@ -21,9 +22,10 @@ class TemplatesTask < Rake::TaskLib
       end
       task :erbs => output
     end
+
     desc 'Generate output based on *.erb files from current ENVIRONMENT= configuration'
     task :erbs
-    
+
     task :templates => :erbs
   end
 end
