@@ -46,7 +46,7 @@ class FxCopTask < Rake::TaskLib
 			Rake::FileTask[@name].invoke
 		end
 
-		task :clobber_fxcop, [:globs] do
+		task :clobber_fxcop do
 			rm_rf @report_dir
 		end
 	end

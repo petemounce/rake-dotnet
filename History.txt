@@ -1,5 +1,6 @@
 === 0.2.0 / 2010-01-
 
+NEW: NCover - make it possible to pass in test-runner options with the :runner_options parameter
 NEW: Support harvesting from web-deployment projects
 NEW: MsBuild - Support for building web-deployment projects
 NEW: AssemblyInfo now supports generating to websites' App_Code directory

@@ -1,5 +1,5 @@
 class NCoverTask < Rake::TaskLib
-  attr_accessor :profile_options, :reporting_options
+  attr_accessor :profile_options, :reporting_options, :runner_options
 
   def initialize(params={})
     @product_name = params[:product_name] || PRODUCT_NAME
