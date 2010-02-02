@@ -35,6 +35,12 @@ describe RDNPackageTask do
 		it 'should have 1 item defined' do
 			@pt.should have(1).items
 		end
+		it 'should define sensible excludes' do
+			@pt.exclude.should include('**/.svn')
+			@pt.exclude.should include('**/_svn')
+			@pt.exclude.should include('**/.git')
+			@pt.exclude.should include('**/obj')
+		end
 		it 'should have a sensible output directory' do
 			@pt.out_dir.should eql("#{OUT_DIR}/pkg")
 		end

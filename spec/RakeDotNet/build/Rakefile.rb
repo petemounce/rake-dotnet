@@ -17,16 +17,18 @@ RDNPackageTask.new(:name=>'bin',:dependencies=>[:compile, :harvest, :tests]) do 
 	p.items << {:from=>Bin_out}
 end
 RDNPackageTask.new(:name=>'RakeDotNet.WdpSite', :dependencies=>[:compile, :harvest, :tests]) do |p|
-	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION), :named=>'RakeDotNet.WdpSite'}
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION),
+							:named=>'RakeDotNet.WdpSite'}
 end
 RDNPackageTask.new(:name => 'RakeDotNet.WebApp.Site', :dependencies=>[:compile, :harvest, :tests]) do |p|
 	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WebApp.Site'),
-							:exclude=>['.svn', '**/*.cs', '**/*.csproj', '**/Properties']}
+							:exclude=>['**/*.cs', '**/*.csproj', '**/Properties']}
 end
 RDNPackageTask.new(:name=>'RakeDotNet', :dependencies=>[:compile, :harvest, :tests, :ndepend, :coverage, :fxcop]) do |p|
-	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION), :named=>'RakeDotNet.WdpSite'}
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION),
+							:named=>'RakeDotNet.WdpSite'}
 	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WebApp.Site'),
-							:exclude=>['.svn', '**/*.cs', '**/*.csproj', '**/Properties']}
+							:exclude=>['**/*.cs', '**/*.csproj', '**/Properties']}
 	p.items << {:from => File.join(OUT_DIR, 'reports')}
 end
 

@@ -1,11 +1,12 @@
 class RDNPackageTask < Rake::TaskLib
 	include DependentTask
-	attr_accessor :name, :items, :out_dir, :configuration
+	attr_accessor :name, :items, :out_dir, :configuration, :exclude
 
 	def initialize(params={})
 		@name = params[:name]
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'pkg')
 		@configuration = params[:configuration] || CONFIGURATION
+		@exclude = params[:exclude] || ['**/.svn', '**/_svn', '**/.git', '**/obj']
 		@items = params[:items] || []
 
 		yield self if block_given?
@@ -13,6 +14,22 @@ class RDNPackageTask < Rake::TaskLib
 		raise(ArgumentError, 'Must have at least one item', caller) if @items.length < 1
 		@main_task_name = "package_#{@name}".to_sym
 		define
+	end
+
+	def remove_exclusions(exclusions, root, start_at)
+		to_remove = []
+		unless exclusions.nil?
+			exclusions.each do |ex|
+				glob = "#{root}/#{start_at}/#{ex}"
+				to_remove << glob
+			end
+		end
+
+		to_remove.each do |remove|
+			Dir.glob(remove).each do |rm|
+				rm_rf rm
+			end
+		end
 	end
 
 	def define
@@ -31,21 +48,10 @@ class RDNPackageTask < Rake::TaskLib
 				mkdir_p to if File.exist? to
 				cp_r f, to if f.directory?
 				cp f, to unless f.directory?
-				unless item[:exclude].nil?
-					to_remove = []
-					item[:exclude].each do |ex|
-						glob = "#{to}/#{f.basename}/#{ex}"
-						glob = "#{to}/#{item[:named]}/#{ex}" unless item[:named].nil?
-						to_remove << glob
-					end
-
-					to_remove.each do |remove|
-						Dir.glob(remove).each do |rm|
-							rm_rf rm
-						end
-					end
-				end
+				base = item[:named].nil? ? f.basename : item[:named]
+				remove_exclusions(item[:exclude], to, base)
 			end
+			remove_exclusions(@exclude, pkg, '.')
 			version = Versioner.new.get
 			versioned_dir = File.join(@out_dir, "#{@name}-#{@configuration}-v#{version}")
 			mv pkg, versioned_dir
