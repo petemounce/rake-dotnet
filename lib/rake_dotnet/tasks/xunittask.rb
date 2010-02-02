@@ -4,7 +4,7 @@ class XUnitTask < Rake::TaskLib
 	def initialize(params={}) # :yield: self
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 		@reports_dir = params[:reports_dir] || File.join(OUT_DIR, 'reports', 'tests')
-		@options = params[:options] || {}
+		@options = params[:options] || {:xml => true}
 		@deps = params[:deps] || []
 
 		yield self if block_given?

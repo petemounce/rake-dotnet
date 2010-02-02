@@ -21,9 +21,6 @@ describe NUnitTask do
 		it 'should have a sensible reports directory to write to' do
 			@nut.out_dir.should match(/#{re(@out_dir)}/)
 		end
-		it 'should have no nunit runner options set' do
-			@nut.runner_options.should be_empty
-		end
 		it 'should have no dependencies set' do
 			@nut.dependencies.should be_empty
 		end

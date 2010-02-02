@@ -1,0 +1,422 @@
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.Tools.Office.Office2003.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+          created a backup copy.  Incorrect changes to this file will make it
+          impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+Office projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <UsingTask TaskName="GenerateAndPersistAppInfoTask" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="IsInvalidDocumentTask" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="SetOffice2003SecurityPolicy" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="SetOffice2003AddInRegistration" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+
+    <!-- Project type -->
+    <PropertyGroup>
+        <VSTO_ProjectType Condition="'$(VSTO_HostDocumentName)' == ''">Application</VSTO_ProjectType>
+        <VSTO_ProjectType Condition="'$(VSTO_HostDocumentName)' != ''">Document</VSTO_ProjectType>
+        <AddAppConfigToBuildOutputs Condition="'$(AddAppConfigToBuildOutputs)' == ''">true</AddAppConfigToBuildOutputs>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(VSTO_ProjectType)' == 'Document'">
+        <VSTO_HostDocumentFullPath>$(ProjectDir)$(VSTO_HostDocumentName)</VSTO_HostDocumentFullPath>
+    </PropertyGroup>
+
+    <!-- Publishing properties -->
+    <PropertyGroup>
+        <PublishableProject Condition="'$(PublishableProject)'==''">true</PublishableProject>
+        <VSTO_TargetApplicationManifestFileName Condition=" '$(VSTO_TargetApplicationManifestFileName)' == '' ">$(TargetFileName).manifest</VSTO_TargetApplicationManifestFileName>    <!-- Example, MyAssembly.dll.manifest -->
+        <VSTO_TargetDeployManifestFileName Condition=" '$(VSTO_TargetDeployManifestFileName)' == '' ">$(TargetName).application</VSTO_TargetDeployManifestFileName>    <!-- Example, MyAssembly.application -->
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <BuiltProjectOutputGroupDependsOn>
+          $(BuiltProjectOutputGroupDependsOn);
+          AddVSTOOutputFiles
+        </BuiltProjectOutputGroupDependsOn>
+      </PropertyGroup>
+
+    <Target Name="AddVSTOOutputFiles"
+        DependsOnTargets=""
+        Outputs="@(BuiltProjectOutputGroupOutput)"
+        Condition="'$(VSTO_ProjectType)' == 'Application'"
+        >
+        <CreateItem Include="$(TargetDir)$(TargetFileName).manifest" AdditionalMetadata="TargetPath=$(TargetFileName).manifest">
+            <Output TaskParameter="Include" ItemName="BuiltProjectOutputGroupOutput"/>
+        </CreateItem>
+    </Target>
+
+    <Target Name="SetApplicationVersion">
+      <CreateProperty Value="1.0.0.0" Condition =" '$(ApplicationVersion)' == '' ">
+        <Output TaskParameter="Value" PropertyName="ApplicationVersion" />
+      </CreateProperty>
+    </Target>
+
+    <!-- GenerateAndPersistAppInfo. -->
+    <PropertyGroup>
+        <GenerateAndPersistAppInfoDependsOn Condition="'$(VSTO_ProjectType)' == 'Document'">
+            GenerateAndPersistDocumentAppInfo
+        </GenerateAndPersistAppInfoDependsOn>
+        <GenerateAndPersistAppInfoDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">
+            GenerateAndPersistApplicationAppInfo
+        </GenerateAndPersistAppInfoDependsOn>
+    </PropertyGroup>
+    
+    <Target Name="GenerateAndPersistAppInfo"
+        DependsOnTargets="$(GenerateAndPersistAppInfoDependsOn)"
+    />
+
+    <Target Name="GenerateAndPersistDocumentAppInfo"
+        DependsOnTargets="SetApplicationVersion">
+        
+        <IsInvalidDocumentTask 
+            SourceDocument="$(VSTO_HostDocumentFullPath)"
+            DestinationDocument="$(OutDir)$(VSTO_HostDocumentName)"
+            DocumentCustomization="$(OutDir)$(TargetName)$(TargetExt)"
+            ContinueOnError = "True"
+            >
+            <Output TaskParameter="IsInvalidDocument" PropertyName="InvalidDocument" />
+        </IsInvalidDocumentTask>
+
+        <Copy
+            Condition="'$(InvalidDocument)' == 'True'"
+            SourceFiles="$(VSTO_HostDocumentFullPath)"
+            DestinationFiles="$(OutDir)$(VSTO_HostDocumentName)"
+        />
+
+        <GenerateAndPersistAppInfoTask
+            Condition="'$(InvalidDocument)' == 'True'"
+            HostDocument="$(OutDir)$(VSTO_HostDocumentName)"
+            Assembly="$(OutDir)$(TargetName)$(TargetExt)"
+            MakePathsRelative="true"
+            ApplicationVersion ="$(ApplicationVersion)"
+        />
+
+        <CreateItem Include="$(OutDir)$(VSTO_HostDocumentName)">
+          <Output TaskParameter="Include" ItemName="FileWrites"/>
+        </CreateItem>
+        
+    </Target>
+
+    <Target Name="GenerateAndPersistApplicationAppInfo"
+        DependsOnTargets="SetApplicationVersion"
+        Inputs="$(OutDir)$(TargetName)$(TargetExt)"
+        Outputs="$(OutDir)$(TargetFileName).manifest" 
+        >
+
+        <GenerateAndPersistAppInfoTask
+            HostDocument="$(OutDir)$(TargetFileName).manifest"
+            Assembly="$(OutDir)$(TargetName)$(TargetExt)"
+            MakePathsRelative="true"
+            ApplicationVersion ="$(ApplicationVersion)"
+        />
+
+        <CreateItem Include="$(OutDir)$(TargetFileName).manifest">
+            <Output TaskParameter="Include" ItemName="FileWrites"/>
+        </CreateItem>
+
+    </Target>
+
+
+    <!-- SetSecurityPolicy -->
+    <Target Name="SetSecurityPolicy"
+        DependsOnTargets="GenerateAndPersistAppInfo"
+        Condition ="Exists('$(TargetDir)$(TargetFileName)') "
+        >
+        
+        <CreateItem 
+            Include= "@(ReferencePath)" 
+            Condition =" '%(ReferencePath.CopyLocal)' == 'true' and '%(ReferencePath.DestinationSubDirectory)' == ''">
+            <Output TaskParameter="Include" ItemName="SetSecurityPolicyReferences" />
+        </CreateItem>
+        
+        <CreateItem 
+            Include= "@(ReferenceDependencyPaths)" 
+            Condition =" '%(ReferenceDependencyPaths.CopyLocal)' == 'true' and '%(ReferenceDependencyPaths.DestinationSubDirectory)' == ''">
+            <Output TaskParameter="Include" ItemName="SetSecurityPolicyReferences" />
+        </CreateItem>
+        
+        <SetOffice2003SecurityPolicy
+            ProjectGroupName="$(ProjectGuid) $(ProjectDir)"
+            ConfigName="$(ConfigurationName)"
+            Assembly="$(OutDir)$(TargetName)$(TargetExt)"
+            References="@(SetSecurityPolicyReferences->'%(FileName)%(Extension)')"
+            TrustAssembliesLocation="$(VSTO_TrustAssembliesLocation)"
+        />
+    </Target>
+
+    <!-- SetOffice2003AddInRegistration -->
+    <Target Name="SetOffice2003AddInRegistration"
+        Condition ="'$(VSTO_ProjectType)' == 'Application'" 
+        DependsOnTargets="GenerateAndPersistAppInfo"
+        >
+        <SetOffice2003AddInRegistration
+            AddinRegistryHive="$(AddinRegistryHive)" 
+            AddinRegistryKey="$(AddinRegistryKey)" 
+            AddinID="$(ProjectGuid)"
+            AddinName="$(ProjectName)"
+            ManifestLocation="$(OutDir)"
+            ManifestFileName="$(TargetFileName).manifest"
+            Unregister ="false"
+        />
+    </Target>
+
+    <!-- SetOffice2003AddInRegistration -->
+    <Target Name="RemoveOffice2003AddInRegistration"
+        Condition ="'$(VSTO_ProjectType)' == 'Application'" 
+        >
+        <SetOffice2003AddInRegistration
+            AddinRegistryHive="$(AddinRegistryHive)" 
+            AddinRegistryKey="$(AddinRegistryKey)" 
+            AddinID="$(ProjectGuid)"
+            AddinName="$(ProjectName)"
+            ManifestLocation="$(OutDir)"
+            ManifestFileName="$(TargetFileName).manifest"
+            Unregister ="true"
+        />
+    </Target>
+
+    <Target Name="SetGenerateManifests"
+        DependsOnTargets="SetApplicationVersion">
+        <!-- DeploymentManifestUrl -->
+        <CreateProperty Value= "$(UpdateUrl)" Condition =" '$(UpdateUrl)' != '' ">
+            <Output TaskParameter="Value" PropertyName="DeploymentManifestUrl" />
+        </CreateProperty>
+        <CreateProperty Value= "$(PublishUrl)" Condition =" '$(UpdateUrl)' == '' ">
+            <Output TaskParameter="Value" PropertyName="DeploymentManifestUrl" />
+        </CreateProperty>
+
+        <FormatUrl InputUrl="$(DeploymentManifestUrl)">
+            <Output TaskParameter="OutputUrl" PropertyName="DeploymentManifestFormattedUrl"/>
+        </FormatUrl>
+
+        <!-- VSTO_DeploymentManifest -->
+        <CreateItem Include= "$(PublishDir)$(VSTO_TargetDeployManifestFileName)">
+            <Output TaskParameter="Include" ItemName="VSTO_DeploymentManifest" />
+        </CreateItem>
+
+        <!-- VSTO_ApplicationManifest -->
+        <CreateItem 
+            Include= "$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(VSTO_TargetApplicationManifestFileName)"
+            AdditionalMetadata="TargetPath=$(TargetName)_$(ApplicationVersion)\$(VSTO_TargetApplicationManifestFileName)">
+            <Output TaskParameter="Include" ItemName="VSTO_ApplicationManifest" />
+        </CreateItem>
+    </Target>
+
+    <Target Name="MakePublishFolder">
+        <MakeDir
+            Condition="!Exists('$(PublishDir)$(AssemblyName)_$(ApplicationVersion)')" 
+            Directories="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)"
+        />
+
+        <Copy
+            SourceFiles="$(OutDir)$(TargetFileName)"
+            DestinationFolder="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)"
+            SkipUnchangedFiles="true"
+        />
+    </Target>
+
+
+    <PropertyGroup>
+        <GenerateAndPersistAppInfoForPublishingDependsOn Condition="'$(VSTO_ProjectType)' == 'Document'">
+            GenerateAndPersistDocumentAppInfoForPublishing
+        </GenerateAndPersistAppInfoForPublishingDependsOn>
+        <GenerateAndPersistAppInfoForPublishingDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">
+            GenerateAndPersistApplicationAppInfoForPublishing
+        </GenerateAndPersistAppInfoForPublishingDependsOn>
+    </PropertyGroup>
+    
+    <!-- GenerateAndPersistAppInfoForPublishing. -->
+    <Target Name="GenerateAndPersistAppInfoForPublishing"
+        DependsOnTargets="$(GenerateAndPersistAppInfoForPublishingDependsOn)"
+    />
+    
+    <Target Name="GenerateAndPersistDocumentAppInfoForPublishing"
+        DependsOnTargets=""
+        Inputs="$(VSTO_HostDocumentFullPath);$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"
+        Outputs="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(VSTO_HostDocumentName);@(VSTO_ApplicationManifest)" 
+        >
+    
+        <Copy
+            Condition="'$(VSTO_HostDocumentFullPath)' != ''"
+            SourceFiles="$(VSTO_HostDocumentFullPath)"
+            DestinationFiles="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(VSTO_HostDocumentName)"
+        />
+    
+        <GenerateAndPersistAppInfoTask
+            HostDocument="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(VSTO_HostDocumentName)"
+            Assembly="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"
+            MakePathsRelative="true"
+            ManifestOutputLocation="@(VSTO_ApplicationManifest)"
+            DeployManifest="$(DeploymentManifestFormattedUrl)@(VSTO_DeploymentManifest->'%(Filename)%(Extension)')"
+            ApplicationVersion ="$(ApplicationVersion)"
+            DeployedAssemblyLocation="$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"
+        />
+    </Target>
+    
+    <Target Name="GenerateAndPersistApplicationAppInfoForPublishing"
+        DependsOnTargets=""
+        Inputs="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"
+        Outputs="@(VSTO_ApplicationManifest)" 
+        >
+    
+        <GenerateAndPersistAppInfoTask
+            HostDocument="@(VSTO_ApplicationManifest)"
+            Assembly="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"
+            MakePathsRelative="true"
+            ManifestOutputLocation="@(VSTO_ApplicationManifest)"
+            DeployManifest="$(DeploymentManifestFormattedUrl)@(VSTO_DeploymentManifest->'%(Filename)%(Extension)')"
+            ApplicationVersion ="$(ApplicationVersion)"
+            DeployedAssemblyLocation="$(AssemblyName)_$(ApplicationVersion)\$(TargetName)$(TargetExt)"        
+        />
+    </Target>
+    
+    <Target Name="GenerateDeploymentManifest"
+        Inputs="@(VSTO_ApplicationManifest)"
+        Outputs="@(VSTO_DeploymentManifest)"
+        >
+
+        <GenerateDeploymentManifest
+            EntryPoint="@(VSTO_ApplicationManifest)"
+            AssemblyName="$(VSTO_TargetDeployManifestFileName)"
+            AssemblyVersion="$(ApplicationVersion)"
+            OutputManifest="@(VSTO_DeploymentManifest)"
+            Platform="$(PlatformTarget)"           
+            />
+    </Target>
+
+    <Target Name="CopyPublishItems"
+        DependsOnTargets=""
+        >
+        
+        <!-- Serialization assemblies for referenced assemblies. -->
+        <CreateItem Include="@(SGenFilesOutputGroupOutput->'%(FullPath)');@(_ReferenceSerializationAssemblyPaths->'%(FullPath)')" Condition="'%(Extension)' == '.dll'">
+            <Output TaskParameter="Include" ItemName="_SGenDllsRelatedToCurrentDll" />
+        </CreateItem>
+
+        <!-- Create list of items for publishing -->
+        <ResolveManifestFiles
+            EntryPoint="$(OutDir)$(TargetFileName)"
+            ManagedAssemblies="@(ReferencePath);@(ReferenceDependencyPaths);@(_SGenDllsRelatedToCurrentDll)"
+            Files="@(AppConfigWithTargetPath);@(ContentWithTargetPath)"
+            SatelliteAssemblies="@(IntermediateSatelliteAssembliesWithTargetPath);@(ReferenceSatellitePaths)"
+            TargetCulture="*"
+            >
+            <Output TaskParameter="OutputAssemblies" ItemName="VSTO_PublishDependencies"/>
+            <Output TaskParameter="OutputFiles" ItemName="VSTO_PublishFiles"/>
+        </ResolveManifestFiles>
+
+        <!-- Copy published files with target path -->
+        <Copy
+            SourceFiles="@(VSTO_PublishDependencies)"
+            DestinationFiles="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\%(VSTO_PublishDependencies.TargetPath)"
+            Condition="'%(VSTO_PublishDependencies.DependencyType)'=='Install'"
+            SkipUnchangedFiles="true"
+        />
+        <Copy
+            SourceFiles="@(VSTO_PublishFiles)"
+            DestinationFiles="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\%(VSTO_PublishFiles.TargetPath)"
+            SkipUnchangedFiles="true"
+        />
+
+        <!-- Copy published files with no target path -->
+        <Copy
+            SourceFiles="@(ReferenceComWrappersToCopyLocal)"
+            DestinationFolder="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)"
+            SkipUnchangedFiles="true"
+        />
+            
+        <Copy Condition="'$(VSTO_ProjectType)' == 'Document'" 
+            SourceFiles="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)\$(VSTO_HostDocumentName)" 
+            DestinationFolder="$(PublishDir)"
+            SkipUnchangedFiles="true"
+        />
+        
+        <Copy 
+            SourceFiles="@(VSTO_DeploymentManifest)" 
+            DestinationFolder="$(PublishDir)$(AssemblyName)_$(ApplicationVersion)"
+            SkipUnchangedFiles="true"
+        />
+    </Target>
+
+    <PropertyGroup>
+        <PublishOnlyDependsOn>
+            SetGenerateManifests;
+            PublishBuild;
+            BeforePublish;
+            CleanPublishFolder;
+            MakePublishFolder;
+            GenerateAndPersistAppInfoForPublishing;
+            GenerateDeploymentManifest;
+            CopyPublishItems;
+            AfterPublish
+        </PublishOnlyDependsOn>
+    </PropertyGroup>
+    <Target Name="PublishOnly"
+        DependsOnTargets="$(PublishOnlyDependsOn)"
+        >
+    </Target>
+
+    <!-- Delete the output document. -->
+    <Target Name="CleanOutputHostDocument" Condition="'$(VSTO_ProjectType)' == 'Document'">
+        <Delete 
+            Condition="Exists('$(OutDir)$(VSTO_HostDocumentName)')" 
+            Files="$(OutDir)$(VSTO_HostDocumentName)" />
+    </Target>
+
+    <!-- Delete the manifest file. -->
+    <Target Name="CleanManifestFile" Condition="'$(VSTO_ProjectType)' == 'Application'">
+        <Delete 
+            Condition="Exists('$(OutDir)$(TargetFileName).manifest')" 
+            Files="$(OutDir)$(TargetFileName).manifest" />
+    </Target>
+    
+    <!-- Delete all intermediate and final build outputs. -->
+    <PropertyGroup>
+        <VSTOCleanDependsOn Condition="'$(VSTO_ProjectType)' == 'Document'">CleanOutputHostDocument;CleanPublishFolder</VSTOCleanDependsOn>
+        <VSTOCleanDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">RemoveOffice2003AddInRegistration;CleanManifestFile;CleanPublishFolder</VSTOCleanDependsOn>
+    </PropertyGroup>
+    <Target Name="VSTOClean"
+        DependsOnTargets="$(VSTOCleanDependsOn)"
+        >
+    </Target>
+
+    <PropertyGroup>
+
+        <PrepareForRunDependsOn>
+            $(PrepareForRunDependsOn);
+            GenerateAndPersistAppInfo;
+            SetSecurityPolicy
+        </PrepareForRunDependsOn>
+
+        <PrepareForRunDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">
+            $(PrepareForRunDependsOn);
+            SetOffice2003AddInRegistration
+        </PrepareForRunDependsOn>
+            
+        <CoreCleanDependsOn>
+            $(CoreCleanDependsOn);
+            VSTOClean
+        </CoreCleanDependsOn>
+        
+        <PublishDependsOn Condition="'$(PublishableProject)'=='true'">
+            SetGenerateManifests;
+            Build;
+            PublishOnly
+        </PublishDependsOn>
+        <PublishDependsOn Condition="'$(PublishableProject)'!='true'">
+            Unpublishable
+        </PublishDependsOn>
+        
+    </PropertyGroup>
+
+</Project>

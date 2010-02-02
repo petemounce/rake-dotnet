@@ -1,14 +1,16 @@
 class NUnitTask < Rake::TaskLib
 	include DependentTask
 	
-	attr_accessor :suites_dir, :out_dir, :runner_options, :include, :exclude
+	attr_accessor :suites_dir, :out_dir, :runner_options
 
 	def initialize(params={})
 		@main_task_name = :nunit
 		super(params)
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'nunit')
-		@runner_options = params[:runner_options] || {}
+		@runner_options = params[:runner_options] || {:xml=>true, :out_dir=>@out_dir}
+		@runner_options[:include].merge(params[:include]) unless params[:include].nil?
+		@runner_options[:exclude].merge(params[:exclude]) unless params[:exclude].nil?
 
 		yield self if block_given?
 		define
@@ -33,11 +35,7 @@ class NUnitTask < Rake::TaskLib
 			out_dir = File.join(@out_dir, suite)
 			unless File.exist?(out_dir) && uptodate?(tests_dll, out_dir)
 				mkdir_p(out_dir) unless File.exist?(out_dir)
-				n = NUnitCmd.new({:input_files=>tests_dll,
-				                  :options=>{:xml=>true,
-				                             :include=>@include,
-				                             :exclude=>@exclude,
-				                             :out_dir=>@out_dir}})
+				n = NUnitCmd.new(:input_files=>tests_dll, :options=>@runner_options)
 				n.run
 			end
 		end

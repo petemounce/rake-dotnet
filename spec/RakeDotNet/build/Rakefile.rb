@@ -13,17 +13,21 @@ MsBuildTask.new({:deps=>[:assembly_info]})
 
 HarvestOutputTask.new({:deps => [:compile]})
 
-HarvestWebApplicationTask.new({:deps=>[:compile]})
-HarvestWebDeploymentTask.new(:dependencies=>[:compile])
-
-RDNPackageTask.new('bin', {:deps=>[:compile, :harvest, :tests]}) do |p|
-	p.targets.include("#{Bin_out}")
+RDNPackageTask.new(:name=>'bin',:dependencies=>[:compile, :harvest, :tests]) do |p|
+	p.items << {:from=>Bin_out}
 end
-RDNPackageTask.new('RakeDotNet.WdpSite', {:deps=>[:compile, :harvest, :tests]}) do |p|
-	p.targets.include(File.join(OUT_DIR, 'RakeDotNet.WdpSite'))
+RDNPackageTask.new(:name=>'RakeDotNet.WdpSite', :dependencies=>[:compile, :harvest, :tests]) do |p|
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION), :named=>'RakeDotNet.WdpSite'}
 end
-RDNPackageTask.new('RakeDotNet.WebApp.Site', {:deps=>[:compile, :harvest, :tests]}) do |p|
-	p.targets.include(File.join(OUT_DIR, 'RakeDotNet.WebApp.Site'))
+RDNPackageTask.new(:name => 'RakeDotNet.WebApp.Site', :dependencies=>[:compile, :harvest, :tests]) do |p|
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WebApp.Site'),
+							:exclude=>['.svn', '**/*.cs', '**/*.csproj', '**/Properties']}
+end
+RDNPackageTask.new(:name=>'RakeDotNet', :dependencies=>[:compile, :harvest, :tests, :ndepend, :coverage, :fxcop]) do |p|
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WdpSite', CONFIGURATION), :named=>'RakeDotNet.WdpSite'}
+	p.items << {:from => File.join(SRC_DIR, 'RakeDotNet.WebApp.Site'),
+							:exclude=>['.svn', '**/*.cs', '**/*.csproj', '**/Properties']}
+	p.items << {:from => File.join(OUT_DIR, 'reports')}
 end
 
 XUnitTask.new
@@ -40,5 +44,5 @@ end
 
 NDependTask.new
 
-task :default => [:compile, :harvest, :xunit, :package]
-task :first_checkout => [:clobber, :assembly_info]
+task :default => [:templates, :compile, :harvest, :tests, :coverage, :fxcop, :ndepend, :package]
+task :first_checkout => [:clobber, :templates]

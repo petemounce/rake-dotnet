@@ -1,10 +1,15 @@
 === 0.2.0 / 2010-01-
 
+BREAKING CHANGE: Reworked RDNPackageTask (and removed HarvestWebApplicationTask and HarvestWebDeploymentTask as a consequence)
+	* RDNPackageTask can now take an array of items to pull into the package that is created.
+	This allows you to create a package more flexibly.  See spec/RakeDotNet/build/Rakefile.rb for examples.
+	This also means that the harvest tasks are no longer necessary (though HarvestOutputTask still is; that has a different purpose)
 NEW: NCover - make it possible to pass in test-runner options with the :runner_options parameter
 NEW: Support harvesting from web-deployment projects
 NEW: MsBuild - Support for building web-deployment projects
 NEW: AssemblyInfo now supports generating to websites' App_Code directory
-NEW: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
+BREAKING CHANGE: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
+	In so doing, renamed "deps" parameter to "dependencies"
 NEW: GH-3 - NDepend support - supports specifying project file and output directory
 NEW: Crap4n support (http://code.google.com/p/crap4n/) (trunk required)
 NEW: NDepend support

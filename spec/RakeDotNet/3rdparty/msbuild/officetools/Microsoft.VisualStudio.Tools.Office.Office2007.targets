@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<!--
+***********************************************************************************************
+Microsoft.VisualStudio.Tools.Office.Office2007.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+created a backup copy.  Incorrect changes to this file will make it
+impossible to load or build your projects from the command-line or the IDE.
+
+This file defines the steps in the standard build process specific for Visual Studio Tools for 
+Office projects.
+
+Copyright (C) Microsoft Corporation. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<!-- Includes -->
+    <UsingTask TaskName="PregenerateApplicationManifest" AssemblyName="Microsoft.VisualStudio.Tools.Applications.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="VerifyClickOnceSigningSettings" AssemblyName="Microsoft.VisualStudio.Tools.Applications.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="SetInclusionListEntry" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="SetOffice2007AddInRegistration" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="GenerateOfficeAddInManifest" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="RegisterFormRegions" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="EmbedTypeLibrary" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="GenerateOfficeDocumentManifest" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="CustomizeOffice2007Document" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="ManageCertificateStore" AssemblyName="Microsoft.VisualStudio.Tools.Applications.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="CheckOffice2007Document" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <UsingTask TaskName="GenerateOfficeDocumentInstallationPath" AssemblyName="Microsoft.VisualStudio.Tools.Office.BuildTasks, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+<!-- End Includes -->
+
+<!-- Variables -->
+    <PropertyGroup>
+<!-- Define project type -->
+        <VSTO_ProjectType Condition="'$(VSTO_HostDocumentName)' == ''">Application</VSTO_ProjectType>
+        <VSTO_ProjectType Condition="'$(VSTO_HostDocumentName)' != ''">Document</VSTO_ProjectType>
+
+<!-- Configurable Updates -->
+
+        <UpdateIntervalUnits Condition="'$(UpdateIntervalUnits)' == '' Or '$(UpdateInterval)' == '' ">days</UpdateIntervalUnits>
+        <UpdateInterval Condition="'$(UpdateEnabled)' == 'false'">0</UpdateInterval>
+        <UpdateInterval Condition="'$(UpdateInterval)' == '' And '$(UpdateEnabled)' == '' ">7</UpdateInterval>
+        <UpdateInterval Condition="'$(UpdateInterval)' == '' And '$(UpdateEnabled)' == 'true' ">0</UpdateInterval>
+        <UpdateEnabled Condition="'$(UpdateEnabled)' == ''">true</UpdateEnabled>
+
+
+        <AddAppConfigToBuildOutputs Condition="'$(AddAppConfigToBuildOutputs)' == ''">true</AddAppConfigToBuildOutputs>
+
+        <PublishableProject Condition="'$(PublishableProject)'==''">true</PublishableProject>
+        <PublishVersion Condition="$(ApplicationVersion)==''">1.0.0.0</PublishVersion>
+        <PublishVersion Condition="$(ApplicationVersion)!=''">$(ApplicationVersion)</PublishVersion>
+
+<!--extensions-->
+        <ApplicationManifestExtension>.manifest</ApplicationManifestExtension>
+        <EmbeddedManifestExtension>.pregam</EmbeddedManifestExtension>
+        <DeploymentManifestExtension>.vsto</DeploymentManifestExtension>
+
+<!-- application manifest -->
+        <ApplicationManifestFileName>$(TargetFileName)$(ApplicationManifestExtension)</ApplicationManifestFileName>
+<!-- embedded vsta manifest -->
+        <EmbeddedManifestFileName>$(ApplicationManifestFileName)$(EmbeddedManifestExtension)</EmbeddedManifestFileName>
+<!-- Deployment manifest -->
+        <DeploymentManifestFileName>$(TargetName)$(DeploymentManifestExtension)</DeploymentManifestFileName>
+<!-- Hashcode of a certificate used for signing manifests -->
+        <CertificateThumbprint>$(ManifestCertificateThumbprint)</CertificateThumbprint>
+
+<!-- Full paths -->
+        <ApplicationManifestWithPath>$(OutDir)$(ApplicationManifestFileName)</ApplicationManifestWithPath>
+        <DeploymentManifestWithPath>$(OutDir)$(DeploymentManifestFileName)</DeploymentManifestWithPath>
+        <DeploymentManifestWithPathForPublishing>$(PublishDir)$(DeploymentManifestFileName)</DeploymentManifestWithPathForPublishing>
+        <DeploymentManifestWithPathPublished>$(PublishUrl)$(DeploymentManifestFileName)</DeploymentManifestWithPathPublished>
+        <HostDocumentWithPath>$(ProjectDir)$(VSTO_HostDocumentName)</HostDocumentWithPath>
+        <OutputDocumentWithPath>$(OutDir)$(VSTO_HostDocumentName)</OutputDocumentWithPath>
+
+
+        <OfficeApplicationDescription Condition="'$(VSTO_ProjectType)' == 'Application'">$(TargetName) - $(OfficeApplication) add-in created with Visual Studio Tools for Office</OfficeApplicationDescription>
+        <OfficeApplicationDescription Condition="'$(VSTO_ProjectType)' == 'Document'">$(TargetName) - $(OfficeApplication) document created with Visual Studio Tools for Office</OfficeApplicationDescription>
+
+<!-- Add-In options -->
+        <LoadBehavior>3</LoadBehavior>
+
+        <AbsolutePathToTheDeploymentManifest>@(DeploymentManifestWithPathCollection->'%(FullPath)')</AbsolutePathToTheDeploymentManifest>
+        <AbsolutePathToCustomization>$(OutDir)$(TargetFileName)</AbsolutePathToCustomization>
+        <AbsolutePathToPublishedDeploymentManifest>@(DeploymentManifestWithPathPublishedCollection->'%(FullPath)')</AbsolutePathToPublishedDeploymentManifest>
+
+<!--Adding .deploy on publishing.-->
+        <MapFileExtensions>true</MapFileExtensions>
+        <VSTO_DeploymentFileMappingExtension Condition="'$(MapFileExtensions)'=='true'">.deploy</VSTO_DeploymentFileMappingExtension>
+        <VSTO_DeploymentFileMappingExtension Condition="'$(MapFileExtensions)'!='true'"></VSTO_DeploymentFileMappingExtension>
+
+<!--DeploymentUrl is the Url that is used by setup.exe to install the solution-->
+        <VSTO_DeploymentManifestUrl Condition="'$(IsWebBootstrapper)'=='true'">$(InstallUrl)</VSTO_DeploymentManifestUrl>
+        <VSTO_DeploymentManifestUrl Condition="'$(IsWebBootstrapper)'=='true' and '$(InstallUrl)'==''">$(PublishUrl)</VSTO_DeploymentManifestUrl>
+        <VSTO_DeploymentComponentsUrl Condition="'$(BootstrapperComponentsLocation)'=='Absolute'">$(BootstrapperComponentsUrl)</VSTO_DeploymentComponentsUrl>
+    </PropertyGroup>   
+
+    <ItemGroup>
+        <DllEntryPoint Include="$(OutDir)$(TargetFileName)" />
+    </ItemGroup>
+
+
+<!-- Some tasks need collections instead of properties-->
+    <ItemGroup>
+        <ApplicationManifestFileNameCollection Include="$(ApplicationManifestFileName)" />
+        <ApplicationManifestWithPathCollection Include="$(ApplicationManifestWithPath)" />
+        <DeploymentManifestWithPathCollection Include="$(DeploymentManifestWithPath)" />
+        <DeploymentManifestWithPathForPublishingCollection Include="$(DeploymentManifestWithPathForPublishing)" />
+        <HostDocumentWithPathCollection Include="$(HostDocumentWithPath)" />
+        <OutputDocumentWithPathCollection Include="$(OutputDocumentWithPath)" />
+        <DeploymentManifestWithPathPublishedCollection Include="$(DeploymentManifestWithPathPublished)" />
+        <PublishUrlCollection Include="$(PublishUrl)" />
+        <OutDirCollection Include="$(OutDir)" />
+        <PfxFileCollection Include="$(ProjectDir)*.pfx"/>    
+    </ItemGroup>
+
+<!--//////////////////////////////////// End Variables ////////////////////////////////////-->
+
+<!--Build -->
+
+    <PropertyGroup>
+        <BuiltProjectOutputGroupDependsOn>
+            $(BuiltProjectOutputGroupDependsOn);
+        </BuiltProjectOutputGroupDependsOn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PrepareForRunDependsOn>
+            $(PrepareForRunDependsOn);
+            VisualStudioForApplicationsBuild;
+        </PrepareForRunDependsOn>
+
+        <PrepareForRunDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">
+            $(PrepareForRunDependsOn);
+            RegisterOfficeAddin;
+        </PrepareForRunDependsOn>
+
+        <PrepareForRunDependsOn Condition="'$(VSTO_ProjectType)' == 'Document'">
+            $(PrepareForRunDependsOn);
+            CustomizeOfficeDocument
+        </PrepareForRunDependsOn>
+    </PropertyGroup>
+
+    <Target Name="VisualStudioForApplicationsBuild">
+
+        <VerifyClickOnceSigningSettings SignManifests="$(SignManifests)" 
+        />
+
+        <ManageCertificateStore
+           CertificateThumbprint="$(CertificateThumbprint)"
+           KeyFiles="@(None)"
+        />
+
+        <RegisterFormRegions Condition ="'$(VSTO_ProjectType)' == 'Application' And '$(OfficeApplication)' == 'Outlook'"
+           AddInName="$(TargetName)"
+           AssemblyName="$(OutDir)$(TargetFileName)"
+           OfficeApplication="$(OfficeApplication)"
+           Unregister ="false"
+        >
+          <Output TaskParameter="FormRegionNamesAndMessageClasses" ItemName="FormRegionNamesAndMessageClassesCollection"/>
+        </RegisterFormRegions>
+
+        <GenerateOfficeAddInManifest Condition="'$(VSTO_ProjectType)' == 'Application'"
+          FriendlyName="$(TargetName)"
+          KeyName="$(TargetName)"
+          Description="$(OfficeApplicationDescription)"
+          OfficeApplication="$(OfficeApplication)"
+          FormRegionNamesAndMessageClasses="@(FormRegionNamesAndMessageClassesCollection)"
+          LoadBehavior="$(LoadBehavior)"
+        >
+            <Output TaskParameter="OutputManifest" ItemName="OutputManifestCollection"/>
+        </GenerateOfficeAddInManifest>
+            
+        <GenerateOfficeDocumentManifest Condition="'$(VSTO_ProjectType)' == 'Document'"
+            SolutionID="$(SolutionID)">
+            <Output TaskParameter="OutputManifest" ItemName="OutputManifestCollection"/>
+        </GenerateOfficeDocumentManifest>
+          
+        <PregenerateApplicationManifest
+            OutputPath="$(OutDir)"
+            TargetFileName="$(TargetFileName)"      
+            EmbeddedManifestFileName="$(EmbeddedManifestFileName)"
+            InputManifest ="@(OutputManifestCollection)"
+            UpdateEnabled = "$(UpdateEnabled)"
+            UpdateInterval = "$(UpdateInterval)"
+            UpdateIntervalUnits = "$(UpdateIntervalUnits)"
+        >
+            <Output TaskParameter="EmbeddedManifestFileNameWithPath" ItemName="EmbeddedManifestFileNameWithPathCollection"/>
+        </PregenerateApplicationManifest>
+        
+<!-- Serialization assemblies for referenced assemblies. -->
+        <CreateItem Include="@(SGenFilesOutputGroupOutput->'%(FullPath)');@(_ReferenceSerializationAssemblyPaths->'%(FullPath)')" Condition="'%(Extension)' == '.dll'">
+            <Output TaskParameter="Include" ItemName="_SGenDllsRelatedToCurrentDll" />
+        </CreateItem>
+
+<!-- Create list of items for publishing -->
+        <ResolveManifestFiles
+            EntryPoint="@(DllEntryPoint)"
+            ManagedAssemblies="@(ReferencePath);@(ReferenceDependencyPaths);@(_SGenDllsRelatedToCurrentDll);@(DllEntryPoint)"
+            Files="@(AppConfigWithTargetPath);@(ContentWithTargetPath)"
+            SatelliteAssemblies="@(IntermediateSatelliteAssembliesWithTargetPath);@(ReferenceSatellitePaths)"
+            TargetCulture="*"
+        >
+            <Output TaskParameter="OutputAssemblies" ItemName="DependenciesForGam"/>
+            <Output TaskParameter="OutputFiles" ItemName="FilesForGAM"/>
+        </ResolveManifestFiles>
+
+<!-- RequiresFramework35SP1Assembly -->
+
+      <RequiresFramework35SP1Assembly
+            ReferencedAssemblies="@(Reference)"
+            TargetFrameworkVersion="$(TargetFrameworkVersion)"
+            SigningManifests="$(SignManifests)"
+            EntryPoint="@(DllEntryPoint)" >
+
+            <Output TaskParameter="RequiresMinimumFramework35SP1" PropertyName="_DeploymentRequiresMinimumFramework35SP1" />
+        </RequiresFramework35SP1Assembly>
+
+<!-- GenerateApplicationManifest -->
+
+        <GenerateApplicationManifest
+            AssemblyName="$(TargetFileName)"
+            AssemblyVersion="$(PublishVersion)"
+            ConfigFile="@(AppConfigWithTargetPath)"
+            ClrVersion="$(ClrVersion)"
+            Dependencies="@(DependenciesForGam)"
+            Description="$(OfficeApplicationDescription)"
+            Files="@(FilesForGAM)"            
+            InputManifest="@(EmbeddedManifestFileNameWithPathCollection)"
+            IsolatedComReferences="@(ResolvedIsolatedComModules)"
+            ManifestType="ClickOnce"
+            MaxTargetPath="$(MaxTargetPath)"
+            OutputManifest="@(ApplicationManifestWithPathCollection)"
+            OSVersion="$(OSVersion)"
+            Platform="$(PlatformTarget)"
+            RequiresMinimumFramework35SP1="$(_DeploymentRequiresMinimumFramework35SP1)"
+            TargetCulture="*"
+            TargetFrameworkSubset="$(TargetFrameworkSubset)"
+            TargetFrameworkVersion="$(TargetFrameworkVersion)"
+        >
+            <Output TaskParameter="OutputManifest" ItemName="FileWrites"/>
+        </GenerateApplicationManifest>
+
+<!-- Delete an embedded manifest file -->
+
+        <Delete Files="@(EmbeddedManifestFileNameWithPathCollection)" Condition="Exists('@(EmbeddedManifestFileNameWithPathCollection)')" />
+
+<!-- SignFile -->
+
+        <SignFile
+            CertificateThumbprint="$(CertificateThumbprint)"
+            SigningTarget="$(OutDir)$(ApplicationManifestFileName)"
+        />
+
+        <CreateItem
+            Include= "$(OutDir)$(ApplicationManifestFileName)"
+            AdditionalMetadata="TargetPath=$(ApplicationManifestFileName)"
+        >
+            <Output TaskParameter="Include" ItemName="ApplicationManifestWithPathForBuildCollection" />
+        </CreateItem>
+
+<!-- GenerateDeploymentManifest -->
+
+        <GenerateDeploymentManifest
+            EntryPoint="@(ApplicationManifestWithPathForBuildCollection)"
+            AssemblyName="$(DeploymentManifestFileName)"
+            AssemblyVersion="$(PublishVersion)"
+            OutputManifest="@(DeploymentManifestWithPathCollection)"
+            Platform="$(PlatformTarget)"
+            Install="false"
+        >
+            <Output TaskParameter="OutputManifest" ItemName="FileWrites"/>
+        </GenerateDeploymentManifest>
+
+
+ <!-- SignFile -->
+
+        <SignFile
+            CertificateThumbprint="$(CertificateThumbprint)"
+            SigningTarget="$(OutDir)$(DeploymentManifestFileName)"
+        />
+
+<!-- SetInclusionListEntry -->
+        <SetInclusionListEntry
+            DeploymentManifestFullPath="$(AbsolutePathToTheDeploymentManifest)"
+            CertificateThumbprint="$(CertificateThumbprint)"
+        />
+    </Target>
+
+
+<!-- RegisterOfficeAddIn -->
+    <Target Name="RegisterOfficeAddin" Condition ="'$(VSTO_ProjectType)' == 'Application'">
+
+        <SetOffice2007AddInRegistration
+            Url="$(AbsolutePathToTheDeploymentManifest)"
+            AddInName="$(TargetName)"
+            OfficeApplication="$(OfficeApplication)"
+            FriendlyName="$(TargetName)"
+            Description="$(OfficeApplicationDescription)"
+            LoadBehavior="$(LoadBehavior)"
+        />
+
+    </Target>
+
+
+    <Target Name="CustomizeOfficeDocument" Condition ="'$(VSTO_ProjectType)' == 'Document'">
+
+        <CheckOffice2007Document
+            SourceDocument="$(HostDocumentWithPath)"
+            DestinationDocument="$(OutputDocumentWithPath)"
+            DocumentCustomization="$(OutDir)$(TargetFileName)"
+            DeploymentManifest="$(AbsolutePathToTheDeploymentManifest)"
+            ContinueOnError="false"
+        >
+            <Output TaskParameter="RecustomizeDocument" PropertyName="RecustomizeDocument" />
+        </CheckOffice2007Document >
+
+        <Copy
+            Condition="'$(RecustomizeDocument)' == 'true'"
+            SourceFiles="$(HostDocumentWithPath)"
+            DestinationFiles="$(OutputDocumentWithPath)"
+        />
+
+        <CustomizeOffice2007Document
+            Condition="'$(RecustomizeDocument)' == 'true'"
+            DocumentPath="$(OutputDocumentWithPath)"
+            AssemblyName="$(OutDir)$(TargetFileName)"        
+            DeploymentManifestName="$(DeploymentManifestFileName)"
+            Local="true"
+            ContinueOnError="false"
+            SolutionID="$(SolutionID)"
+        />
+
+        <CreateItem Include="$(OutputDocumentWithPath)">
+            <Output TaskParameter="Include" ItemName="FileWrites"/>
+        </CreateItem>
+
+        <OnError ExecuteTargets="Clean" />
+
+    </Target>
+<!-- End Build -->
+
+<!--Publish -->
+    <PropertyGroup>
+        <PublishDependsOn Condition="'$(PublishableProject)'=='true'">
+            Build;
+            PublishOnly
+        </PublishDependsOn>
+
+        <PublishDependsOn Condition="'$(PublishableProject)'!='true'">
+            Unpublishable
+        </PublishDependsOn>
+
+        <PublishOnlyDependsOn>
+            InitializePublishProperties;
+            PublishBuild;
+            BeforePublish;
+            CleanPublishFolder;
+            MakePublishFolder;
+            CopyApplicationManifestToPublishFolder;
+            GenerateDeploymentManifestForPublishing;
+            CopyPublishItems;
+            CreateBootstrapper;
+            AfterPublish
+        </PublishOnlyDependsOn>
+    </PropertyGroup>
+
+    <Target Name="PublishOnly" DependsOnTargets="$(PublishOnlyDependsOn)"/>
+
+    <Target Name="InitializePublishProperties">
+      
+      <CreateProperty Value="Application Files">
+            <Output PropertyName="ApplicationFilesFolderName" TaskParameter="Value"/>
+      </CreateProperty>        
+
+<!-- Compute name of application folder, which includes the assembly name plus formatted application version.
+The application version is formatted to use "_" in place of "." chars (i.e. "1_0_0_0" instead of "1.0.0.0").
+This is done because some servers misinterpret "." as a file extension. -->
+        <FormatVersion Version="$(PublishVersion)" FormatType="Path">
+          <Output TaskParameter="OutputVersion" PropertyName="UnderscoredPublishVersion"/>
+        </FormatVersion>
+
+<!-- Versioning folder for publishing-->
+        <CreateProperty Value="$(ApplicationFilesFolderName)\$(AssemblyName)_$(UnderscoredPublishVersion)\">
+            <Output PropertyName="TemporaryVersionFolder" TaskParameter="Value"/>
+        </CreateProperty>
+
+<!-- Versioning folder for publishing(full path)-->
+        <CreateProperty Value="$(PublishDir)$(TemporaryVersionFolder)">
+            <Output PropertyName="TemporaryVersionFolderWithPath" TaskParameter="Value"/>
+        </CreateProperty>
+
+<!-- Versioning deployment manifest -->
+        <CreateProperty Value="$(TargetName)$(DeploymentManifestExtension)">
+            <Output PropertyName="BackupDeploymentManifestFileName" TaskParameter="Value"/>
+        </CreateProperty>
+
+    </Target>
+
+    <Target Name="MakePublishFolder">
+
+        <MakeDir
+            Condition="!Exists('$(TemporaryVersionFolderWithPath)')"
+            Directories="$(TemporaryVersionFolderWithPath)"
+        />
+
+        <Copy
+            SourceFiles="@(DllEntryPoint)"
+            DestinationFiles="$(TemporaryVersionFolderWithPath)\%(FileName)%(Extension)$(VSTO_DeploymentFileMappingExtension)"
+            SkipUnchangedFiles="false"
+        />
+
+    </Target>
+
+    <Target Name="CopyApplicationManifestToPublishFolder">
+
+        <Copy
+            SourceFiles="@(ApplicationManifestWithPathCollection);"
+            DestinationFiles="@(ApplicationManifestWithPathCollection->'$(TemporaryVersionFolderWithPath)$(ApplicationManifestFileName)');"
+            SkipUnchangedFiles="true"
+        />
+
+    </Target>
+
+    <Target Name="GenerateDeploymentManifestForPublishing">
+
+        <CreateItem
+            Include= "$(TemporaryVersionFolderWithPath)$(ApplicationManifestFileName)"
+            AdditionalMetadata="TargetPath=$(TemporaryVersionFolder)$(ApplicationManifestFileName)">
+            <Output TaskParameter="Include" ItemName="ApplicationManifestWithPathForPublishingCollection" />
+        </CreateItem>
+
+        <VerifyClickOnceSigningSettings SignManifests="$(SignManifests)" />
+
+        <GenerateDeploymentManifest
+            EntryPoint="@(ApplicationManifestWithPathForPublishingCollection)"
+            AssemblyName="$(DeploymentManifestFileName)"
+            AssemblyVersion="$(PublishVersion)"
+            MapFileExtensions="$(MapFileExtensions)"
+            OutputManifest="@(DeploymentManifestWithPathForPublishingCollection)"
+            Platform="$(PlatformTarget)"
+            Install="false"
+        />    
+
+<!-- SignFile -->
+        <SignFile
+            CertificateThumbprint="$(CertificateThumbprint)"
+            SigningTarget="$(PublishDir)$(DeploymentManifestFileName)"
+        />
+
+        <Copy
+            SourceFiles="@(DeploymentManifestWithPathForPublishingCollection);"
+            DestinationFiles="@(DeploymentManifestWithPathForPublishingCollection->'$(TemporaryVersionFolderWithPath)$(BackupDeploymentManifestFileName)');"
+            SkipUnchangedFiles="true"
+        />
+
+    </Target>
+
+    <Target Name="CopyPublishItems" >              
+<!-- Copy published files with target path -->
+<!-- Serialization assemblies for referenced assemblies. -->
+        <CreateItem Include="@(SGenFilesOutputGroupOutput->'%(FullPath)');@(_ReferenceSerializationAssemblyPaths->'%(FullPath)')" Condition="'%(Extension)' == '.dll'">
+            <Output TaskParameter="Include" ItemName="VSTO_SGenDllsRelatedToCurrentDll" />
+        </CreateItem>
+
+<!-- Create list of items for publishing -->
+        <ResolveManifestFiles
+            EntryPoint="@(DllEntryPoint)"
+            ManagedAssemblies="@(ReferencePath);@(ReferenceDependencyPaths);@(VSTO_SGenDllsRelatedToCurrentDll);@(DllEntryPoint)"
+            Files="@(AppConfigWithTargetPath);@(ContentWithTargetPath)"
+            SatelliteAssemblies="@(IntermediateSatelliteAssembliesWithTargetPath);@(ReferenceSatellitePaths)"
+            TargetCulture="*"
+        >
+            <Output TaskParameter="OutputAssemblies" ItemName="VSTO_PublishDependencies"/>
+            <Output TaskParameter="OutputFiles" ItemName="VSTO_PublishFiles"/>
+        </ResolveManifestFiles>
+        
+        <Copy
+            SourceFiles="@(VSTO_PublishDependencies)"
+            DestinationFiles="$(TemporaryVersionFolderWithPath)\%(VSTO_PublishDependencies.TargetPath)$(VSTO_DeploymentFileMappingExtension)"
+            Condition="'%(VSTO_PublishDependencies.DependencyType)'=='Install'"
+            SkipUnchangedFiles="true"
+        />
+
+        <Copy
+            SourceFiles="@(VSTO_PublishFiles)"
+            DestinationFiles="$(TemporaryVersionFolderWithPath)\%(VSTO_PublishFiles.TargetPath)$(VSTO_DeploymentFileMappingExtension)"
+            SkipUnchangedFiles="true"
+        />
+
+<!-- Copy published files with no target path -->
+        <Copy
+            SourceFiles="@(ReferenceComWrappersToCopyLocal)"
+            DestinationFiles="$(TemporaryVersionFolderWithPath)\%(FileName)%(Extension)$(VSTO_DeploymentFileMappingExtension)"
+            SkipUnchangedFiles="true"
+        />
+
+        <Copy Condition="'$(VSTO_ProjectType)' == 'Document'"
+            SourceFiles="$(HostDocumentWithPath)"
+            DestinationFolder="$(PublishDir)"
+         />
+
+        <GenerateOfficeDocumentInstallationPath
+            InstallUrl="$(InstallUrl)"
+            PublishUrl="$(PublishUrl)"
+        > 
+            <Output TaskParameter="InstallationPath" PropertyName="VSTO_DeploymentManifestUrl"/>
+         </GenerateOfficeDocumentInstallationPath>
+
+
+        <CustomizeOffice2007Document Condition="'$(VSTO_ProjectType)' == 'Document'"
+            DocumentPath="$(PublishDir)$(VSTO_HostDocumentName)"
+            AssemblyName="$(TemporaryVersionFolderWithPath)$(TargetFileName)$(VSTO_DeploymentFileMappingExtension)"        
+            DeploymentManifestName="$(DeploymentManifestFileName)"
+            Local="false"
+            SolutionID="$(SolutionID)"
+            InstallationPath="$(VSTO_DeploymentManifestUrl)"
+        />
+
+        <Copy Condition="'$(VSTO_ProjectType)' == 'Document'"
+            SourceFiles="$(PublishDir)$(VSTO_HostDocumentName)"
+            DestinationFolder="$(TemporaryVersionFolderWithPath)"
+         />
+    </Target>
+
+    <Target Name="CreateBootstrapper">
+
+<!-- Invoke the GenerateBootstrapper task to create the ClickOnce default bootstrapper -->
+        <GenerateBootstrapper
+            ApplicationFile="$(DeploymentManifestFileName)"
+            ApplicationName="$(AssemblyName)"
+            ApplicationUrl="$(VSTO_DeploymentManifestUrl)"
+            BootstrapperItems="@(BootstrapperPackage)"
+            ComponentsLocation="$(BootstrapperComponentsLocation)"
+            ComponentsUrl="$(VSTO_DeploymentComponentsUrl)"
+            Culture="$(TargetCulture)"
+            FallbackCulture="$(FallbackCulture)"
+            OutputPath="$(PublishDir)"
+            SupportUrl=""
+            Path="$(GenerateBootstrapperSdkPath)"
+            Condition="'$(BootstrapperEnabled)'=='true' and '$(IsWebBootstrapper)'=='true'"
+        />
+
+
+        <GenerateBootstrapper
+            ApplicationFile="$(DeploymentManifestFileName)"
+            ApplicationName="$(AssemblyName)"
+            ApplicationUrl=""
+            BootstrapperItems="@(BootstrapperPackage)"
+            ComponentsLocation="$(BootstrapperComponentsLocation)"
+            ComponentsUrl="$(VSTO_DeploymentComponentsUrl)"
+            Culture="$(TargetCulture)"
+            FallbackCulture="$(FallbackCulture)"
+            OutputPath="$(PublishDir)"
+            SupportUrl=""
+            Path="$(GenerateBootstrapperSdkPath)"
+            Condition="'$(BootstrapperEnabled)'=='true' and '$(IsWebBootstrapper)'=='false'"
+        />
+
+
+        <SignFile
+           CertificateThumbprint="$(CertificateThumbprint)"
+           SigningTarget="$(PublishDir)\setup.exe"
+           Condition="'$(BootstrapperEnabled)'=='true'" 
+        />
+
+    </Target>
+<!-- End Publish -->
+
+<!-- Embed Type library -->
+
+<!-- Saving a TLB inside the assembly and re-signing the assembly -->
+
+    <Target Name="EmbedTypeLibraryInAssembly"
+        Inputs="@(IntermediateAssembly)"
+        Outputs="@(IntermediateAssembly -> '%(rootdir)%(directory)%(filename).tlb')"
+    >
+
+        <EmbedTypeLibrary
+            Assembly="@(IntermediateAssembly)"
+            KeyContainer="$(KeyContainerName)"
+            KeyFile="$(KeyOriginatorFile)"
+        />
+        
+    </Target>
+
+    <PropertyGroup>
+        <CompileDependsOn Condition="'$(VSTO_EmbedTypeLibraryInAssembly)'=='true'">
+            $(CompileDependsOn);
+            EmbedTypeLibraryInAssembly
+        </CompileDependsOn>
+    </PropertyGroup>
+
+
+<!-- End Embed type library -->
+
+<!-- Clean -->
+    <PropertyGroup>
+        <CoreCleanDependsOn>
+            $(CoreCleanDependsOn);
+            VSTOClean;
+            CleanManifestFile;
+            CleanPublishFolder
+        </CoreCleanDependsOn>
+
+        <VSTOCleanDependsOn Condition="'$(VSTO_ProjectType)' == 'Application'">
+            UnregisterFormRegions;
+            RemoveOfficeAddInSecurity;
+            UnregisterOfficeAddin;
+        </VSTOCleanDependsOn>
+
+        <VSTOCleanDependsOn Condition="'$(VSTO_ProjectType)' == 'Document'">
+          RemoveOfficeAddInSecurity;
+          CleanOutputHostDocument;
+        </VSTOCleanDependsOn>
+
+    </PropertyGroup>
+
+    <Target Name="VSTOClean" DependsOnTargets="$(VSTOCleanDependsOn)" />
+        
+    <Target Name ="RemoveOfficeAddInSecurity">
+        <SetInclusionListEntry
+            DeploymentManifestFullPath="$(AbsolutePathToTheDeploymentManifest)"
+            CertificateThumbprint="$(CertificateThumbprint)" 
+            Unregister="true" 
+        />          
+    </Target>
+    
+    <Target Name="UnregisterOfficeAddin">
+        <SetOffice2007AddInRegistration
+            Url="$(AbsolutePathToTheDeploymentManifest)"
+            AddInName="$(TargetName)"
+            OfficeApplication="$(OfficeApplication)"
+            FriendlyName="$(TargetName)"
+            Description="$(OfficeApplicationDescription)"
+            LoadBehavior="$(LoadBehavior)"
+            Unregister ="true"
+        /> 
+    </Target>
+    
+<!-- UnregisterFormRegions -->
+   <Target Name="UnregisterFormRegions" Condition ="'$(VSTO_ProjectType)' == 'Application' And '$(OfficeApplication)' == 'Outlook'">
+        <RegisterFormRegions
+        AddInName="$(TargetName)"
+        AssemblyName="$(OutDir)$(TargetFileName)"
+        OfficeApplication="$(OfficeApplication)"
+        Unregister ="true"
+        />
+    </Target>
+
+<!-- Delete the manifest file. -->
+    <Target Name="CleanManifestFile">
+        <Delete
+            Condition="Exists('$(ApplicationManifestWithPath)')"
+            Files="$(ApplicationManifestWithPath)" 
+        />
+    </Target>
+
+<!-- Delete the output document. -->
+    <Target Name="CleanOutputHostDocument" Condition="'$(VSTO_ProjectType)' == 'Document'">
+        <Delete
+            Condition="Exists('$(OutputDocumentWithPath)')"
+            Files="$(OutputDocumentWithPath)" 
+        />
+    </Target>
+
+<!-- End Clean -->
+
+</Project>

@@ -1,0 +1,27 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="BuildShadowTask" AssemblyFile="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\TeamTest\Microsoft.VisualStudio.TestTools.BuildShadowsTask.dll"/>
+  <PropertyGroup>
+    <ResolveReferencesDependsOn>
+      $(ResolveReferencesDependsOn);
+      ResolveTestReferences
+    </ResolveReferencesDependsOn>
+  </PropertyGroup>
+  <!--
+       The condition here ensures that we aren't needlessly loaded into projects
+       that don't actually have shadow items in them
+  -->
+  <Target Name="ResolveTestReferences" Condition="'@(Shadow)'!=''">
+    <BuildShadowTask
+        CurrentResolvedReferences="@(ReferencePath)"
+        CurrentCopyLocalFiles="@(ReferenceCopyLocalPaths)"
+        Shadows="@(Shadow)"
+        ProjectPath="$(ProjectDir)"
+        IntermediatePath="$(IntermediateOutputPath)"
+        SignAssembly="$(SignAssembly)"
+        KeyFile="$(AssemblyOriginatorKeyFile)"
+        DelaySign="$(DelaySign)">
+      <Output TaskParameter="FixedUpReferences" ItemName="ReferencePath"/>
+      <Output TaskParameter="NewCopyLocalAssemblies" ItemName="ReferenceCopyLocalPaths"/>
+    </BuildShadowTask>
+  </Target>
+</Project>

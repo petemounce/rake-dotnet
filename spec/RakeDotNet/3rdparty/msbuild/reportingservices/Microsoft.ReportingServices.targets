@@ -1,0 +1,32 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="Microsoft.Reporting.RdlCompile" AssemblyName="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"/>
+
+  <PropertyGroup>
+	<PrepareResourcesDependsOn>$(PrepareResourcesDependsOn);CompileRdlFiles</PrepareResourcesDependsOn>
+	<CompileRdlFilesDependsOn>PrepareRdlFiles;RunRdlCompiler</CompileRdlFilesDependsOn>
+  </PropertyGroup>
+
+  <Target Name="CompileRdlFiles" DependsOnTargets="$(CompileRdlFilesDependsOn)"/>
+
+  <Target Name="PrepareRdlFiles">
+	<CreateItem
+		Include="@(EmbeddedResource);@(Content)"
+		Condition="'%(Extension)'=='.rdlc'">
+	  <Output TaskParameter="Include" ItemName="RdlFile"/>
+	</CreateItem>
+  </Target>
+
+  <Target
+	  Name="RunRdlCompiler"
+	  Inputs="@(RdlFile)"  
+	  Outputs="$(IntermediateOutputPath)RdlCompile.compiled"
+	  Condition="'@(RdlFile)'!=''">
+	<RdlCompile
+		Sources="@(RdlFile)"
+		StateFile="$(IntermediateOutputPath)RdlCompile.cache"
+		TimeStampFile="$(IntermediateOutputPath)RdlCompile.compiled">
+	  <Output TaskParameter="StateFile" ItemName="FileWrites"/>
+	  <Output TaskParameter="TimeStampFile" ItemName="FileWrites"/>
+	</RdlCompile>
+  </Target>
+</Project>

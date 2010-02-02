@@ -34,8 +34,6 @@ lib/rake_dotnet/tasks/crap4ntask.rb
 lib/rake_dotnet/tasks/dependenttask.rb
 lib/rake_dotnet/tasks/fxcoptask.rb
 lib/rake_dotnet/tasks/harvestoutputtask.rb
-lib/rake_dotnet/tasks/harvestwebapplicationtask.rb
-lib/rake_dotnet/tasks/harvestwebdeploymenttask.rb
 lib/rake_dotnet/tasks/msbuildtask.rb
 lib/rake_dotnet/tasks/ncovertask.rb
 lib/rake_dotnet/tasks/ndependtask.rb
@@ -64,8 +62,6 @@ spec/tasks/crap4ntask_spec.rb
 spec/tasks/dependenttask_spec.rb
 spec/tasks/fxcoptask_spec.rb
 spec/tasks/harvestoutputtask_spec.rb
-spec/tasks/harvestwebapplicationtask_spec.rb
-spec/tasks/harvestwebdeploymenttask_spec.rb
 spec/tasks/msbuildtask_spec.rb
 spec/tasks/ncovertask_spec.rb
 spec/tasks/ndependtask_spec.rb
