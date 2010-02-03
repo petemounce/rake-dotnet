@@ -5,7 +5,6 @@ class NUnitTask < Rake::TaskLib
 
 	def initialize(params={})
 		@main_task_name = :nunit
-		super(params)
 		@suites_dir = params[:suites_dir] || File.join(OUT_DIR, 'bin')
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'nunit')
 		@runner_options = params[:runner_options] || {:xml=>true, :out_dir=>@out_dir}
@@ -13,6 +12,7 @@ class NUnitTask < Rake::TaskLib
 		@runner_options[:exclude].merge(params[:exclude]) unless params[:exclude].nil?
 
 		yield self if block_given?
+		super(params)
 		define
 	end
 

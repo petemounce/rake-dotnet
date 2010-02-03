@@ -10,8 +10,9 @@ describe NDependTask do
 		Rake::FileTask.clear
 	end
 	describe 'When initialised with no settings' do
+		it_should_behave_like 'A DependentTask'
 		before :all do
-			@ndt = NDependTask.new
+			@task = NDependTask.new
 			@ndepend = Rake::Task[:ndepend]
 			@out_dir = File.join(OUT_DIR, 'reports', 'ndepend')
 			@reports_dir = Rake::FileTask[@out_dir]
@@ -19,8 +20,8 @@ describe NDependTask do
 		end
 
 		it 'should pass reports_dir to options for console runner' do
-			@ndt.options.should include(:out_dir)
-			@ndt.out_dir.should eql(@ndt.options[:out_dir])
+			@task.options.should include(:out_dir)
+			@task.out_dir.should eql(@task.options[:out_dir])
 		end
 		it 'should define a directory for reports' do
 			@reports_dir.should_not be_nil
@@ -41,15 +42,19 @@ describe NDependTask do
 	end
 
 	describe 'When initialised with reports_dir specified' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@task = NDependTask.new(:out_dir=>'foo')
+		end
 		it 'should use it' do
-			ndt = NDependTask.new(:out_dir=>'foo')
-			ndt.out_dir.should eql('foo')
+			@task.out_dir.should eql('foo')
 		end
 	end
 
 	describe 'When initialised with dependencies' do
+		it_should_behave_like 'A DependentTask'
 		before :all do
-			@ndt = NDependTask.new(:dependencies=>[:foo])
+			@task = NDependTask.new(:dependencies=>[:foo])
 			@ndepend = Rake::Task[:ndepend]
 		end
 		it 'should make :ndepend task depend on those' do

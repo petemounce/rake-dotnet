@@ -10,19 +10,21 @@ describe NUnitTask do
 		Rake::FileTask.clear
 	end
 	describe 'When initialised with no settings' do
+		it_should_behave_like 'A DependentTask'
 		before :all do
-			@nut = NUnitTask.new
+			@task = NUnitTask.new
 			@out_dir = File.join(OUT_DIR, 'reports', 'nunit')
+			@nunit = Rake::Task[:nunit]
 		end
 		it 'should have a sensible suites directory to look in' do
 			sd = File.join(OUT_DIR, 'bin')
-			@nut.suites_dir.should match(/#{re(sd)}/)
+			@task.suites_dir.should match(/#{re(sd)}/)
 		end
 		it 'should have a sensible reports directory to write to' do
-			@nut.out_dir.should match(/#{re(@out_dir)}/)
+			@task.out_dir.should match(/#{re(@out_dir)}/)
 		end
 		it 'should have no dependencies set' do
-			@nut.dependencies.should be_empty
+			@task.dependencies.should be_empty
 		end
 		it 'should create a directory for the reports' do
 			rd = Rake::FileTask[@out_dir]
@@ -31,14 +33,12 @@ describe NUnitTask do
 			rd.name.should eql(@out_dir)
 		end
 		it 'should create a task called :nunit' do
-			nunit = Rake::Task[:nunit]
-			nunit.should_not be_nil
-			nunit.should be_a(Rake::Task)
-			nunit.name.should eql('nunit')
+			@nunit.should_not be_nil
+			@nunit.should be_a(Rake::Task)
+			@nunit.name.should eql('nunit')
 		end
 		it 'should make :nunit depend on @reports_dir' do
-			nunit = Rake::Task[:nunit]
-			nunit.prerequisites.should include(@out_dir)
+			@nunit.prerequisites.should include(@out_dir)
 		end
 		it 'should create a task to clobber the nunit-output' do
 			cn = Rake::Task[:clobber_nunit]
@@ -48,46 +48,54 @@ describe NUnitTask do
 	end
 
 	describe 'When initialised with suites dir' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@sd = File.join(OUT_DIR, 'bong')
+			@task = NUnitTask.new(:suites_dir=>@sd)
+		end
 		it 'should use that dir' do
-			sd = File.join(OUT_DIR, 'bong')
-			nut = NUnitTask.new(:suites_dir=>sd)
-			nut.suites_dir.should match(/#{re(sd)}/)
+			@task.suites_dir.should match(/#{re(@sd)}/)
 		end
 	end
 
 	describe 'When initialised with out_dir' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@d = File.join(OUT_DIR, 'junk')
+			@task = NUnitTask.new(:out_dir => @d)
+		end
 		it 'should use that dir' do
-			d = File.join(OUT_DIR, 'junk')
-			nut = NUnitTask.new(:out_dir => d)
-			nut.out_dir.should match(/#{re(d)}/)
+			@task.out_dir.should match(/#{re(@d)}/)
 		end
 	end
 
 	describe 'When initialised with runner options' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@task = NUnitTask.new(:runner_options => {:exclude=>'unit,integration'})
+		end
 		it 'should use those options' do
-			o = {:exclude=>[]}
-			nut = NUnitTask.new(:runner_options => {:exclude=>'unit,integration'})
-			nut.runner_options.should_not be_empty
+			@task.runner_options.should_not be_empty
 		end
 	end
 
 	describe NUnitTask, 'When initialised with dependencies' do
+		it_should_behave_like 'A DependentTask'
 		before :all do
 			task :foo
-			@nut = NUnitTask.new(:dependencies=>[:foo])
+			@task = NUnitTask.new(:dependencies=>[:foo])
+			@nunit = Rake::Task[:nunit]
 		end
 		it 'should create :nunit task' do
-			nunit = Rake::Task[:nunit]
-			nunit.should_not be_nil
-			nunit.should be_a(Rake::Task)
-			nunit.name.should eql('nunit')
+			@nunit.should_not be_nil
+			@nunit.should be_a(Rake::Task)
+			@nunit.name.should eql('nunit')
 		end
 		it 'should read those dependencies' do
-			@nut.dependencies.should include(:foo)
+			@task.dependencies.should include(:foo)
 		end
 		it 'should create :nunit task that depends on those' do
-			nunit = Rake::Task[:nunit]
-			nunit.prerequisites.should include('foo')
+			@nunit.prerequisites.should include('foo')
 		end
 	end
 end

@@ -17,8 +17,9 @@ describe RDNPackageTask do
 		end
 	end
 	describe 'When initialised with minimum-required settings' do
+		it_should_behave_like 'A DependentTask'
 		before :all do
-			@pt = RDNPackageTask.new(
+			@task = RDNPackageTask.new(
 							:name=>'bin',
 							:items=>[{:from=>'bin'}]
 			)
@@ -30,19 +31,19 @@ describe RDNPackageTask do
 			@package_bin = Rake::Task['package_bin']
 		end
 		it 'should assume default configuration' do
-			@pt.configuration.should eql(CONFIGURATION)
+			@task.configuration.should eql(CONFIGURATION)
 		end
 		it 'should have 1 item defined' do
-			@pt.should have(1).items
+			@task.should have(1).items
 		end
 		it 'should define sensible excludes' do
-			@pt.exclude.should include('**/.svn')
-			@pt.exclude.should include('**/_svn')
-			@pt.exclude.should include('**/.git')
-			@pt.exclude.should include('**/obj')
+			@task.exclude.should include('**/.svn')
+			@task.exclude.should include('**/_svn')
+			@task.exclude.should include('**/.git')
+			@task.exclude.should include('**/obj')
 		end
 		it 'should have a sensible output directory' do
-			@pt.out_dir.should eql("#{OUT_DIR}/pkg")
+			@task.out_dir.should eql("#{OUT_DIR}/pkg")
 		end
 		it 'should create a directory task for the out_dir' do
 			@out_dir.should_not be_nil
@@ -76,22 +77,33 @@ describe RDNPackageTask do
 		it 'should define a rule to build the package'
 	end
 	describe 'When given an out_dir' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@task = RDNPackageTask.new(:name=>'bin',
+							:items=>[{:from=>'bin'}], :out_dir=>'foo')
+		end
 		it 'should use it' do
-			RDNPackageTask.new(:name=>'bin',
-							:items=>[{:from=>'bin'}], :out_dir=>'foo').out_dir.should eql('foo')
+			@task.out_dir.should eql('foo')
 		end
 	end
 	describe 'When given a configuration' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@task = RDNPackageTask.new(:name=>'bin',
+							:items=>[{:from=>'bin'}], :configuration=>'Release')
+		end
 		it 'should use it' do
-			RDNPackageTask.new(:name=>'bin',
-							:items=>[{:from=>'bin'}], :configuration=>'Release').configuration.should eql('Release')
+			@task.configuration.should eql('Release')
 		end
 	end
 	describe 'When given an item' do
+		it_should_behave_like 'A DependentTask'
+		before :all do
+			@task = RDNPackageTask.new(:name=>'bin', :items=>[{:src=>'site'}])
+		end
 		it 'should add it to the array' do
-			pt = RDNPackageTask.new(:name=>'bin', :items=>[{:src=>'site'}])
-			pt.should have(1).items
-			pt.items.should include({:src=>'site'})
+			@task.should have(1).items
+			@task.items.should include({:src=>'site'})
 		end
 	end
 end

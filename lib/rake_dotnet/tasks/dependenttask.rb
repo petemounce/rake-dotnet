@@ -1,5 +1,5 @@
 module DependentTask
-	attr_accessor :dependencies
+	attr_accessor :dependencies, :ci_dependencies, :main_task_name, :is_local_build
 	
 	def initialize(params={})
 		raise(ArgumentError, 'must supply task name', caller) if @main_task_name.nil?
