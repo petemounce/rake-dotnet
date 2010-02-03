@@ -25,6 +25,9 @@ describe NDependConsoleCmd do
 			@nd.cmd.should match(/.*exe" ".*#{PRODUCT_NAME}\.ndepend\.xml"/i)
 			@nd.cmd.should include("/OutDir \"#{@out_dir}\"")
 		end
+		it 'should not publish' do
+			@nd.should_publish.should eql(false)
+		end
 	end
 
 	describe 'When initialised with a project filename' do
@@ -38,6 +41,13 @@ describe NDependConsoleCmd do
 		it 'should use it' do
 			nd = NDependConsoleCmd.new(:out_dir => 'foo')
 			nd.out_dir.should include('foo')
+		end
+	end
+
+	describe 'When initialised so it publishes' do
+		it 'should publish' do
+			nd = NDependConsoleCmd.new(:should_publish=>true)
+			nd.should_publish.should eql(true)
 		end
 	end
 end

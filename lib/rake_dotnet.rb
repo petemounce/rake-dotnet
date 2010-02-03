@@ -35,6 +35,7 @@ require 'rake/clean'
 require 'rake/tasklib'
 require 'Pathname'
 require 'erb'
+require 'rexml/document'
 
 require 'rake_dotnet/defaults'
 require 'rake_dotnet/helpers'

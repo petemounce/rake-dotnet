@@ -1,5 +1,14 @@
 === 0.2.0 / 2010-01-
 
+NEW: NDepend console will publish CQL-constraint violation counts to TeamCity, so that custom charts can be rendered to show trends.
+	in TeamCityDataDir/config/main-config.xml:
+	    <graph title="NDepend" seriesTitle="CQL Constraint Violation">
+    		<valueType key="NDependCQLTotal" title="Total" />
+    	</graph>
+	in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
+			<graph title="NDepend (project)" defaultFilters="" hideFilters="" seriesTitle="CQL Constraint Violation">
+				<valueType key="NDependCQLTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
+			</graph>
 BREAKING CHANGE: Reworked RDNPackageTask (and removed HarvestWebApplicationTask and HarvestWebDeploymentTask as a consequence)
 	* RDNPackageTask can now take an array of items to pull into the package that is created.
 	This allows you to create a package more flexibly.  See spec/RakeDotNet/build/Rakefile.rb for examples.
@@ -11,7 +20,7 @@ NEW: AssemblyInfo now supports generating to websites' App_Code directory
 BREAKING CHANGE: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 	In so doing, renamed "deps" parameter to "dependencies"
 NEW: GH-3 - NDepend support - supports specifying project file and output directory
-NEW: Crap4n support (http://code.google.com/p/crap4n/) (trunk required)
+NEW: Crap4n support (http://code.google.com/p/crap4n/) (crap4n trunk required)
 NEW: NDepend support
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
 NEW: NCover - added trend output via ncover.console

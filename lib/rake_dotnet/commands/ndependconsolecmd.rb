@@ -1,5 +1,5 @@
 class NDependConsoleCmd < Cli
-	attr_accessor :project, :out_dir
+	attr_accessor :project, :out_dir, :should_publish
 	
 	def initialize(params={})
 		sps = params[:search_paths] || []
@@ -8,6 +8,7 @@ class NDependConsoleCmd < Cli
 
 		@project = params[:project] || PRODUCT_NAME + '.ndepend.xml'
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'ndepend')
+		@should_publish = params[:should_publish] || ENV['BUILD_NUMBER'] || false
 	end
 
 	def out_dir
@@ -27,5 +28,30 @@ class NDependConsoleCmd < Cli
 	def run
 		puts cmd if VERBOSE
 		sh cmd
+		publish
+	end
+
+	def publish
+		if (@should_publish)
+			ndepend_doc = REXML::Document.new(File.open("#{@out_dir}/CQLResult.xml"))
+			stats_data = {}
+			stats_data['NDependCQLTotal'] = 0
+			ndepend_doc.elements.each('CQLResult/Group') do |group|
+				specific = "NDepend_Warn_#{group.attributes['Name']}"
+				group.elements.each('Query') do |query|
+					stats_data['NDependCQLTotal'] += query.attributes['NbNodeMatched'].to_i
+					specific_query = to_attr("#{specific}_#{query.attributes['Name']}")
+					stats_data[specific_query] = query.attributes['NbNodeMatched'].to_i
+				end
+			end
+
+			stats_data.sort.each do |key, value|
+				puts "##teamcity[buildStatisticValue key='#{key}' value='#{value}']"
+			end
+		end
+	end
+
+	def to_attr(input)
+		return input.gsub(' ', '| ').gsub('"', '|"').gsub('\\','|\\').gsub('#','|#').gsub('\'', '|\'')
 	end
 end
