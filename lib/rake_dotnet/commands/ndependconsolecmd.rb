@@ -1,6 +1,6 @@
 class NDependConsoleCmd < Cli
 	attr_accessor :project, :out_dir, :should_publish
-	
+
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'ndepend')
@@ -28,26 +28,24 @@ class NDependConsoleCmd < Cli
 	def run
 		puts cmd if VERBOSE
 		sh cmd
-		publish
+		publish if @should_publish
 	end
 
 	def publish
-		if (@should_publish)
-			ndepend_doc = REXML::Document.new(File.open("#{@out_dir}/CQLResult.xml"))
-			stats_data = {}
-			stats_data['NDependCQLTotal'] = 0
-			ndepend_doc.elements.each('CQLResult/Group') do |group|
-				specific = "NDepend_Warn_#{group.attributes['Name']}"
-				group.elements.each('Query') do |query|
-					stats_data['NDependCQLTotal'] += query.attributes['NbNodeMatched'].to_i
-					specific_query = to_attr("#{specific}_#{query.attributes['Name']}")
-					stats_data[specific_query] = query.attributes['NbNodeMatched'].to_i
-				end
+		ndepend_doc = REXML::Document.new(File.open("#{@out_dir}/CQLResult.xml"))
+		stats_data = {}
+		stats_data['NDependCQLTotal'] = 0
+		ndepend_doc.elements.each('CQLResult/Group') do |group|
+			specific = "NDepend_Warn_#{group.attributes['Name']}"
+			group.elements.each('Query') do |query|
+				stats_data['NDependCQLTotal'] += query.attributes['NbNodeMatched'].to_i
+				specific_query = to_attr("#{specific}_#{query.attributes['Name']}")
+				stats_data[specific_query] = query.attributes['NbNodeMatched'].to_i
 			end
+		end
 
-			stats_data.sort.each do |key, value|
-				puts "##teamcity[buildStatisticValue key='#{key}' value='#{value}']"
-			end
+		stats_data.sort.each do |key, value|
+			puts "##teamcity[buildStatisticValue key='#{key}' value='#{value}']"
 		end
 	end
 

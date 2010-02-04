@@ -38,7 +38,7 @@ class NDependTask < Rake::TaskLib
 
 		desc "Run ndepend u"
 		task :ndepend do
-			ndt = NDependConsoleCmd.new(:options => @options)
+			ndt = NDependConsoleCmd.new(@options)
 			ndt.run
 		end
 
