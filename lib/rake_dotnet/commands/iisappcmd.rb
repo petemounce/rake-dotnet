@@ -13,6 +13,8 @@ class AddSiteIisAppCmd < IisAppCmd
 		@name = params[:name]
 		@id = params[:id]
 		@bindings = params[:bindings]
+
+		raise(ArgumentError, 'Must have a physical path', caller) if @path.nil?
 	end
 
 	def bindings

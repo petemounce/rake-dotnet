@@ -33,6 +33,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "RakeDotNet.Website", "src\R
 EndProject
 Project("{2CFEAB61-6A3B-4EB8-B523-560B4BEEF521}") = "RakeDotNet.WdpSite", "src\RakeDotNet.WdpSite\RakeDotNet.WdpSite.wdproj", "{6B97BFFE-32B8-4504-B500-744E47E82218}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RakeDotNet.Other.Tests", "src\RakeDotNet.Other.Tests\RakeDotNet.Other.Tests.csproj", "{BC295343-B007-47C9-9780-0854CFE4DC2C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{6B97BFFE-32B8-4504-B500-744E47E82218}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B97BFFE-32B8-4504-B500-744E47E82218}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B97BFFE-32B8-4504-B500-744E47E82218}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC295343-B007-47C9-9780-0854CFE4DC2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC295343-B007-47C9-9780-0854CFE4DC2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC295343-B007-47C9-9780-0854CFE4DC2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC295343-B007-47C9-9780-0854CFE4DC2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

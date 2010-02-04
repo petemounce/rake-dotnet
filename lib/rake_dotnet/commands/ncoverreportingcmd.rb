@@ -1,6 +1,8 @@
 class NCoverReportingCmd
+	attr_accessor :reports, :report_dir
+
 	def initialize(report_dir, coverage_files, params)
-		@report_dir = report_dir
+		@report_dir = report_dir || File.join(out_dir, 'reports', 'ncover')
 		@coverage_files = coverage_files || []
 
 		params ||= {}
@@ -15,6 +17,7 @@ class NCoverReportingCmd
 		# optional
 		@sort_order = params[:sort] || 'CoveragePercentageAscending'
 		@project_name = params[:project_name] || PRODUCT_NAME
+		@save_to = params[:save_to]
 	end
 
 	def coverage_files
@@ -56,8 +59,12 @@ class NCoverReportingCmd
 		return "//p #{@project_name}" unless @project_name.nil?
 	end
 
+	def save_to
+		return "//s #{@save_to}" unless @save_to.nil?
+	end
+
 	def cmd
-		return "\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name}"
+		return "\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name} #{save_to}"
 	end
 
 	def run

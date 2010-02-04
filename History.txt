@@ -1,5 +1,6 @@
 === 0.2.0 / 2010-01-
 
+NEW: NCover will now merge all coverage files into a single one (if you have the NCover Complete edition)
 NEW: NDepend console will publish CQL-constraint violation counts to TeamCity, so that custom charts can be rendered to show trends.
 	in TeamCityDataDir/config/main-config.xml:
 	    <graph title="NDepend" seriesTitle="CQL Constraint Violation">

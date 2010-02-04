@@ -1,26 +1,26 @@
 class NCoverTask < Rake::TaskLib
-  attr_accessor :profile_options, :reporting_options, :runner_options
+	include DependentTask
+  attr_accessor :profile_options, :reporting_options, :runner_options, :merge_options
+	attr_accessor :product_name, :bin_dir, :report_dir
 
   def initialize(params={})
     @product_name = params[:product_name] || PRODUCT_NAME
     @bin_dir = params[:bin_dir] || File.join(OUT_DIR, 'bin')
     @report_dir = params[:report_dir] || File.join(OUT_DIR, 'reports', 'ncover')
-    @deps = params[:deps] || []
     tool_defaults = {:arch => ENV['PROCESSOR_ARCHITECTURE']}
     @allow_iis_profiling = params[:allow_iis_profiling] || false
     @profile_options = tool_defaults.merge(params[:profile_options] || {})
-    @runner_options = {:xml => false}.merge(params[:runner_options] || {})
     @reporting_options = tool_defaults.merge(params[:reporting_options] || {})
+		@merge_options = tool_defaults.merge(params[:merge_options] || {:reports=>[], :project_name=>"#{PRODUCT_NAME}.merged"})
+		@runner_options = params[:runner_options] || {:xml => false}
 
     yield self if block_given?
+		@main_task_name = :ncover
+		super(params)
     define
   end
 
   def define
-    @deps.each do |d|
-      task :ncover_profile => d
-    end
-
     directory @report_dir
 
     reports_dir_regex = regexify(@report_dir)
@@ -76,16 +76,25 @@ class NCoverTask < Rake::TaskLib
     desc "Generate ncover coverage report(s), on all coverage files"
     task :ncover_reports => [:ncover_profile] do
       report_sets = FileList.new("#{@report_dir}/**/*.coverage.xml")
+			report_sets.exclude("#{@report_dir}/**/*.merged.coverage.xml")
       report_sets.each do |set|
         cov_report = set.sub('.coverage.xml', '/')
         Rake::FileTask[cov_report].invoke
-      end
-    end
+			end
+		end
 
-    task :ncover => [:ncover_profile, :ncover_reports]
+		desc "Merge coverage profile data into single file"
+		task :ncover_merged => [@report_dir, :ncover_profile] do
+			merged_coverage_xml = File.join(@report_dir, "#{PRODUCT_NAME}.merged.coverage.xml")
+			rm merged_coverage_xml if File.exist? merged_coverage_xml
+			ncr = NCoverReportingCmd.new(@report_dir, "#{@report_dir}/*.coverage.xml", @merge_options)
+			ncr.run
+		end
+
+    task @main_task_name => [:ncover_profile, :ncover_merged, :ncover_reports]
 
     desc 'Generate coverage data and run ncover reports based on it'
-    task :coverage => :ncover
+    task :coverage => @main_task_name
 
     task :clobber_ncover do
       rm_rf @report_dir
