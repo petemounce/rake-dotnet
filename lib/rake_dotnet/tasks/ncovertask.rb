@@ -14,7 +14,7 @@ class NCoverTask < Rake::TaskLib
 		@merge_options = tool_defaults.merge(params[:merge_options] || {
 						:reports=>[],
 						:project_name=>"#{PRODUCT_NAME}.merged",
-						:save_to=>File.join(@reports_dir, "#{PRODUCT_NAME}.merged.coverage.xml")})
+						:save_to=>File.join(@report_dir, "#{PRODUCT_NAME}.merged.coverage.xml")})
 		@runner_options = params[:runner_options] || {:xml => false}
 		@should_publish = ENV['BUILD_NUMBER'] || params[:should_publish] || false
 
@@ -41,6 +41,7 @@ class NCoverTask < Rake::TaskLib
         else
           raise(ArgumentError, ':test_framework must be one of [:nunit,:xunit]', caller)
       end
+
       nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
       nc.run
     end
@@ -80,8 +81,7 @@ class NCoverTask < Rake::TaskLib
     desc "Generate ncover coverage report(s), on all coverage files"
     task :ncover_reports => [:ncover_profile] do
       report_sets = FileList.new("#{@report_dir}/**/*.coverage.xml")
-			report_sets.exclude("#{@report_dir}/**/*.merged.coverage.xml")
-      report_sets.each do |set|
+			report_sets.each do |set|
         cov_report = set.sub('.coverage.xml', '/')
         Rake::FileTask[cov_report].invoke
 			end
@@ -90,7 +90,7 @@ class NCoverTask < Rake::TaskLib
 		desc "Merge coverage profile data into single file"
 		task :ncover_merged => [@report_dir, :ncover_profile] do
 			merged_coverage_xml = File.join(@report_dir, "#{PRODUCT_NAME}.merged.coverage.xml")
-			rm merged_coverage_xml if File.exist? merged_coverage_xml
+			rm merged_coverage_xml if File.exists? merged_coverage_xml
 			ncr = NCoverReportingCmd.new(@report_dir, "#{@report_dir}/*.coverage.xml", @merge_options)
 			ncr.run
 		end
@@ -103,11 +103,19 @@ class NCoverTask < Rake::TaskLib
 						summary_html = e.children.select {|c| c.to_s.include? '/summary.html'}
 						doc = REXML::Document.new(File.open(summary_html.first))
 						spans = REXML::XPath.match(doc,"//div[@id='left']/p/span")
-						publish_from_xpath("NCoverSymbol_#{to_attr(e.basename)}", spans[0], /(\d+\.?\d*)%/)
-						publish_from_xpath("NCoverBranch_#{to_attr(e.basename)}", spans[1], /(\d+\.?\d*)%/)
-						publish_from_xpath("NCoverMethod_#{to_attr(e.basename)}", spans[2], /(\d+\.?\d*)%/)
-						publish_from_xpath("NCoverCycCompAvg_#{to_attr(e.basename)}", spans[3], /(\d+\.?\d*)/)
-						publish_from_xpath("NCoverCycCompMax_#{to_attr(e.basename)}", spans[4], /(\d+\.?\d*)/)
+						key = to_attr(e.basename)
+						publish_from_xpath("NCoverSymbol_#{key}", spans[0], /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverBranch_#{key}", spans[1], /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverMethod_#{key}", spans[2], /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverCycCompAvg_#{key}", spans[3], /(\d+\.?\d*)/)
+						publish_from_xpath("NCoverCycCompMax_#{key}", spans[4], /(\d+\.?\d*)/)
+						if e.basename.to_s.include? '.merged'
+							publish_from_xpath("NCoverSymbol_Merged", spans[0], /(\d+\.?\d*)%/)
+							publish_from_xpath("NCoverBranch_Merged", spans[1], /(\d+\.?\d*)%/)
+							publish_from_xpath("NCoverMethod_Merged", spans[2], /(\d+\.?\d*)%/)
+							publish_from_xpath("NCoverCycCompAvg_Merged", spans[3], /(\d+\.?\d*)/)
+							publish_from_xpath("NCoverCycCompMax_Merged", spans[4], /(\d+\.?\d*)/)
+						end
 					end
 				end
 			end

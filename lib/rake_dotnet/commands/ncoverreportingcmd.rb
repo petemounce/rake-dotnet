@@ -12,7 +12,7 @@ class NCoverReportingCmd
 		@is_complete_version = `#{@exe}`.include?('NCover Reporting Complete')
 		# required
 		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections', 'FullCoverageReport']
-		@output_path = File.join(@report_dir)
+		@output_path = @report_dir
 
 		# optional
 		@sort_order = params[:sort] || 'CoveragePercentageAscending'
