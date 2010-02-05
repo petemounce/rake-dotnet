@@ -11,7 +11,10 @@ class NCoverTask < Rake::TaskLib
     @allow_iis_profiling = params[:allow_iis_profiling] || false
     @profile_options = tool_defaults.merge(params[:profile_options] || {})
     @reporting_options = tool_defaults.merge(params[:reporting_options] || {})
-		@merge_options = tool_defaults.merge(params[:merge_options] || {:reports=>[], :project_name=>"#{PRODUCT_NAME}.merged"})
+		@merge_options = tool_defaults.merge(params[:merge_options] || {
+						:reports=>[],
+						:project_name=>"#{PRODUCT_NAME}.merged",
+						:save_to=>File.join(@reports_dir, "#{PRODUCT_NAME}.merged.coverage.xml")})
 		@runner_options = params[:runner_options] || {:xml => false}
 		@should_publish = ENV['BUILD_NUMBER'] || params[:should_publish] || false
 
