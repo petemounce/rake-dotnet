@@ -2,6 +2,8 @@ require 'rake'
 require 'rake/tasklib'
 require 'rake/clean'
 require 'pathname'
+require 'erb'
+require 'rexml/document'
 require 'systemu'
 
 require '../../../lib/rake_dotnet/helpers'

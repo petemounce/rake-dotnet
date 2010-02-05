@@ -13,7 +13,7 @@ MsBuildTask.new({:deps=>[:assembly_info]})
 
 HarvestOutputTask.new({:deps => [:compile]})
 
-RDNPackageTask.new(:name=>'bin',:dependencies=>[:compile, :harvest, :tests]) do |p|
+RDNPackageTask.new(:name=>'bin', :dependencies=>[:compile, :harvest, :tests]) do |p|
 	p.items << {:from=>Bin_out}
 end
 RDNPackageTask.new(:name=>'RakeDotNet.WdpSite', :dependencies=>[:compile, :harvest, :tests]) do |p|
@@ -38,10 +38,10 @@ FxCopTask.new
 
 NCoverTask.new do |nc|
 	nc.profile_options[:test_framework] = :xunit
-	nc.reporting_options[:reports] = 
-		['Summary', 'UncoveredCodeSections', 'FullCoverageReport', 'SymbolModule',
-		'SymbolModuleNamespace', 'SymbolModuleNamespaceClass', 'SymbolCCModuleClassFailedCoverageTop', 
-		'MethodModule', 'MethodModuleNamespaceClass', 'MethodCCModuleClassFailedCoverageTop']
+	nc.reporting_options[:reports] =
+					['Summary', 'UncoveredCodeSections', 'FullCoverageReport', 'SymbolModule',
+					 'SymbolModuleNamespace', 'SymbolModuleNamespaceClass', 'SymbolCCModuleClassFailedCoverageTop',
+					 'MethodModule', 'MethodModuleNamespaceClass', 'MethodCCModuleClassFailedCoverageTop']
 	nc.should_publish = true
 end
 

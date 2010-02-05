@@ -107,7 +107,32 @@ class NCoverTask < Rake::TaskLib
 			ncr.run
 		end
 
-    task @main_task_name => [:ncover_profile, :ncover_merged, :ncover_reports]
+		task :ncover_publish do
+			if @should_publish
+				FileList.new("#{@report_dir}/*").each do |entry|
+					e = Pathname.new(entry)
+					if e.directory? && e.children.length > 0
+						summary_html = e.children.select {|c| c.to_s.include? '/summary.html'}
+						doc = REXML::Document.new(File.open(summary_html.first))
+						publish_from_xpath("NCoverSymbol_#{to_attr(e.basename)}", doc, "//span[@class='highlight covered']", /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverBranch_#{to_attr(e.basename)}", doc, "//span[@class='highlight nacoverage']", /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverMethod_#{to_attr(e.basename)}", doc, "//span[@class='highlight uncovered']", /(\d+\.?\d*)%/)
+						publish_from_xpath("NCoverCycCompAvg_#{to_attr(e.basename)}", doc, "//p/span[@class='highlight']", /(\d+\.?\d*)/)
+						publish_from_xpath("NCoverCycCompMax_#{to_attr(e.basename)}", doc, "//p/span[@class='highlight acceptable']", /(\d+\.?\d*)/)
+					end
+				end
+			end
+		end
+
+		def publish_from_xpath(key, doc, xpath, regex)
+			element = REXML::XPath.first(doc, xpath)
+			if element.text
+				value_matches = element.text.match(regex)
+				puts "##teamcity[buildStatisticValue key='#{key}' value='#{value_matches[1]}']" unless value_matches.nil?
+			end
+		end
+
+    task @main_task_name => [:ncover_profile, :ncover_merged, :ncover_reports, :ncover_publish]
 
     desc 'Generate coverage data and run ncover reports based on it'
     task :coverage => @main_task_name
