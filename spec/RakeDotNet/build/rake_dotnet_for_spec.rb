@@ -2,6 +2,7 @@ require 'rake'
 require 'rake/tasklib'
 require 'rake/clean'
 require 'pathname'
+require 'systemu'
 
 require '../../../lib/rake_dotnet/helpers'
 require '../../../lib/rake_dotnet/defaults'

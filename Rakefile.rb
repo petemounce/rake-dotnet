@@ -13,6 +13,7 @@ Hoe.spec 'rake-dotnet' do
 	#self.homepage = 'http://github.com/petemounce/rake-dotnet'
 	self.version = '0.2.0'
 	self.extra_deps << ['rake', '>= 0.8.3']
+	self.extra_deps << ['systemu', '>= 1.2.0']
 	self.extra_dev_deps << ['rspec', '>= 1.2.9']
 	self.extra_dev_deps << ['rcov', '>= 0.8.1.2.0']
 	self.extra_dev_deps << ['hoe', '>= 2.4.0']

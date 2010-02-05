@@ -1,7 +1,7 @@
 class NCoverTask < Rake::TaskLib
 	include DependentTask
   attr_accessor :profile_options, :reporting_options, :runner_options, :merge_options
-	attr_accessor :product_name, :bin_dir, :report_dir
+	attr_accessor :product_name, :bin_dir, :report_dir, :should_publish
 
   def initialize(params={})
     @product_name = params[:product_name] || PRODUCT_NAME
@@ -13,6 +13,7 @@ class NCoverTask < Rake::TaskLib
     @reporting_options = tool_defaults.merge(params[:reporting_options] || {})
 		@merge_options = tool_defaults.merge(params[:merge_options] || {:reports=>[], :project_name=>"#{PRODUCT_NAME}.merged"})
 		@runner_options = params[:runner_options] || {:xml => false}
+		@should_publish = ENV['BUILD_NUMBER'] || params[:should_publish] || false
 
     yield self if block_given?
 		@main_task_name = :ncover
@@ -38,7 +39,9 @@ class NCoverTask < Rake::TaskLib
           raise(ArgumentError, ':test_framework must be one of [:nunit,:xunit]', caller)
       end
       nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
-      nc.run
+      result = nc.run
+			name = to_attr(dll_to_execute.sub(@bin_dir, '').sub('.dll', '').sub('/', ''))
+			publish(result, name) if @should_publish
     end
 
     def should_profile_iis (dll)
@@ -48,7 +51,20 @@ class NCoverTask < Rake::TaskLib
       return true if dll.include? 'selenium'
       return true if dll.include? 'watin'
       return false
-    end
+		end
+
+		def publish(result, key_suffix)
+			publish_stat(result, "NCoverSymbolCoverage_#{key_suffix}", /Symbol Coverage: (\d+\.?\d*)%/)
+			publish_stat(result, "NCoverBranchCoverage_#{key_suffix}", /Branch Coverage: (\d+\.?\d*)%/)
+			publish_stat(result, "NCoverExeTime_#{key_suffix}", /Execution Time: (\d+\.?\d*) s/)
+		end
+
+		def publish_stat(result, key, regex)
+			matches = result[:stdout].match(regex)
+			unless matches.nil?
+				puts "##teamcity[buildStatisticValue key='#{key}' value='#{matches[1]}']"
+			end
+		end
 
     desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
     task :ncover_profile, [:dlls_to_run] => [@report_dir] do |t, args|

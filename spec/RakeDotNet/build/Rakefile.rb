@@ -42,6 +42,7 @@ NCoverTask.new do |nc|
 		['Summary', 'UncoveredCodeSections', 'FullCoverageReport', 'SymbolModule',
 		'SymbolModuleNamespace', 'SymbolModuleNamespaceClass', 'SymbolCCModuleClassFailedCoverageTop', 
 		'MethodModule', 'MethodModuleNamespaceClass', 'MethodCCModuleClassFailedCoverageTop']
+	nc.should_publish = true
 end
 
 NDependTask.new

@@ -48,8 +48,4 @@ class NDependConsoleCmd < Cli
 			puts "##teamcity[buildStatisticValue key='#{key}' value='#{value}']"
 		end
 	end
-
-	def to_attr(input)
-		return input.gsub(' ', '| ').gsub('"', '|"').gsub('\\','|\\').gsub('#','|#').gsub('\'', '|\'')
-	end
 end

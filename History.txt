@@ -1,5 +1,17 @@
 === 0.2.0 / 2010-01-
 
+NEW: NCover will report Symbol, Branch, Method coverage, and Cyclomatic Complexity Avg & Max
+	* for each coverage file
+	* overall, from the merged coverage files, if NCover Complete is used
+	so that TeamCity can chart this data.  (It needs the Summary report to run for this)
+	in TeamCityDataDir/config/main-config.xml:
+	    <graph title="NCover" seriesTitle="Coverage %">
+    		<valueType key="NCoverMergedTotal" title="Total" />
+    	</graph>
+	in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
+			<graph title="NCover (project)" seriesTitle="Coverage %">
+				<valueType key="NCoverMergedTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
+			</graph>
 NEW: NCover will now merge all coverage files into a single one (if you have the NCover Complete edition)
 NEW: NDepend console will publish CQL-constraint violation counts to TeamCity, so that custom charts can be rendered to show trends.
 	in TeamCityDataDir/config/main-config.xml:
@@ -7,7 +19,7 @@ NEW: NDepend console will publish CQL-constraint violation counts to TeamCity, s
     		<valueType key="NDependCQLTotal" title="Total" />
     	</graph>
 	in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
-			<graph title="NDepend (project)" defaultFilters="" hideFilters="" seriesTitle="CQL Constraint Violation">
+			<graph title="NDepend (project)" seriesTitle="CQL Constraint Violation">
 				<valueType key="NDependCQLTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
 			</graph>
 BREAKING CHANGE: Reworked RDNPackageTask (and removed HarvestWebApplicationTask and HarvestWebDeploymentTask as a consequence)
