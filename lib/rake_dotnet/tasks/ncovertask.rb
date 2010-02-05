@@ -39,9 +39,7 @@ class NCoverTask < Rake::TaskLib
           raise(ArgumentError, ':test_framework must be one of [:nunit,:xunit]', caller)
       end
       nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
-      result = nc.run
-			name = to_attr(dll_to_execute.sub(@bin_dir, '').sub('.dll', '').sub('/', ''))
-			publish(result, name) if @should_publish
+      nc.run
     end
 
     def should_profile_iis (dll)
@@ -51,19 +49,6 @@ class NCoverTask < Rake::TaskLib
       return true if dll.include? 'selenium'
       return true if dll.include? 'watin'
       return false
-		end
-
-		def publish(result, key_suffix)
-			publish_stat(result, "NCoverSymbolCoverage_#{key_suffix}", /Symbol Coverage: (\d+\.?\d*)%/)
-			publish_stat(result, "NCoverBranchCoverage_#{key_suffix}", /Branch Coverage: (\d+\.?\d*)%/)
-			publish_stat(result, "NCoverExeTime_#{key_suffix}", /Execution Time: (\d+\.?\d*) s/)
-		end
-
-		def publish_stat(result, key, regex)
-			matches = result[:stdout].match(regex)
-			unless matches.nil?
-				puts "##teamcity[buildStatisticValue key='#{key}' value='#{matches[1]}']"
-			end
 		end
 
     desc "Generate ncover coverage XML, one file per test-suite that exercises your product"
