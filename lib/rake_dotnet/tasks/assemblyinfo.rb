@@ -9,19 +9,19 @@ class AssemblyInfoTask < Rake::TaskLib
 
 	def define
 		src_dir_regex = regexify(@src_dir)
-		rule(/#{src_dir_regex}\/[\w\.\d]+\/Properties\/AssemblyInfo.cs/) do |r|
+		rule(/#{src_dir_regex}\/.*\/Properties\/AssemblyInfo.cs/) do |r|
 			generate_for(r, 'cs')
 		end
 
-		rule(/#{src_dir_regex}\/[\w\.\d]+\/App_Code\/AssemblyInfo.cs/) do |r|
+		rule(/#{src_dir_regex}\/.*\/App_Code\/AssemblyInfo.cs/) do |r|
 			generate_for(r, 'cs')
 		end
 
-		rule(/#{src_dir_regex}\/[\w\.\d]+\/My Project\/AssemblyInfo.vb/) do |r|
+		rule(/#{src_dir_regex}\/.*\/My Project\/AssemblyInfo.vb/) do |r|
 			generate_for(r, 'vb')
 		end
 
-		rule(/#{src_dir_regex}\/[\w\.\d]+\/App_Code\/AssemblyInfo.vb/) do |r|
+		rule(/#{src_dir_regex}\/.*\/App_Code\/AssemblyInfo.vb/) do |r|
 			generate_for(r, 'vb')
 		end
 
@@ -65,6 +65,12 @@ class AssemblyInfoTask < Rake::TaskLib
 		end
 		if (pn_entry == 'AssemblyInfo.cs.template' || pn_entry == 'AssemblyInfo.vb.template')
 			return nil
+		end
+
+		if pn_entry.basename.to_s.include? '.Website'
+			is_csharp = pn_entry.parent.children.select {|sib| sib.basename.to_s.include? '.vb'}.first.nil?
+			return File.join(@src_dir, pn_entry, 'App_Code', 'AssemblyInfo.cs') if is_csharp
+			return File.join(@src_dir, pn_entry, 'App_Code', 'AssemblyInfo.vb') unless is_csharp
 		end
 
 		proj = FileList.new("#{@src_dir}/#{pn_entry}/*.*proj").first
