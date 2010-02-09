@@ -89,6 +89,12 @@ class AssemblyInfoTask < Rake::TaskLib
 		return path
 	end
 
+	def is_website_project(pn)
+		return true if pn.basename.to_s.include? '.Website'
+		return true if pn.entries.include? 'App_Code'
+		return false
+	end
+
 	def token_replacements
 		r = {}
 		r[:built_on] = Time.now
