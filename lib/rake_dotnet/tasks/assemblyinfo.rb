@@ -8,6 +8,9 @@ class AssemblyInfoTask < Rake::TaskLib
 	end
 
 	def define
+		stamp = '.assembly_info_task_stamp'
+		CLEAN.include(stamp)
+		
 		src_dir_regex = regexify(@src_dir)
 		rule(/#{src_dir_regex}\/.*\/Properties\/AssemblyInfo.cs/) do |r|
 			generate_for(r, 'cs')
@@ -39,9 +42,10 @@ class AssemblyInfoTask < Rake::TaskLib
 
 		desc 'Generate the AssemblyInfo.cs file from the template closest'
 		task :assembly_info do
+			File.open(stamp, 'w') {}
 			Pathname.new(@src_dir).entries.each do |e|
 				asm_info = asm_info_to_generate(e)
-				Rake::FileTask[asm_info].invoke unless asm_info.nil?
+				Rake::FileTask[asm_info].enhance([stamp]).invoke unless asm_info.nil?
 			end
 		end
 
