@@ -1,6 +1,8 @@
 class Versioner
+	VERSION_TEMPLATE_FILE = 'version.template.txt'
+
 	def initialize(template_file=nil, opts={})
-		tf_path = template_file || 'version.template.txt'
+		tf_path = template_file || VERSION_TEMPLATE_FILE
 		@tf = Pathname.new(tf_path)
 		@vf = Pathname.new(tf_path.sub('.template', ''))
 	end
@@ -34,7 +36,8 @@ class Versioner
 end
 
 Version_txt = 'version.txt'
-file Version_txt do
+file Version_txt => Versioner::VERSION_TEMPLATE_FILE do
+	rm_rf Version_txt
 	Versioner.new.get
 end
 task :version => Version_txt
