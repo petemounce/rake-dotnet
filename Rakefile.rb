@@ -46,4 +46,6 @@ file 'doc/examples.html' => [:examples_with_report]
 
 task :package => [:examples_with_report, :examples_with_rcov]
 
+task :default => :package
+
 # vim: syntax=Ruby
