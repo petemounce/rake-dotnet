@@ -27,7 +27,7 @@ describe DependentTask do
 		Rake::Task.clear
 		Rake::FileTask.clear
 	end
-	describe DependentTask, 'When initialiasing with no main_task_name' do
+	describe 'When initialiasing with no main_task_name' do
 		it 'should throw ArgumentError' do
 			lambda { BlahTask.new }.should raise_error(ArgumentError)
 		end
