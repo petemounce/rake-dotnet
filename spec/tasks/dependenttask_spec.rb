@@ -22,6 +22,7 @@ shared_examples_for 'A DependentTask' do
 		end
 	end
 end
+
 describe DependentTask do
 	after :all do
 		Rake::Task.clear
@@ -45,9 +46,6 @@ describe DependentTask do
 		before :all do
 			DepTask.new
 			@foo = Rake::Task[:foo]
-		end
-		after :all do
-			@foo.clear
 		end
 		it 'should not make the main-task dependent on anything (else)' do
 			@foo.prerequisites[0].should include('dependency1')
@@ -76,7 +74,7 @@ describe DependentTask do
 			task :b
 			task :foo
 			@foo = Rake::Task[:foo]
-			DepTask.new(:dependencies=>[:a, :b])
+			DepTask.new(:dependencies=>'a,b')
 		end
 		it 'should make the main-task dependent on those dependencies' do
 			@foo.should have(4).prerequisites
@@ -93,6 +91,9 @@ describe DependentTask do
 			@foo = Rake::Task[:foo]
 			DepTask.new(:build_number=>1345)
 		end
+		after :all do
+			@foo.clear
+		end
 		it 'should not change any dependencies' do
 			@foo.should have(2).prerequisites
 		end
@@ -100,13 +101,19 @@ describe DependentTask do
 
 	describe 'When initialised with some dependencies during a CI build' do
 		before :all do
+			puts 'start'
 			task :a
 			task :b
 			task :foo
-			@foo = Rake::Task[:foo]
 			DepTask.new(:dependencies=>[:a, :b], :build_number=>1345)
+			@foo = Rake::Task[:foo]
+		end
+		after :all do
+			@foo.clear
 		end
 		it 'should not make the main-task dependent on those dependencies because dependencies are just sugar for developer builds' do
+			@foo.prerequisites.should_not include('a')
+			@foo.prerequisites.should_not include('b')
 			@foo.should have(2).prerequisites
 		end
 	end
