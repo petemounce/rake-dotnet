@@ -39,6 +39,9 @@ describe NDependTask do
 			@clobber_ndepend.should_not be_nil
 			@clobber_ndepend.should be_a(Rake::Task)
 		end
+		it 'should use a sensible glob for finding assemblies in the binaries directory' do
+			@task.globs.should include("#{Bin_out}/**/#{PRODUCT_NAME}*.dll")
+		end
 	end
 
 	describe 'When initialised with reports_dir specified' do

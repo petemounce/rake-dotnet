@@ -32,9 +32,9 @@ NEW: MsBuild - Support for building web-deployment projects
 NEW: AssemblyInfo now supports generating to websites' App_Code directory
 BREAKING CHANGE: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 	In so doing, renamed "deps" parameter to "dependencies"
-NEW: GH-3 - NDepend support - supports specifying project file and output directory
+NEW: GH-3 - NDepend support - supports specifying project file and output directory, and file-patterns to match DLLs to run analysis against
 NEW: Crap4n support (http://code.google.com/p/crap4n/) (crap4n trunk required)
-NEW: NDepend support
+NEW: NDepend support - requires placing a `{ProductName}.ndepend.xml.erb` into the `PRODUCT_ROOT` - get a sample from `spec\RakeDotNet\RakeDotNet.ndepend.xml.erb` and if necessary, add/remove framework assemblies
 NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
 NEW: NCover - added trend output via ncover.console
 CHANGE: NCover - Support writing NCover3 coverage data to TeamCity v5 as service message
