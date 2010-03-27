@@ -13,6 +13,7 @@ class RDNPackageTask < Rake::TaskLib
 		raise(ArgumentError, 'Must have a :name', caller) if @name.nil?
 		raise(ArgumentError, 'Must have at least one item', caller) if @items.length < 1
 		@main_task_name = "package_#{@name}".to_sym
+		params[:build_number] ||= ENV['BUILD_NUMBER']
 		super(params)
 		define
 	end

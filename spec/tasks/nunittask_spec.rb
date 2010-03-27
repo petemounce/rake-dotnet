@@ -83,7 +83,7 @@ describe NUnitTask do
 		it_should_behave_like 'A DependentTask'
 		before :all do
 			task :foo
-			@task = NUnitTask.new(:dependencies=>[:foo])
+			@task = NUnitTask.new(:dependencies=>[:foo], :build_number=>0)
 			@nunit = Rake::Task[:nunit]
 		end
 		it 'should create :nunit task' do

@@ -20,6 +20,7 @@ class NCoverTask < Rake::TaskLib
 
     yield self if block_given?
 		@main_task_name = :ncover
+    params[:build_number] ||= ENV['BUILD_NUMBER']
 		super(params)
     define
   end

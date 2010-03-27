@@ -57,7 +57,7 @@ describe NDependTask do
 	describe 'When initialised with dependencies' do
 		it_should_behave_like 'A DependentTask'
 		before :all do
-			@task = NDependTask.new(:dependencies=>[:foo])
+			@task = NDependTask.new(:dependencies=>[:foo], :build_number=>0)
 			@ndepend = Rake::Task[:ndepend]
 		end
 		it 'should make :ndepend task depend on those' do
