@@ -3,7 +3,7 @@ module DependentTask
 	
 	def initialize(params={})
 		raise(ArgumentError, 'must supply task name', caller) if @main_task_name.nil?
-		@is_local_build = params[:build_number].nil? || params[:build_number] == 0 || !ENV['BUILD_NUMBER']
+		@is_local_build = params[:build_number].nil? || params[:build_number] == 0 || !ENV['BUILD_NUMBER'].nil?
 		@dependencies = params[:dependencies] || []
 		if @dependencies.is_a?(String)
 			@dependencies = @dependencies.split(',')

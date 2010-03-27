@@ -53,7 +53,6 @@ class NDependProject
 	attr_accessor :out_dir, :bin_dir, :assembly_names
 
 	def initialize(out_dir, bin_dir, globs)
-      # TODO: Supply a list of globs to generate the <Assemblies> element of the project file
 		@out_dir = File.expand_path(out_dir).gsub('/', '\\')
 		@bin_dir = File.expand_path(bin_dir).gsub('/', '\\')
 		@assembly_names = []

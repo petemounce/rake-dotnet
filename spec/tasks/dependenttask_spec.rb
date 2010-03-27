@@ -101,7 +101,6 @@ describe DependentTask do
 
 	describe 'When initialised with some dependencies during a CI build' do
 		before :all do
-			puts 'start'
 			task :a
 			task :b
 			task :foo
