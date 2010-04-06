@@ -61,7 +61,6 @@ class RDNPackageTask < Rake::TaskLib
 			chdir versioned_dir do
 				sz.run_add
 			end
-			rm_rf versioned_dir
 		end
 
 		desc "Generate zip'd package for #{@name}"
