@@ -5,6 +5,7 @@ class HarvestOutputTask < Rake::TaskLib
 
 	def initialize(params={})
 		@main_task_name = :harvest_output
+		params[:build_number] ||= ENV['BUILD_NUMBER']
 		super(params)
 		@src_dir = params[:src_dir] || File.join(PRODUCT_ROOT, 'src')
 		@out_dir = params[:out_dir] || Bin_out

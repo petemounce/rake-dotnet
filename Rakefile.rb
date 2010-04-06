@@ -30,7 +30,7 @@ require 'spec/rake/spectask'
 desc 'Run all examples and report'
 Spec::Rake::SpecTask.new('examples_with_report') do |t|
 	t.spec_files = File.join('spec', 'rake_dotnet_spec.rb')
-	t.spec_opts = ["--format", "html:doc/examples.html", "--diff"]
+	t.spec_opts = ["--format", "html:doc/examples.html", "--diff", '--colour']
 	t.fail_on_error = true
 end
 

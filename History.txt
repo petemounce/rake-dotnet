@@ -1,49 +1,68 @@
-=== 0.2.0 / 2010-01-
+=== 0.2.0 / 2010-04
 
-NEW: NCover will report Symbol, Branch, Method coverage, and Cyclomatic Complexity Avg & Max
-	* for each coverage file
-	* overall, from the merged coverage files, if NCover Complete is used
-	so that TeamCity can chart this data.  (It needs the Summary report to run for this)
-	in TeamCityDataDir/config/main-config.xml:
-	    <graph title="NCover" seriesTitle="Coverage %">
-    		<valueType key="NCoverMergedTotal" title="Total" />
-    	</graph>
-	in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
-			<graph title="NCover (project)" seriesTitle="Coverage %">
-				<valueType key="NCoverMergedTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
-			</graph>
-NEW: NCover will now merge all coverage files into a single one (if you have the NCover Complete edition)
-NEW: NDepend console will publish CQL-constraint violation counts to TeamCity, so that custom charts can be rendered to show trends.
-	in TeamCityDataDir/config/main-config.xml:
-	    <graph title="NDepend" seriesTitle="CQL Constraint Violation">
-    		<valueType key="NDependCQLTotal" title="Total" />
-    	</graph>
-	in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
-			<graph title="NDepend (project)" seriesTitle="CQL Constraint Violation">
-				<valueType key="NDependCQLTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
-			</graph>
-BREAKING CHANGE: Reworked RDNPackageTask (and removed HarvestWebApplicationTask and HarvestWebDeploymentTask as a consequence)
-	* RDNPackageTask can now take an array of items to pull into the package that is created.
-	This allows you to create a package more flexibly.  See spec/RakeDotNet/build/Rakefile.rb for examples.
-	This also means that the harvest tasks are no longer necessary (though HarvestOutputTask still is; that has a different purpose)
-NEW: NCover - make it possible to pass in test-runner options with the :runner_options parameter
-NEW: Support harvesting from web-deployment projects
-NEW: MsBuild - Support for building web-deployment projects
-NEW: AssemblyInfo now supports generating to websites' App_Code directory
-BREAKING CHANGE: GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
-	In so doing, renamed "deps" parameter to "dependencies"
-NEW: GH-3 - NDepend support - supports specifying project file and output directory
-NEW: Crap4n support (http://code.google.com/p/crap4n/) (crap4n trunk required)
-NEW: NDepend support
-NEW: NCover - added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
-NEW: NCover - added trend output via ncover.console
-CHANGE: NCover - Support writing NCover3 coverage data to TeamCity v5 as service message
-NEW: GH-1 NUnitTask and NUnitCmd (based on NUnit 2.5.3).  Support for include, exclude, and xml command-line switches.
-CHANGE: The test-tasks now create a task called after themselves (eg :xunit and :nunit) but there's now also a :test task to abstract the choice of test framework in the build script
-FIX: Update documentation to include how to build
-FIX: Update to allow use with Hoe 2.4.0 (latest)
-FIX: 7-zip x86 installer does not name the 7z executable 7za like the x64 one does.  Therefore the test I was using to pick which executable won't work.
-CHANGE: 7-zip is now looked for in 3RD_PARTY/7-zip instead of 3RD_PARTY/7zip because this is how the installer installs it; no need to rename the directory if pushing into source-control.
+BREAKING CHANGES:
+	* Reworked RDNPackageTask (and removed HarvestWebApplicationTask and HarvestWebDeploymentTask as a consequence)
+		RDNPackageTask can now take an array of items to pull into the package that is created.
+			This allows you to create a package more flexibly.  See spec/RakeDotNet/build/Rakefile.rb for examples.
+			This also means that the harvest tasks are no longer necessary (though HarvestOutputTask still is; that has a different purpose)
+	* GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
+		In so doing, renamed "deps" parameter to "dependencies"
+	* Removed the RakeDotNet module (which was based on a misunderstanding on my part)
+
+NEW:
+	NUnit (via NUnitTask)
+		GH-1 NUnitTask and NUnitCmd (based on NUnit 2.5.3).  Support for include, exclude, and xml command-line switches.
+
+	NCover
+		* will report Symbol, Branch, Method coverage, and Cyclomatic Complexity Avg & Max
+			* for each coverage file
+			* overall, from the merged coverage files, if NCover Complete is used
+			so that TeamCity can chart this data.  (It needs the Summary report to run for this)
+			Configure TeamCity charts:
+				in TeamCityDataDir/config/main-config.xml:
+					<graph title="NCover" seriesTitle="Coverage %">
+						<valueType key="NCoverMergedTotal" title="Total" />
+					</graph>
+				in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
+					<graph title="NCover (project)" seriesTitle="Coverage %">
+						<valueType key="NCoverMergedTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
+					</graph>
+		* will now merge all coverage files into a single one (if you have the NCover Complete edition)
+		* make it possible to pass in test-runner options with the :runner_options parameter
+		* added ability to exclude files from coverage (NCover v3 Complete edition only) and ignored *.designer.cs by default (since those are auto-generated)
+		* added trend output via ncover.console
+		* support writing NCover3 coverage data to TeamCity v5 as service message
+
+	NDepend support - GH-3 (NDependTask)
+		* supports specifying project file and output directory, and file-patterns to match DLLs to run analysis against
+			requires placing a `{PRODUCT_NAME}.ndepend.xml.erb` into the `PRODUCT_ROOT` - get a sample from `spec\RakeDotNet\RakeDotNet.ndepend.xml.erb` and if necessary, add/remove framework assemblies
+		* console will publish CQL-constraint violation counts to TeamCity, so that custom charts can be rendered to show trends.
+			Configure TeamCity charts:
+				in TeamCityDataDir/config/main-config.xml:
+					<graph title="NDepend" seriesTitle="CQL Constraint Violation">
+						<valueType key="NDependCQLTotal" title="Total" />
+					</graph>
+				in TeamCityDataDir/config/ProjectName/plugin-settings.xml:
+					<graph title="NDepend (project)" seriesTitle="CQL Constraint Violation">
+						<valueType key="NDependCQLTotal" title="Total" buildTypeId="bt2" /> <!-- in this file, you need a buildTypeId setting for the series to show -->
+					</graph>
+
+	Crap4n support (Crap4nTask)
+		(http://code.google.com/p/crap4n/) (crap4n trunk required)
+
+	Continuous Integration
+		Set up at http://teamcity.codebetter.com/project.html?projectId=project72
+		This builds the gem, as well as runs integration tests against the demo project within `spec/RakeDotNet`
+
+	Miscellaneous
+		* Support harvesting from web-deployment projects
+		* MsBuild - Support for building web-deployment projects
+		* AssemblyInfo now supports generating to websites' App_Code directory
+		* The test-tasks now create a task called after themselves (eg :xunit and :nunit) but there's now also a :test task to abstract the choice of test framework in the build script
+		* Update documentation to include how to build
+		* Update to allow use with Hoe 2.4.0 when packaging gem (latest)
+		* 7-zip x86 installer does not name the 7z executable 7za like the x64 one does.  Therefore the test I was using to pick which executable won't work.
+		* 7-zip is now looked for in 3RD_PARTY/7-zip instead of 3RD_PARTY/7zip because this is how the installer installs it; no need to rename the directory if pushing into source-control.
 
 === 0.1.20 / 2009-11-30
 

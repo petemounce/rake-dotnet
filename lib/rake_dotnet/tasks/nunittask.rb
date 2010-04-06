@@ -12,6 +12,7 @@ class NUnitTask < Rake::TaskLib
 		@runner_options[:exclude].merge(params[:exclude]) unless params[:exclude].nil?
 
 		yield self if block_given?
+		params[:build_number] ||= ENV['BUILD_NUMBER']
 		super(params)
 		define
 	end

@@ -8,7 +8,7 @@ class NDependConsoleCmd < Cli
 
 		@project = params[:project] || PRODUCT_NAME + '.ndepend.xml'
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'ndepend')
-		@should_publish = params[:should_publish] || ENV['BUILD_NUMBER'] || false
+		@should_publish = params[:should_publish] || !ENV['BUILD_NUMBER'].nil? || false
 	end
 
 	def out_dir

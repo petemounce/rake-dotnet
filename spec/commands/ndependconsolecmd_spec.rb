@@ -6,6 +6,7 @@ describe NDependConsoleCmd do
 	describe 'When initialised with no options' do
 		before(:all) do
 			@cmd = NDependConsoleCmd.new
+			@cmd.should_publish = false if ENV['BUILD_NUMBER']
 			@out_dir = File.expand_path(File.join(OUT_DIR, 'reports', 'ndepend')).gsub('/', '\\')
 		end
 

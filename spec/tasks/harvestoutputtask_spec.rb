@@ -54,7 +54,7 @@ describe HarvestOutputTask do
 	describe 'When initialised with a dependency' do
 		it_should_behave_like 'A DependentTask'
 		before :all do
-			@task = HarvestOutputTask.new(:dependencies=>[:foo])
+			@task = HarvestOutputTask.new(:dependencies=>[:foo], :build_number=>0)
 			@harvest_output = Rake::Task[:harvest_output]
 		end
 		it 'should read those dependencies' do

@@ -12,6 +12,8 @@ AssemblyInfo.cs
 out/
 _ReSharper*
 [bB]in
+[dD]ebug
+[rR]elease
 obj
 lib/RakeDotNet/src/**/*.dll
 lib/RakeDotNet/src/**/*.pdb
@@ -22,6 +24,9 @@ presentation/*/*.[ab]
 *.intermediate
 *.end_result
 *.cache
+.assembly_info_task_stamp
+*.ndepend.xml
+NDependProLicense.xml
 
 doc
 coverage

@@ -2,11 +2,14 @@
 <NDepend AppName="RakeDotNet" Platform="DotNet">
   <OutputDir KeepHistoric="True" KeepXmlFiles="True" ViewReport="True"><%= out_dir %></OutputDir>
   <Assemblies>
-    <Name>RakeDotNet</Name>
+	<% assembly_names.each do |asm| %>
+		<Name><%= asm %></Name>
+	<% end %>
+<!--    <Name>RakeDotNet</Name>
     <Name>RakeDotNet.Example</Name>
     <Name>RakeDotNet.Tests</Name>
     <Name>RakeDotNet.WebApp.Site</Name>
-	<Name>RakeDotNet.WdpSite</Name>
+	<Name>RakeDotNet.WdpSite</Name>-->
   </Assemblies>
   <FrameworkAssemblies>
     <Name>Microsoft.Build.Utilities</Name>

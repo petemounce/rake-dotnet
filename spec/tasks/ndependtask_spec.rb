@@ -39,6 +39,9 @@ describe NDependTask do
 			@clobber_ndepend.should_not be_nil
 			@clobber_ndepend.should be_a(Rake::Task)
 		end
+		it 'should use a sensible glob for finding assemblies in the binaries directory' do
+			@task.globs.should include("#{Bin_out}/**/#{PRODUCT_NAME}*.dll")
+		end
 	end
 
 	describe 'When initialised with reports_dir specified' do
@@ -54,7 +57,7 @@ describe NDependTask do
 	describe 'When initialised with dependencies' do
 		it_should_behave_like 'A DependentTask'
 		before :all do
-			@task = NDependTask.new(:dependencies=>[:foo])
+			@task = NDependTask.new(:dependencies=>[:foo], :build_number=>0)
 			@ndepend = Rake::Task[:ndepend]
 		end
 		it 'should make :ndepend task depend on those' do
