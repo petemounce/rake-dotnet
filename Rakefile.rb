@@ -44,7 +44,7 @@ end
 file 'coverage/index.html' => [:examples_with_rcov]
 file 'doc/examples.html' => [:examples_with_report]
 
-#task :package => [:examples_with_report, :examples_with_rcov]
+task :package => [:examples_with_report, :examples_with_rcov]
 task :ci => [:clobber, :examples_with_report, :examples_with_rcov, :package]
 
 task :default => [:clobber, :examples_with_report, :examples_with_rcov, :package]
