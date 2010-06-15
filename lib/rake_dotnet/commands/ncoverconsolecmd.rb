@@ -74,7 +74,7 @@ class NCoverConsoleCmd
 	end
 
 	def run
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		status, stdout, stderr = systemu cmd
 		puts "##teamcity[importData type='dotNetCoverage' tool='ncover3' path='#{File.expand_path(@output_file)}']" if ENV['BUILD_NUMBER']
 		return {:status=>status, :stdout=>stdout, :stderr=>stderr}

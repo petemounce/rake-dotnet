@@ -18,7 +18,7 @@ class XUnitCmd
 	def run
 		test_dir = Pathname.new(test_dll).dirname
 		chdir test_dir do
-			puts cmd if VERBOSE
+			puts cmd if verbose
 			sh cmd
 		end
 	end

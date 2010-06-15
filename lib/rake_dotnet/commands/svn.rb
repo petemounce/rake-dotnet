@@ -34,7 +34,7 @@ class SvnExport < SvnCmd
 	end
 
 	def run
-		puts cmd if VERBOSE==true
+		puts cmd if verbose
 		sh cmd
 	end
 end

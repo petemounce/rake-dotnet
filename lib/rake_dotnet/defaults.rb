@@ -33,7 +33,4 @@ task :clobber do
 	rm_rf OUT_DIR
 end
 
-VERBOSE = ENV['VERBOSE'] ? ENV['VERBOSE'] : false
-verbose(VERBOSE)
-
 Bin_out = File.join(OUT_DIR, 'bin')

@@ -380,7 +380,7 @@ How?
 			build then call clean; deletes the intermediate files but not the output files
 		rake default clobber --trace
 			build then call clobber; deletes the intermediate files AND the output files - idea is to bring us back to fresh-checkout state
-		rake VERBOSE=true
+		rake -v
 		rake clean uber.end_result
 			see that since foo.intermediate is new, dependencies are rebuilt
 		del uber.end_result; rake uber.end_result

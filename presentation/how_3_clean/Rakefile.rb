@@ -2,9 +2,6 @@ require 'rake'
 require 'rake/clean'
 
 CONFIGURATION = ENV['CONFIGURATION'] || 'Debug'
-VERBOSE = ENV['VERBOSE'] || false
-
-verbose(VERBOSE)
 
 msbuild = File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe')
 solution = File.join('..', 'DemoRoot', 'Demo', 'Demo.sln')

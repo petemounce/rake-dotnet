@@ -87,7 +87,7 @@ class BcpCmd < Cli
 	end
 
 	def run
-		puts cmd if VERBOSE == true
+		puts cmd if verbose
 		sh cmd
 		revert_optionals
 	end

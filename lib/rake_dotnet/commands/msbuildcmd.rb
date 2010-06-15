@@ -17,7 +17,7 @@ class MsBuildCmd
 	def run
 		if @working_dir
 			chdir(@working_dir) do
-				puts cmd if VERBOSE
+				puts cmd if verbose
 				sh cmd
 			end
 		end

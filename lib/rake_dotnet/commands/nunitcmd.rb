@@ -54,7 +54,7 @@ class NUnitCmd < Cli
 	end
 
 	def run
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		sh cmd
 		if (ENV['BUILD_NUMBER'])
 			puts "##teamcity[importData type='nunit' path='#{xml}']" unless no_xml

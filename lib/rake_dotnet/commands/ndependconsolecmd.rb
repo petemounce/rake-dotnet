@@ -26,7 +26,7 @@ class NDependConsoleCmd < Cli
 	end
 
 	def run
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		sh cmd
 		publish if @should_publish
 	end

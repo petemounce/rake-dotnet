@@ -14,7 +14,7 @@ class SevenZipCmd
 	end
 
 	def run_add
-		puts cmd_add if VERBOSE
+		puts cmd_add if verbose
 		sh cmd_add
 	end
 
@@ -23,7 +23,7 @@ class SevenZipCmd
 	end
 
 	def run_extract
-		puts cmd_extract if VERBOSE
+		puts cmd_extract if verbose
 		sh cmd_extract
 	end
 

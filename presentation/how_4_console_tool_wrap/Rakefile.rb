@@ -3,10 +3,7 @@ require 'rake/clean'
 require 'xunit.rb'
 
 CONFIGURATION = ENV['CONFIGURATION'] || 'Debug'
-VERBOSE = ENV['VERBOSE'] || false
 TOOLS_DIR = File.join('..', 'DemoRoot', '3rdparty')
-
-verbose(VERBOSE)
 
 msbuild = File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v3.5', 'msbuild.exe')
 solution = File.join('..', 'DemoRoot', 'Demo', 'Demo.sln')

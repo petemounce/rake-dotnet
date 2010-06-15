@@ -2,9 +2,6 @@ require 'rake'
 require 'rake/clean'
 
 CONFIGURATION = ENV['CONFIGURATION'] || 'Debug'
-VERBOSE = ENV['VERBOSE'] || false
-
-verbose(VERBOSE)
 
 CLEAN.include('*.a')
 CLEAN.include('*.b')

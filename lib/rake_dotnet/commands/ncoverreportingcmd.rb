@@ -68,7 +68,7 @@ class NCoverReportingCmd
 	end
 
 	def run
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		sh cmd
 	end
 end

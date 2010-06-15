@@ -35,16 +35,16 @@ class AddSiteIisAppCmd < IisAppCmd
 	end
 
 	def id
-		return @id unless @id.nil?
-		#TODO: Generate an ID
+		return "/id:#{@id}" unless @id.nil?
+		return ''
 	end
 
 	def cmd
-		return "#{exe} add site /name:#{name} /id:#{id} /bindings:#{bindings} /path:#{@path}"
+		return "#{exe} add site /name:#{name} #{id} /bindings:#{bindings} /physicalPath:#{@path}"
 	end
 
 	def run
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		sh cmd
 	end
 end
