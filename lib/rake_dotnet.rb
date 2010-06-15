@@ -30,6 +30,9 @@
 # as a library via a require statement, but it can be distributed
 # independently as an application.
 
+require 'rubygems'
+gem 'rake'
+
 require 'rake'
 require 'rake/clean'
 require 'rake/tasklib'
