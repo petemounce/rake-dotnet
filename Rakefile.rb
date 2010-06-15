@@ -30,7 +30,7 @@ require 'spec/rake/spectask'
 desc 'Run all examples and report'
 Spec::Rake::SpecTask.new('examples_with_report') do |t|
 	t.spec_files = File.join('spec', 'rake_dotnet_spec.rb')
-	t.spec_opts = ["--format", "html:doc/examples.html", "--diff", '--colour']
+	t.spec_opts = ["--format", "html:doc/examples.html", "--format", "progress", "--diff", '--colour']
 	t.fail_on_error = true
 end
 
@@ -44,8 +44,9 @@ end
 file 'coverage/index.html' => [:examples_with_rcov]
 file 'doc/examples.html' => [:examples_with_report]
 
-task :package => [:examples_with_report, :examples_with_rcov]
+#task :package => [:examples_with_report, :examples_with_rcov]
+task :ci => [:clobber, :examples_with_report, :examples_with_rcov, :package]
 
-task :default => :package
+task :default => [:clobber, :examples_with_report, :examples_with_rcov, :package]
 
 # vim: syntax=Ruby
