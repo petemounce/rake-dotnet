@@ -8,6 +8,7 @@ BREAKING CHANGES:
 	* GH-16 - make dependencies happen for non-CI builds only, and ci_dependencies happen for CI-builds
 		In so doing, renamed "deps" parameter to "dependencies"
 	* Removed the RakeDotNet module (which was based on a misunderstanding on my part)
+	* Removed the requirement for VERBOSE=true at the command line in favour of the built-in -v flag for verbose=yes
 
 NEW:
 	NUnit (via NUnitTask)
