@@ -224,14 +224,14 @@
         <NCover ToolPath="$(NCoverPath)"
                 TestRunnerExe="$(NAntTestRunner)"
                 TestRunnerArgs="$(TestDlls) /noshadow"
-                IncludeAssemblies=".*tests\.dll;DAL\.tests.internal.dll"/>
+                IncludeAssemblies=".*tests;DAL\.tests.internal"/>
     </Target>
 
     <Target Name="GetCoverageOnNONTestAssemblies">
         <NCover ToolPath="$(NCoverPath)"
                 TestRunnerExe="$(NAntTestRunner)"
                 TestRunnerArgs="$(TestDlls) /noshadow"
-                ExcludeAssemblies=".*vendorsupplied.*;.*tests\.dll"/>
+                ExcludeAssemblies=".*vendorsupplied.*;.*tests"/>
     </Target>
     
 </Project>

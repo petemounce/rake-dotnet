@@ -1,5 +1,5 @@
 ﻿<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
-    <xsl:output method="html" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
+    <xsl:output method="html" />
     <xsl:param name="reportnameoverride" />
 
     <!--This gets passed in from the transform so we are able to determine the type-->
@@ -8,6 +8,7 @@
     <xsl:variable name="date" select="//./params[@name = 'date']/@value" />
     <xsl:variable name="time" select="//./params[@name = 'time']/@value" />
     <xsl:variable name="fulltags" select="string(//./params[@name = 'ishtml']/@value) = '1'" />
+
     <!--
     Hide elements above what percent? The number must be between 0 and 1 and this is why we divide by 100 so we can use normal numbers
     The example below shows all data, if you changed atmostpercent to 20, only items between 0 and 20 would be displayed.
@@ -17,9 +18,9 @@
 
     <!--
     Possible values (symbol,branch)
-	WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  WARNING WARNING WARNING WARNING
+    WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  WARNING WARNING WARNING WARNING
     The string must be in single quotes or it will default to symbol
-	WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  WARNING WARNING WARNING WARNING
+    WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING  WARNING WARNING WARNING WARNING
     -->
     <xsl:variable name="atleastpercenttype" select="'symbol'" />
     <!--<xsl:variable name="atleastpercenttype" select="'branch'" />-->
@@ -30,12 +31,12 @@
     NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE 
     -->
     <xsl:variable name="baseimagepath" xml:space="preserve"><xsl:choose>
-														<xsl:when test="not ($fulltags)">/ccnet/images/</xsl:when>
-														<xsl:otherwise></xsl:otherwise></xsl:choose></xsl:variable>
+                                                        <xsl:when test="not ($fulltags)">/ccnet/images/</xsl:when>
+                                                        <xsl:otherwise></xsl:otherwise></xsl:choose></xsl:variable>
     <!--
-	The width of the widest graph in pixels
-	The Class in .8 of that and methods are .7
-	-->
+    The width of the widest graph in pixels
+    The Class in .8 of that and methods are .7
+    -->
     <xsl:variable name="graphscale">75</xsl:variable>
     <xsl:variable name="projectstats" select="$root/stats[last()]"></xsl:variable>
     <xsl:variable name="execution" select="$root/execution[last()]"></xsl:variable>
@@ -47,19 +48,21 @@
             <xsl:when test="string(//./params[@name = 'reportname']/@value) != ''"><xsl:value-of select="//./params[@name = 'reportname']/@value" /></xsl:when>
             <xsl:otherwise><xsl:value-of select="$execution/projectname" /></xsl:otherwise></xsl:choose>
         </xsl:otherwise></xsl:choose></xsl:variable>
-    <xsl:variable name="isFunctionReport" select="$reportType = 'MethodModuleNamespaceClass'
-													or $reportType = 'MethodModuleNamespaceClassMethod'
-													or $reportType = 'MethodSourceCode'
-													or $reportType = 'MethodSourceCodeClass'
-													or $reportType = 'MethodSourceCodeClassMethod'
-													or $reportType = 'MethodCCModuleClassFailedCoverageTop'
-													or $reportType = 'MethodCCModuleClassCoverageTop'"/>
+    <xsl:variable name="isFunctionReport" select="$reportType = 'MethodModule'
+                                                    or $reportType = 'MethodModuleNamespace'
+                                                    or $reportType = 'MethodModuleNamespaceClass'
+                                                    or $reportType = 'MethodModuleNamespaceClassMethod'
+                                                    or $reportType = 'MethodSourceCode'
+                                                    or $reportType = 'MethodSourceCodeClass'
+                                                    or $reportType = 'MethodSourceCodeClassMethod'
+                                                    or $reportType = 'MethodCCModuleClassFailedCoverageTop'
+                                                    or $reportType = 'MethodCCModuleClassCoverageTop'"/>
     <xsl:variable name="isDocumentReport" select="$reportType = 'SymbolSourceCode'
-													or $reportType = 'SymbolSourceCodeClass'
-													or $reportType = 'SymbolSourceCodeClassMethod'
-													or $reportType = 'MethodSourceCode'
-													or $reportType = 'MethodSourceCodeClass'
-													or $reportType = 'MethodSourceCodeClassMethod'"/>
+                                                    or $reportType = 'SymbolSourceCodeClass'
+                                                    or $reportType = 'SymbolSourceCodeClassMethod'
+                                                    or $reportType = 'MethodSourceCode'
+                                                    or $reportType = 'MethodSourceCodeClass'
+                                                    or $reportType = 'MethodSourceCodeClassMethod'"/>
     <xsl:variable name="isDiffReport" select="$reportType = 'Diff'"/>
     <xsl:variable name="isTrendReport" select="$reportType = 'Trends'"/>
     <xsl:variable name="trendCoverageMetric" select="string(//./params[@name = 'trendcoveragemetric']/@value)" />
@@ -72,29 +75,29 @@
     <xsl:variable name="reportVisitCounts" select="$isFunctionReport and $projectstats/@svc" />
     <!--We have specific function CC reports that need the extra column-->
     <xsl:variable name="pointCCReport" select="$reportType = 'SymbolCCModuleClassFailedCoverageTop'
-												or $reportType = 'SymbolCCModuleClassCoverageTop'" />
+                                                or $reportType = 'SymbolCCModuleClassCoverageTop'" />
     <xsl:variable name="functionalCCReport" select="$reportType = 'SymbolCCModuleClassFailedCoverageTop'
-												or $reportType = 'SymbolCCModuleClassCoverageTop'" />
+                                                or $reportType = 'SymbolCCModuleClassCoverageTop'" />
     <xsl:variable name="ccnodeExists" select="$projectstats/@ccavg" />
     <xsl:variable name="ccdataExists" select="$projectstats/@ccavg > 0" />
     <xsl:variable name="trendsdataexist" select="count($projectstats/tp) > 0" />
     <xsl:variable name="reportCC" xml:space="preserve" select="($functionalCCReport and $ccdataExists)
-																or	($projectstats/@ccavg and $ccdataExists and not ($isFunctionReport))" />
+                                                                or    ($projectstats/@ccavg and $ccdataExists and not ($isFunctionReport))" />
     <xsl:variable name="vcColumnCount" xml:space="preserve"><xsl:choose>
-															<xsl:when test="$reportVisitCounts">2</xsl:when>
-															<xsl:otherwise>0</xsl:otherwise></xsl:choose></xsl:variable>
+                                                            <xsl:when test="$reportVisitCounts">2</xsl:when>
+                                                            <xsl:otherwise>0</xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="ccClassCount" xml:space="preserve"><xsl:choose>
-															<xsl:when test="$reportType = 'SymbolCCModuleClassFailedCoverageTop'">20</xsl:when>
-															<xsl:when test="$reportType = 'SymbolCCModuleClassCoverageTop'">20</xsl:when>
-															<xsl:otherwise>20</xsl:otherwise></xsl:choose></xsl:variable>
+                                                            <xsl:when test="$reportType = 'SymbolCCModuleClassFailedCoverageTop'">20</xsl:when>
+                                                            <xsl:when test="$reportType = 'SymbolCCModuleClassCoverageTop'">20</xsl:when>
+                                                            <xsl:otherwise>20</xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="ccColumnCount" xml:space="preserve"><xsl:choose>
-															<xsl:when test="$reportCC">1</xsl:when>
-															<xsl:otherwise>0</xsl:otherwise></xsl:choose></xsl:variable>
+                                                            <xsl:when test="$reportCC">1</xsl:when>
+                                                            <xsl:otherwise>0</xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="tablecolumns" xml:space="preserve"><xsl:choose>
-												            <xsl:when test="$isDiffReport">16</xsl:when>
+                                                            <xsl:when test="$isDiffReport">16</xsl:when>
                                                             <xsl:when test="$isTrendReport">6</xsl:when>
                                                             <xsl:when test="not ($isFunctionReport) and $reportBranchPoints"><xsl:value-of select="9 + $ccColumnCount" /></xsl:when>
-												            <xsl:otherwise><xsl:value-of select="5 + $ccColumnCount + $vcColumnCount" /></xsl:otherwise></xsl:choose></xsl:variable>
+                                                            <xsl:otherwise><xsl:value-of select="5 + $ccColumnCount + $vcColumnCount" /></xsl:otherwise></xsl:choose></xsl:variable>
     <xsl:variable name="reportTitle">
         <xsl:choose xml:space="preserve">
             <xsl:when test="$reportType = 'MethodModule'">Method Module</xsl:when>
@@ -253,9 +256,9 @@
 
         <!--SymbolCCModuleClassFailedCoverageTop we show everything sorted by cc desc and coverage asc-->
         <xsl:if test="$reportType = 'SymbolCCModuleClassFailedCoverageTop' 
-						or $reportType = 'SymbolCCModuleClassCoverageTop'
-						or $reportType = 'MethodCCModuleClassFailedCoverageTop'
-						or $reportType = 'MethodCCModuleClassCoverageTop'">
+                        or $reportType = 'SymbolCCModuleClassCoverageTop'
+                        or $reportType = 'MethodCCModuleClassFailedCoverageTop'
+                        or $reportType = 'MethodCCModuleClassCoverageTop'">
             <xsl:call-template name="cyclomaticComplexitySummaryCommon">
                 <xsl:with-param name="threshold" select="$threshold" />
                 <xsl:with-param name="unvisitedTitle" select="$unvisitedTitle" />
@@ -286,9 +289,9 @@
 
         <!--Output the top level module information moduleSummary-->
         <xsl:if test="$reportType = 'SymbolSourceCodeClass' 
-								or $reportType = 'MethodSourceCodeClass'
-								or $reportType = 'SymbolSourceCodeClassMethod' 
-								or $reportType = 'MethodSourceCodeClassMethod'">
+                                or $reportType = 'MethodSourceCodeClass'
+                                or $reportType = 'SymbolSourceCodeClassMethod' 
+                                or $reportType = 'MethodSourceCodeClassMethod'">
             <xsl:call-template name="documentSummaryCommon">
                 <xsl:with-param name="threshold" select="$threshold" />
                 <xsl:with-param name="unvisitedTitle" select="$unvisitedTitle" />
@@ -296,9 +299,9 @@
                 <xsl:with-param name="printClasses">True</xsl:with-param>
                 <xsl:with-param name="printMethods">
                     <xsl:choose xml:space="preserve">
-						<xsl:when test="$reportType = 'SymbolSourceCodeClassMethod' or $reportType = 'MethodSourceCodeClassMethod'">True</xsl:when>
-						<xsl:otherwise>False</xsl:otherwise>
-					</xsl:choose>
+                        <xsl:when test="$reportType = 'SymbolSourceCodeClassMethod' or $reportType = 'MethodSourceCodeClassMethod'">True</xsl:when>
+                        <xsl:otherwise>False</xsl:otherwise>
+                    </xsl:choose>
                 </xsl:with-param>
             </xsl:call-template>
         </xsl:if>
@@ -377,6 +380,14 @@
                                 </h1>
                                 <table cellpadding="1" class="subtitleText">
                                     <tbody>
+                                        <xsl:if test="string(//./params[@name = 'coveragedate']/@value) != ''">
+                                            <tr>
+                                                <td class="heading">Coverage generated on:</td>
+                                                <td>
+                                                    <xsl:value-of select="string(//./params[@name = 'coveragedate']/@value)" />&#160;at&#160;<xsl:value-of select="string(//./params[@name = 'coveragetime']/@value)" />
+                                                </td>
+                                            </tr>
+                                        </xsl:if>
                                         <tr>
                                             <td class="heading">Report generated on:</td>
                                             <td>
@@ -398,22 +409,28 @@
                                         <tr>
                                             <td class="heading">Report version:</td>
                                             <td>
-                                                2009.05.13.12.00
+                                                2009.06.23.12.20
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </td>
                             <td class="projectStatistics" align="right" valign="top">
-                                <table cellpadding="1">
+                                <table cellpadding="1" class="subtitleText">
                                     <tbody>
                                         <tr>
-                                            <td rowspan="4" valign="top" nowrap="true" class="heading">Project Statistics:</td>
+                                            <td valign="top" nowrap="true" class="heading">
+                                                <xsl:attribute name="rowspan" xml:space="preserve"><xsl:choose><xsl:when test="$reportBranchPoints">5</xsl:when><xsl:otherwise>4</xsl:otherwise></xsl:choose></xsl:attribute>
+                                                Project Statistics:
+                                            </td>
                                             <td align="right" class="heading">Files:</td>
                                             <td align="right">
                                                 <xsl:value-of select="count($root/doc)" />
                                             </td>
-                                            <td rowspan="4">&#160;</td>
+                                            <td>
+                                                <xsl:attribute name="rowspan" xml:space="preserve"><xsl:choose><xsl:when test="$reportBranchPoints">5</xsl:when><xsl:otherwise>4</xsl:otherwise></xsl:choose></xsl:attribute>
+                                                &#160;
+                                            </td>
                                             <td align="right" class="heading">NCLOC:</td>
                                             <td align="right">
                                                 <xsl:value-of select="$projectstats/@ul + $projectstats/@vl" />
@@ -447,7 +464,18 @@
                                                 <xsl:value-of select="$projectstats/@usp" />
                                             </td>
                                         </tr>
-
+                                        <xsl:if test="$reportBranchPoints">
+                                            <tr>
+                                                <td align="right" class="heading">Branch Pts:</td>
+                                                <td align="right">
+                                                    <xsl:value-of select="$projectstats/@ubp + $projectstats/@vbp" />
+                                                </td>
+                                                <td align="right" class="heading">Unvisited:</td>
+                                                <td align="right">
+                                                    <xsl:value-of select="$projectstats/@ubp" />
+                                                </td>
+                                            </tr>
+                                        </xsl:if>
                                         <xsl:if test="$ccnodeExists and not ($ccdataExists)">
                                             <tr>
                                                 <td colspan="6" align="right" class="heading">Cyclomatic complexity data does not exist</td>
@@ -461,7 +489,7 @@
                                                 </td>
                                             </tr>
                                         </xsl:if>
-                                        <xsl:if test ="(not ($trendsdataexist) and $isTrendReport) or (string($projectstats/stats/dvsp) = '' and $isDiffReport)">
+                                        <xsl:if test ="(not ($trendsdataexist) and $isTrendReport) or (string($projectstats/@dvsp) = '' and $isDiffReport)">
                                             <tr>
                                                 <td colspan="6" align="right" class="heading">
                                                     Trend or Diff data does not exist and the report will not render correctly.
@@ -534,7 +562,7 @@
     </xsl:template>
 
     <!--Build the header for each of the sections.
-	It removes the complexity of building the multi table headers for the project and then the modules-->
+    It removes the complexity of building the multi table headers for the project and then the modules-->
     <xsl:template name="sectionTableHeader">
         <xsl:param name="unvisitedTitle" />
         <xsl:param name="coverageTitle" />
@@ -858,39 +886,39 @@
     <xsl:template name="exclusionsSummary">
         <xsl:param name="excludedTitle" />
         <!--<tr>
-			<td colspan="{$tablecolumns}">&#160;</td>
-		</tr>
-		<tr>
-			<td class="exclusionTable mtHdLeft" colspan="1">Exclusion In Module</td>
-			<td class="exclusionTable mtgHd" colspan="3">Item Excluded</td>
-			<td class="exclusionTable mtgHd" colspan="1">All Code Within</td>
-			<td class="exclusionTable mtgHd2" colspan="1">
-				<xsl:value-of select="$excludedTitle" />
-			</td>
-		</tr>
-		<xsl:for-each select="./exclusions/exclusion">
-			<tr>
-				<td class="mb etcItem exclusionCell" colspan="1">
-					<xsl:value-of select="@m" />
-				</td>
-				<td class="mb tmcGraph exclusionCell" colspan="3">
-					<xsl:value-of select="@n" />
-				</td>
-				<td class="mb tmcGraph exclusionCell" colspan="1">
-					<xsl:value-of select="@cat" />
-				</td>
-				<td class="mb mtcData exclusionCell" colspan="1">
-					<xsl:value-of select="@fp" />
-				</td>
-			</tr>
-		</xsl:for-each>
-		<tr>
-			<td colspan="4">&#160;</td>
-			<td class="exclusionTable mtHdLeft">Total</td>
-			<td class="exclusionTable mtgHd2">
-				<xsl:value-of select="sum(./exclusions/exclusion/@fp)"/>
-			</td>
-		</tr>-->
+            <td colspan="{$tablecolumns}">&#160;</td>
+        </tr>
+        <tr>
+            <td class="exclusionTable mtHdLeft" colspan="1">Exclusion In Module</td>
+            <td class="exclusionTable mtgHd" colspan="3">Item Excluded</td>
+            <td class="exclusionTable mtgHd" colspan="1">All Code Within</td>
+            <td class="exclusionTable mtgHd2" colspan="1">
+                <xsl:value-of select="$excludedTitle" />
+            </td>
+        </tr>
+        <xsl:for-each select="./exclusions/exclusion">
+            <tr>
+                <td class="mb etcItem exclusionCell" colspan="1">
+                    <xsl:value-of select="@m" />
+                </td>
+                <td class="mb tmcGraph exclusionCell" colspan="3">
+                    <xsl:value-of select="@n" />
+                </td>
+                <td class="mb tmcGraph exclusionCell" colspan="1">
+                    <xsl:value-of select="@cat" />
+                </td>
+                <td class="mb mtcData exclusionCell" colspan="1">
+                    <xsl:value-of select="@fp" />
+                </td>
+            </tr>
+        </xsl:for-each>
+        <tr>
+            <td colspan="4">&#160;</td>
+            <td class="exclusionTable mtHdLeft">Total</td>
+            <td class="exclusionTable mtgHd2">
+                <xsl:value-of select="sum(./exclusions/exclusion/@fp)"/>
+            </td>
+        </tr>-->
     </xsl:template>
 
     <!-- Footer -->
@@ -939,7 +967,7 @@
     <xsl:template name="cyclomaticComplexitySummaryCommon">
         <xsl:param name="threshold" />
         <xsl:param name="unvisitedTitle" />
-        <xsl:param name="coverageTitle">Coverage</xsl:param>
+        <xsl:param name="coverageTitle" xml:space="preserve">Coverage</xsl:param>
         <xsl:param name="printClasses" />
         <xsl:param name="printMethods" />
 
@@ -948,21 +976,21 @@
             <xsl:variable name="docstats" select="stats[last()]" />
             <xsl:variable name="documentID" select="@id" />
             <!--
-			To make a nice clean report we want to see if we actually have a count before we continue.
-			-->
+            To make a nice clean report we want to see if we actually have a count before we continue.
+            -->
             <xsl:variable name="classcount">
                 <xsl:choose xml:space="preserve">
-					<xsl:when test="$reportType = 'SymbolCCModuleClassFailedCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
-										(
-										(stats/@vsp div (stats/@usp + stats/@vsp)) * 100 &lt; stats/@acp
-										or (stats/@vbp div (stats/@ubp + stats/@vbp)) * 100 &lt; stats/@acp
-										)
-										])"/></xsl:when>
-					<xsl:when test="$reportType = 'MethodCCModuleClassFailedCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
-										(stats/@vm div (stats/@um + stats/@vm)) * 100 &lt; stats/@afp])" /></xsl:when>
-					<xsl:when test="$reportType = 'MethodCCModuleClassCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0])" /></xsl:when>
-					<xsl:otherwise>1</xsl:otherwise>
-				</xsl:choose>
+                    <xsl:when test="$reportType = 'SymbolCCModuleClassFailedCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
+                                        (
+                                        (stats/@vsp div (stats/@usp + stats/@vsp)) * 100 &lt; stats/@acp
+                                        or (stats/@vbp div (stats/@ubp + stats/@vbp)) * 100 &lt; stats/@acp
+                                        )
+                                        ])"/></xsl:when>
+                    <xsl:when test="$reportType = 'MethodCCModuleClassFailedCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
+                                        (stats/@vm div (stats/@um + stats/@vm)) * 100 &lt; stats/@afp])" /></xsl:when>
+                    <xsl:when test="$reportType = 'MethodCCModuleClassCoverageTop'"><xsl:value-of select="count(ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0])" /></xsl:when>
+                    <xsl:otherwise>1</xsl:otherwise>
+                </xsl:choose>
             </xsl:variable>
 
             <!--If we have something to show then show it-->
@@ -989,14 +1017,14 @@
                     <xsl:when test="$reportType = 'SymbolCCModuleClassFailedCoverageTop'">
                         <!--Grab the first 10 classes where the sp or bp % is less than acceptable-->
                         <xsl:for-each select="ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
-										(
-										(stats/@vsp div (stats/@usp + stats/@vsp)) * 100 &lt; stats/@acp
-										or (stats/@vbp div (stats/@ubp + stats/@vbp)) * 100 &lt; stats/@acp
-										)
-										]">
+                                        (
+                                        (stats/@vsp div (stats/@usp + stats/@vsp)) * 100 &lt; stats/@acp
+                                        or (stats/@vbp div (stats/@ubp + stats/@vbp)) * 100 &lt; stats/@acp
+                                        )
+                                        ]">
                             <xsl:sort select="stats[last()]/@ccmax" order="descending" data-type ="number" />
                             <!--Not sure why the position above works so we are going to limit it here-->
-                            <xsl:if test="position() &lt; $ccClassCount">
+                            <xsl:if test="position() &lt;= $ccClassCount">
                                 <xsl:call-template name="classCommon">
                                     <xsl:with-param name="printMethods" select="$printMethods" />
                                 </xsl:call-template>
@@ -1006,25 +1034,22 @@
                     <xsl:when test="$reportType = 'MethodCCModuleClassFailedCoverageTop'">
                         <!--Grab the first 10 classes where the sp or bp % is less than acceptable-->
                         <xsl:for-each select="ns/class[string(stats/@ex) != '1' and stats/@ccmax > 0 and
-										(stats/@vm div (stats/@um + stats/@vm)) * 100 &lt; stats/@afp]">
+                                        (stats/@vm div (stats/@um + stats/@vm)) * 100 &lt; stats/@afp]">
                             <xsl:sort select="stats[last()]/@ccmax" order="descending" data-type ="number" />
                             <!--Not sure why the position above works so we are going to limit it here-->
-                            <xsl:if test="position() &lt; $ccClassCount">
+                            <xsl:if test="position() &lt;= $ccClassCount">
                                 <xsl:call-template name="classCommon">
                                     <xsl:with-param name="printMethods" select="$printMethods" />
                                 </xsl:call-template>
                             </xsl:if>
                         </xsl:for-each>
                     </xsl:when>
-                    <!--<xsl:when test="$reportType = 'SymbolCCModuleClassCoverageTop'">
-				
-				</xsl:when>-->
                     <xsl:otherwise>
                         <!--Grab the first 10 classes where the sp or bp %-->
                         <xsl:for-each select="ns/class[string(stats/@ex) != '1']">
                             <xsl:sort select="stats[last()]/@ccmax" order="descending" data-type ="number" />
                             <!--Not sure why the position above works so we are going to limit it here-->
-                            <xsl:if test="position() &lt; $ccClassCount and stats[last()]/@ccmax > 0">
+                            <xsl:if test="position() &lt;= $ccClassCount and stats[last()]/@ccmax > 0">
                                 <xsl:call-template name="classCommon">
                                     <xsl:with-param name="printMethods" select="$printMethods" />
                                 </xsl:call-template>
@@ -1143,6 +1168,7 @@
                         <xsl:with-param name="name" select="name" />
                         <xsl:with-param name="stats" select="$nsstats" />
                         <xsl:with-param name="styleTweak">padding-left:20px;font-weight:bold</xsl:with-param>
+                        <xsl:with-param name="showTrendGraph">True</xsl:with-param>
                         <xsl:with-param name="showThreshold">True</xsl:with-param>
                         <xsl:with-param name="showBottomLine">True</xsl:with-param>
                     </xsl:call-template>
@@ -1346,7 +1372,7 @@
     </xsl:template>
 
     <!--Build the header for each of the sections.
-	It removes the complexity of building the multi table headers for the project and then the modules-->
+    It removes the complexity of building the multi table headers for the project and then the modules-->
     <xsl:template name="diffSectionTableHeader">
         <xsl:param name="coverageTitle" />
         <xsl:param name="sectionTitle" />
@@ -1691,17 +1717,13 @@
                     <xsl:call-template name="trendsCoverageDetail">
                         <xsl:with-param name="name" select="assembly" />
                         <xsl:with-param name="stats" select="$modstats" />
+                        <xsl:with-param name="showTrendGraph">True</xsl:with-param>
                         <xsl:with-param name="showThreshold">True</xsl:with-param>
                     </xsl:call-template>
                     <tr>
                         <td class="secondaryChildTable ctHeader" valign="bottom">
-                            <xsl:attribute name="colspan" xml:space="preserve"><xsl:choose><xsl:when test="$threshold = 'True'"><xsl:value-of select="$tablecolumns - 5 - 1"/></xsl:when><xsl:otherwise><xsl:value-of select="$tablecolumns - 4 - 1"/></xsl:otherwise></xsl:choose></xsl:attribute>
+                            <xsl:attribute name="colspan" xml:space="preserve"><xsl:choose><xsl:when test="$threshold = 'True'"><xsl:value-of select="$tablecolumns"/></xsl:when><xsl:otherwise><xsl:value-of select="$tablecolumns"/></xsl:otherwise></xsl:choose></xsl:attribute>
                             Namespace <xsl:if test="$printClasses = 'True'"> / Classes</xsl:if>
-                        </td>
-                        <td class="secondaryChildTable ctHeader trGr" style="background:white;">
-                            <xsl:attribute name="colspan" xml:space="preserve"><xsl:choose><xsl:when test="$threshold = 'True'">6</xsl:when><xsl:otherwise>5</xsl:otherwise></xsl:choose></xsl:attribute>
-                            <xsl:attribute xml:space="preserve" name="data"><xsl:for-each select="./stats/tp"><xsl:value-of select="format-number(@v,'#0')"/><xsl:if test="position() != last()">,</xsl:if></xsl:for-each></xsl:attribute>
-                            Trend Graph
                         </td>
                     </tr>
                     <!--print the Namespaces classes and methods-->
@@ -1712,6 +1734,15 @@
                 </xsl:if>
             </xsl:for-each>
         </xsl:if>
+    </xsl:template>
+
+    <xsl:template name="trendTDAttributes">
+        <xsl:param name="stats" />
+        <xsl:param name="threshold" />
+        <xsl:attribute name="colspan" xml:space="preserve"><xsl:choose><xsl:when test="$threshold = 'True'">6</xsl:when><xsl:otherwise>5</xsl:otherwise></xsl:choose></xsl:attribute>
+        <xsl:attribute xml:space="preserve" name="data"><xsl:for-each select="$stats/tp"><xsl:value-of select="format-number(@v,'#0')"/><xsl:if test="position() != last()">,</xsl:if></xsl:for-each></xsl:attribute>
+        <xsl:attribute xml:space="preserve" name="min"><xsl:call-template name="trendThreshold"><xsl:with-param name="stats" select="$stats" /></xsl:call-template></xsl:attribute>
+        Enable Javascript for Trend Graph (see IE Warning on top of browser)
     </xsl:template>
 
     <!-- projectSummary -->
@@ -1746,6 +1777,7 @@
                     </xsl:choose>
                 </xsl:with-param>
                 <xsl:with-param name="stats" select="$projectstats" />
+                <xsl:with-param name="showTrendGraph">True</xsl:with-param>
                 <xsl:with-param name="showThreshold">True</xsl:with-param>
                 <xsl:with-param name="showBottomLine">True</xsl:with-param>
             </xsl:call-template>
@@ -1755,7 +1787,7 @@
 
     <!-- sectionTableHeader -->
     <!--Build the header for each of the sections.
-	It removes the complexity of building the multi table headers for the project and then the modules-->
+    It removes the complexity of building the multi table headers for the project and then the modules-->
     <xsl:template name="trendsSectionTableHeader">
         <xsl:param name="unvisitedTitle" />
         <xsl:param name="coverageTitle" />
@@ -1787,14 +1819,6 @@
             </tr>
 
             <tr>
-                <td class="{$cellClass} mtHdLeftTop">&#160;</td>
-                <td class="{$cellClass} mtHdRightTop trGr" style="background:white;">
-                    <xsl:attribute name="colspan" xml:space="preserve"><xsl:choose><xsl:when test="$showThreshold = 'True'">5</xsl:when><xsl:otherwise>4</xsl:otherwise></xsl:choose></xsl:attribute>
-                    <xsl:attribute xml:space="preserve" name="data"><xsl:for-each select="./stats/tp"><xsl:value-of select="format-number(@v,'#0')"/><xsl:if test="position() != last()">,</xsl:if></xsl:for-each></xsl:attribute>
-                    Trend Graph
-                </td>
-            </tr>
-            <tr>
                 <td>
                     <xsl:attribute xml:space="preserve" name="class"><xsl:value-of select="$cellClass" /><xsl:choose><xsl:when test="$isFunctionReport"> mtHdLeftFunc</xsl:when><xsl:otherwise> mtHdLeft</xsl:otherwise></xsl:choose></xsl:attribute>
                     <xsl:value-of select="$sectionTitle" disable-output-escaping="yes" />
@@ -1823,6 +1847,7 @@
     <xsl:template name="trendsCoverageDetail">
         <xsl:param name="name" />
         <xsl:param name="stats" />
+        <xsl:param name="showTrendGraph" />
         <xsl:param name="showThreshold" />
         <xsl:param name="showBottomLine" />
         <!--By default this needs to be unvisited count-->
@@ -1855,14 +1880,9 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:variable name="threshold">
-            <xsl:choose xml:space="preserve">
-                <xsl:when test="$trendCoverageMetric = 'SequencePoints' or $trendCoverageMetric = 'SymbolCoverage'"><xsl:value-of select="$stats/@acp" /></xsl:when>
-                <xsl:when test="$trendCoverageMetric = 'BranchPoints' or $trendCoverageMetric = 'BranchCoverage'"><xsl:value-of select="$stats/@abp" /></xsl:when>
-                <xsl:when test="$trendCoverageMetric = 'MethodCoverage'"><xsl:value-of select="$stats/@afp" /></xsl:when>
-                <xsl:when test="$trendCoverageMetric = 'LineCoverage'">-</xsl:when>
-                <xsl:when test="$trendCoverageMetric = 'CyclomaticComplexity'"><xsl:value-of select="$stats/@acc" /></xsl:when>
-                <xsl:otherwise>-</xsl:otherwise>
-            </xsl:choose>
+            <xsl:call-template name="trendThreshold">
+                <xsl:with-param name="stats" select="$stats" />
+            </xsl:call-template>
         </xsl:variable>
         <!--We need to set the class for the coverage-->
         <xsl:variable name="coverageclass" xml:space="preserve"><xsl:choose><xsl:when test="$coverage = '-' or threshold = '-'"></xsl:when><xsl:when test="$coverage &gt;= $threshold">up</xsl:when><xsl:when test="$coverage &lt; $threshold">dn</xsl:when></xsl:choose></xsl:variable>
@@ -1881,10 +1901,33 @@
                     <xsl:when test="$showThreshold='True'">
                         <td>
                             <xsl:attribute xml:space="preserve" name="class"><xsl:if test="$showBottomLine = 'True'">mb </xsl:if>mtcItem</xsl:attribute>
-                            <xsl:if test="$styleTweak != ''" xml:space="preserve"><xsl:attribute name="style"><xsl:value-of select="$styleTweak"/></xsl:attribute></xsl:if>
-                            <div class="mtDiv">
-                                <xsl:value-of select="$name" />
-                            </div>
+                            <xsl:attribute name="style">padding-right:0px;<xsl:value-of select="$styleTweak"/></xsl:attribute>
+                            <xsl:choose>
+                                <xsl:when test="$showTrendGraph='True'">
+                                    <table width="100%" padding="0" cellpadding="0" cellspacing="0" border="0">
+                                        <tr>
+                                            <td>
+                                                <div class="trendTitle">
+                                                    <xsl:value-of select="$name" />
+                                                </div>
+                                            </td>
+                                            <td align="right">
+                                                <div class="trGr" style="width:200px;border: 1px solid black;">
+                                                    <xsl:call-template name="trendTDAttributes">
+                                                        <xsl:with-param name="stats" select="./stats" />
+                                                        <xsl:with-param name="threshold" select="$showThreshold" />
+                                                    </xsl:call-template>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <div class="mtDiv">
+                                        <xsl:value-of select="$name" />
+                                    </div>
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </td>
                         <td>
                             <xsl:attribute xml:space="preserve" name="class"><xsl:if test="$showBottomLine = 'True'">mb </xsl:if>mR</xsl:attribute>
@@ -1939,6 +1982,17 @@
         </xsl:if>
     </xsl:template>
 
+    <xsl:template name="trendThreshold">
+        <xsl:param name="stats" />
+        <xsl:choose xml:space="preserve">
+            <xsl:when test="$trendCoverageMetric = 'SequencePoints' or $trendCoverageMetric = 'SymbolCoverage'"><xsl:value-of select="$stats/@acp" /></xsl:when>
+            <xsl:when test="$trendCoverageMetric = 'BranchPoints' or $trendCoverageMetric = 'BranchCoverage'"><xsl:value-of select="$stats/@abp" /></xsl:when>
+            <xsl:when test="$trendCoverageMetric = 'MethodCoverage'"><xsl:value-of select="$stats/@afp" /></xsl:when>
+            <xsl:when test="$trendCoverageMetric = 'LineCoverage'">-</xsl:when>
+            <xsl:when test="$trendCoverageMetric = 'CyclomaticComplexity'"><xsl:value-of select="$stats/@acc" /></xsl:when>
+        <xsl:otherwise>-</xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     <!--End Trends Templates-->
 
     <xsl:template name="min">
@@ -2098,45 +2152,49 @@
             <xsl:when test="$showAllItems">1</xsl:when>
             <!--One of the items must be at least this diff amount-->
             <xsl:when test="$diffAtLeast &lt; 0"><xsl:value-of select="count(.//stats[
-                                                             @diffexists='1'
-                                                             and
-                                                             (
-                                                               (@vsp div (@vsp + @usp)) - (@dvsp div (@dvsp + @dusp)) &lt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vbp div (@vbp + @ubp)) - (@dvbp div (@dvbp + @dubp)) &lt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vl div (@vl + @ul)) - (@dvl div (@dvl + @dul)) &lt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vm div (@vm + @um)) - (@dvm div (@dvm + @dum)) &lt;= $diffAtLeast div 100
-                                                             or
-                                                               (@ccmax - @dccmax) &lt;= $diffAtLeast
-                                                             )
-                                                             ])" /></xsl:when>
-             <xsl:when test="$diffAtLeast &gt; 0"><xsl:value-of select="count(.//stats[
-                                                             @diffexists='1'
-                                                             and
-                                                             (
-                                                               (@vsp div (@vsp + @usp)) - (@dvsp div (@dvsp + @dusp)) &gt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vbp div (@vbp + @ubp)) - (@dvbp div (@dvbp + @dubp)) &gt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vl div (@vl + @ul)) - (@dvl div (@dvl + @dul)) &gt;= $diffAtLeast div 100
-                                                             or
-                                                               (@vm div (@vm + @um)) - (@dvm div (@dvm + @dum)) &gt;= $diffAtLeast div 100
-                                                             or
-                                                               (@ccmax - @dccmax) &gt;= $diffAtLeast
-                                                             )
-                                                             ])" /></xsl:when>
+                                                            @diffexists='1'
+                                                            and
+                                                            (
+                                                                (@vsp div (@vsp + @usp)) - (@dvsp div (@dvsp + @dusp)) &lt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vbp div (@vbp + @ubp)) - (@dvbp div (@dvbp + @dubp)) &lt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vl div (@vl + @ul)) - (@dvl div (@dvl + @dul)) &lt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vm div (@vm + @um)) - (@dvm div (@dvm + @dum)) &lt;= $diffAtLeast div 100
+                                                            or
+                                                                (@ccmax - @dccmax) &lt;= $diffAtLeast
+                                                            )
+                                                            ])" /></xsl:when>
+            <xsl:when test="$diffAtLeast &gt; 0"><xsl:value-of select="count(.//stats[
+                                                            @diffexists='1'
+                                                            and
+                                                            (
+                                                                (@vsp div (@vsp + @usp)) - (@dvsp div (@dvsp + @dusp)) &gt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vbp div (@vbp + @ubp)) - (@dvbp div (@dvbp + @dubp)) &gt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vl div (@vl + @ul)) - (@dvl div (@dvl + @dul)) &gt;= $diffAtLeast div 100
+                                                            or
+                                                                (@vm div (@vm + @um)) - (@dvm div (@dvm + @dum)) &gt;= $diffAtLeast div 100
+                                                            or
+                                                                (@ccmax - @dccmax) &gt;= $diffAtLeast
+                                                            )
+                                                            ])" /></xsl:when>
            <xsl:otherwise><xsl:value-of select="count(.//stats[@diffexists='1'])" /></xsl:otherwise>
         </xsl:choose></xsl:when>
         <xsl:when test="$isTrendReport">1</xsl:when>
         <xsl:when test="string($atleastpercenttype) = 'branch'"><xsl:choose>
             <xsl:when test="name(.) = 'method'"><xsl:value-of select="count(stats[(@vbp div (@ubp + @vbp)) >= $atleastpercent and (@vbp div (@ubp + @vbp)) &lt;= $atmostpercent])" /></xsl:when>
+            <!--if rdf is used we have no way to show the data.-->
+            <xsl:when test="count(.//method) = 0">1</xsl:when>
             <xsl:otherwise><xsl:value-of select="count(.//method/stats[(@vbp div (@ubp + @vbp)) >= $atleastpercent and (@vbp div (@ubp + @vbp)) &lt;= $atmostpercent])" /></xsl:otherwise>
         </xsl:choose></xsl:when>
         <xsl:otherwise><xsl:choose>
-            <xsl:when test="name(.) = 'method'"><xsl:value-of select="count(stats[(@vsp div (@usp + @vsp)) >= $atleastpercent and (@vsp div (@usp + @vsp)) &lt;= $atmostpercent])" /></xsl:when>
-            <xsl:otherwise><xsl:value-of select="count(.//method/stats[(@vsp div (@usp + @vsp)) >= $atleastpercent and (@vsp div (@usp + @vsp)) &lt;= $atmostpercent])" /></xsl:otherwise>
+           <xsl:when test="name(.) = 'method'"><xsl:value-of select="count(stats[(@vsp div (@usp + @vsp)) >= $atleastpercent and (@vsp div (@usp + @vsp)) &lt;= $atmostpercent])" /></xsl:when>
+           <!--if rdf is used we have no way to show the data.-->
+           <xsl:when test="count(.//method) = 0">1</xsl:when>
+           <xsl:otherwise><xsl:value-of select="count(.//method/stats[(@vsp div (@usp + @vsp)) >= $atleastpercent and (@vsp div (@usp + @vsp)) &lt;= $atmostpercent])" /></xsl:otherwise>
         </xsl:choose></xsl:otherwise>
     </xsl:choose></xsl:template>
 
@@ -2148,8 +2206,9 @@
             .reportHeader           { padding: 5px 8px 5px 8px; font-size: 12px; border: 1px solid; margin: 0px;    }
             .titleText              { font-weight: bold; font-size: 12px; white-space: nowrap; padding: 0px; margin: 1px; }
             .subtitleText           { font-size: 9px; font-weight: normal; padding: 0px; margin: 1px; white-space: nowrap; }
-            .projectStatistics      { font-size: 10px; border-left: #649cc0 1px solid; white-space: nowrap;    width: 40%;    }
+            .projectStatistics      { font-size: 10px; border-left: #649cc0 1px solid; white-space: nowrap; width: 40%;    }
             .heading                { font-weight: bold; }
+            .trendTitle             { font-weight: bold; font-size: 10px;}
             
             .mtHdLeftTop        {
                                 border-top: #dcdcdc 1px solid;
@@ -2216,31 +2275,33 @@
         </xsl:text>
         </style>
         <xsl:if test="$isTrendReport">
-		    <script src="{baseimagepath}jquery-1.3.2.min.js" type="text/javascript"></script>
-		    <script src="{baseimagepath}trends.js" type="text/javascript"></script>
+            <script src="{baseimagepath}jquery-1.3.2.min.js" type="text/javascript"></script>
+            <script src="{baseimagepath}trends.js" type="text/javascript"></script>
             
             <script type="text/javascript">
             <xsl:text disable-output-escaping="yes" xml:space="preserve">
             <![CDATA[$(function(){
 
-	            $('.trGr').each(function(){
+                $('.trGr').each(function(){
                     var t = $(this);
                     t.sparkline(t.attr('data').split(','),
-							            {
-								            marginBottom: '0px',
-								            height:50,
-								            width: '100%', 
-								            lineColor: '#ff0000',
-								            spotColor:'#0000ff',
-								            barColor:'#ffffff',
-								            fillColor: null,
-								            normalRangeColor: '#00cd00',
-								            normalRangeMin: 80,
-								            normalRangeMax: 100,
-								            chartRangeMin: -1,
-								            chartRangeMax: 100
-							            }
-						            );
+                                        {
+                                            minSpotColor : '#000000',
+                                            maxSpotColor : '#000000',
+                                            marginBottom: '0px',
+                                            height:30,
+                                            width: '100%', 
+                                            lineColor: '#000000',
+                                            spotColor:'#0000ff',
+                                            barColor:'#ffffff',
+                                            fillColor: null,
+                                            normalRangeColor: '#00cd00',
+                                            normalRangeMin: t.attr('min'),
+                                            normalRangeMax: 100,
+                                            chartRangeMin: -1,
+                                            chartRangeMax: 100
+                                        }
+                                    );
                             });
             });]]>
             </xsl:text>

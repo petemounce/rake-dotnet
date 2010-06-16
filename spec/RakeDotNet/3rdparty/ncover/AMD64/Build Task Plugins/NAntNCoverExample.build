@@ -3,9 +3,14 @@
     <!-- TODO: Uncomment and add the full path to NCover.NAntTasks.dll if not in your path -->
     <!-- TODO: Alternatively, remove this line if you have copied the .dll to your NAnt bin folder -->
     <loadtasks assembly="NCover.NAntTasks.dll"/>
-    
-    <property name="ncoverPath" value="C:\Program Files\" />
-    <property name="msTestPath" value="C:\Program Files (x86)\Microsoft Visual Studio 9.0\Common7\IDE\" />
+
+    <!--
+    NOTE: This needs to be changed if you are profiling a 32 bit application on a 64 bit machine
+    NOTE: OR you are testing MSTest on a 64 Bit machine.
+    In that case the path would be C:\Program Files (x86)\NCover\ncover.console.exe
+    -->
+    <property name="ncoverPath" value="C:\Program Files\NCover\ncover.console.exe" />
+    <property name="msTestPath" value="C:\Program Files (x86)\Microsoft Visual Studio 9.0 \Common7\IDE\" />
     <property name="nantTestRunner" value=".\Tools\nunit-console.exe" />
     <property name="testDlls" value=".\bin\tests1.dll .\bin\tests2.dll .\bin\tests3.dll" />
         
@@ -223,14 +228,14 @@
         <ncover program="${ncoverPath}"
                 testRunnerExe="${nantTestRunner}"
                 testRunnerArgs="${testDlls} /noshadow"
-                includeAssemblies=".*tests\.dll;DAL\.tests.internal.dll"/>
+                includeAssemblies=".*tests;DAL\.tests.internal"/>
     </target>
 
     <target name="">
         <ncover program="${ncoverPath}"
                 testRunnerExe="${nantTestRunner}"
                 testRunnerArgs="${testDlls} /noshadow"
-                excludeAssemblies=".*vendorsupplied.*;.*tests\.dll"/>
+                excludeAssemblies=".*vendorsupplied.*;.*tests"/>
     </target>
 
 </project>
