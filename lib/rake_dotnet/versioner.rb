@@ -1,9 +1,11 @@
 class Versioner
 	VERSION_TEMPLATE_FILE = 'version.template.txt'
 
-	def initialize(template_file=nil, opts={})
+  attr_accessor :template_file
+
+  def initialize(template_file=nil)
 		tf_path = template_file || VERSION_TEMPLATE_FILE
-		@tf = Pathname.new(tf_path)
+    @template_file = Pathname.new(tf_path)
 		@vf = Pathname.new(tf_path.sub('.template', ''))
 	end
 
@@ -16,7 +18,7 @@ class Versioner
 	end
 
 	def maj_min
-		return @tf.read.chomp
+    return @template_file.read.chomp
 	end
 
 	def build
@@ -37,8 +39,9 @@ end
 
 Version_txt = 'version.txt'
 file Version_txt => Versioner::VERSION_TEMPLATE_FILE do
-	rm_rf Version_txt
+  rm_rf Version_txt if File.exist? Version_txt
 	Versioner.new.get
 end
 task :version => Version_txt
 task :assembly_info => Version_txt
+task :templates => Version_txt

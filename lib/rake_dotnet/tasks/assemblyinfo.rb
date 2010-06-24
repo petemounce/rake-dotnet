@@ -1,9 +1,12 @@
 class AssemblyInfoTask < Rake::TaskLib
+  include DependentTask
 	attr_accessor :product_name, :configuration, :company_name, :version
 
 	def initialize(params={})
+    @main_task_name = :assembly_info
 		@src_dir = params[:src_dir] || SRC_DIR
 		yield self if block_given?
+    super(params)
 		define
 	end
 
@@ -41,7 +44,7 @@ class AssemblyInfoTask < Rake::TaskLib
 		end
 
 		desc 'Generate the AssemblyInfo.cs file from the template closest'
-		task :assembly_info do
+    task @main_task_name do
 			File.open(stamp, 'w') {}
 			Pathname.new(@src_dir).entries.each do |e|
 				asm_info = asm_info_to_generate(e)
@@ -50,7 +53,7 @@ class AssemblyInfoTask < Rake::TaskLib
 		end
 
 		desc 'Generate all output from templates'
-		task :templates => :assembly_info
+    task :templates => @main_task_name
 	end
 
 	def generate(template_file, destination)

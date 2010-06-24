@@ -20,7 +20,7 @@ class AddSiteIisAppCmd < IisAppCmd
 	def bindings
 		if @bindings.nil?
 			return 'http://*:80'
-		elsif is_a? Array
+    elsif @bindings.is_a? Array
 			return @bindings.join(',')
 		else
 			return @bindings
@@ -29,9 +29,8 @@ class AddSiteIisAppCmd < IisAppCmd
 
 	def name
 		return @name unless @name.nil?
-		pn = Pathname.new(@path)
-		exp = File.expand_path(pn.dirname)
-		return exp.gsub('/', '\\')
+    result = Pathname.new(@path).basename
+    return result
 	end
 
 	def id

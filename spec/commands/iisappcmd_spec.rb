@@ -21,13 +21,46 @@ describe IisAppCmd do
 			before :all do
 				@cmd = AddSiteIisAppCmd.new(:path => 'foo')
 			end
-			it 'should default to http://*:80 when no bindings are supplied'
-			it 'should handle a list of bindings'
-			it 'should handle a single binding'
-			it 'should default to naming the site like the last directory name in physical-path'
-			it 'should use a supplied website name'
-			it 'should use a supplied id'
-			it 'should generate an id when not supplied'
+      it_should_behave_like 'An IisAppCmd'
+      it 'should default to http://*:80 when no bindings are supplied' do
+        @cmd.cmd.should match(/\/bindings:http:\/\/\*:80/)
+      end
+      it 'should default to naming the site like the last directory name in physical-path' do
+        @cmd.cmd.should match(/\/name:foo/)
+      end
+      it 'should generate an id'
+    end
+    describe 'When given an array of bindings' do
+      before :all do
+        @cmd = AddSiteIisAppCmd.new(:path => 'foo', :bindings => ['http://foo.com', 'http://bar.com'])
+      end
+      it 'should correctly join them into the command' do
+        @cmd.cmd.should match(/\/bindings:http:\/\/foo\.com,http:\/\/bar\.com/)
+      end
+    end
+    describe 'When given a csv-list of bindings' do
+      before :all do
+        @cmd = AddSiteIisAppCmd.new(:path => 'foo', :bindings => 'http://foo.com,http://bar.com')
+      end
+      it 'should correctly write them out into the command' do
+        @cmd.cmd.should match(/\/bindings:http:\/\/foo\.com,http:\/\/bar\.com/)
+      end
+    end
+    describe 'When given a name' do
+      before :all do
+        @cmd = AddSiteIisAppCmd.new(:path => 'foo', :name => 'bar')
+      end
+      it 'should use it to name the website' do
+        @cmd.cmd.should match(/\/name:bar/)
+      end      
+    end
+    describe 'When given an ID' do
+      before :all do
+        @cmd = AddSiteIisAppCmd.new(:path => 'foo', :id => 54)
+      end
+      it 'should use it' do
+        @cmd.cmd.should match(/\/id:54/)
+      end
 		end
 	end
 end

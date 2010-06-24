@@ -1,24 +1,27 @@
 class MsBuildTask < Rake::TaskLib
+  include DependentTask
 	attr_accessor :src_dir, :verbosity, :working_dir
 
 	def initialize(params={})
-		#TODO: Support for arbitrary properties, not just configuration.  For example, TreatWarningsAsErrors, WarningLevel.
+    @main_task_name = :compile
+    params[:build_number] ||= ENV['BUILD_NUMBER']
+    params[:dependencies] ||= [Bin_out]
+
 		@configuration = params[:configuration] || CONFIGURATION
 		@src_dir = params[:src_dir] || SRC_DIR
 		@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 		@working_dir = params[:working_dir] || '.'
-		@deps = params[:deps] || [Bin_out]
 		@buildable_projects = ['.csproj', '.vbproj', '.wdproj', '.wixproj']
 		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
 
 		yield self if block_given?
+    super(params)
 		define
 	end
 
 	def define
 		# most project types put output into bin/{configuration}
 		rule(/#{src_dir_regex}\/[\w\.]+\/bin\/#{@configuration}\/[\w\.]+\.(?:dll|exe)/) do |r|
-			puts r.name
 			build_lib(r)
 		end
 
@@ -37,7 +40,6 @@ class MsBuildTask < Rake::TaskLib
 
 		# web deployment projects put output into /{configuration}
 		rule(/#{src_dir_regex}\/[\w\.]+\/#{@configuration}/) do |r|
-			puts r.name
 			build_wdp(r)
 		end
 
@@ -67,19 +69,9 @@ class MsBuildTask < Rake::TaskLib
 				Rake::FileTask[target].invoke if @buildable_projects.include?(pn.extname)
 			end
 		end
-
-		@deps.each do |d|
-			task :compile => d
-		end
-
-		self
 	end
 
 	def src_dir_regex
 		regexify(@src_dir)
-	end
-
-	def figure_out_project_type(project_pathname)
-		# TODO.
 	end
 end

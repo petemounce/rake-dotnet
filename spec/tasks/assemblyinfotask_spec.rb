@@ -2,6 +2,7 @@ require 'spec'
 require 'rake'
 require 'rake/tasklib'
 require 'lib/rake_dotnet.rb'
+require 'constants_spec.rb'
 
 describe AssemblyInfoTask do
 	after :all do
@@ -10,8 +11,9 @@ describe AssemblyInfoTask do
 	end
 
 	describe 'When initialised with default settings' do
+    it_should_behave_like 'A DependentTask'
 		before :all do
-			@at = AssemblyInfoTask.new
+      @task = AssemblyInfoTask.new
 			@templates = Rake::Task[:templates]
 		end
 		it 'should define a rule to hit AssemblyInfo.cs files in projects\' Properties dir'

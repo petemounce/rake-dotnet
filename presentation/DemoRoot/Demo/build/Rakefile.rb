@@ -6,31 +6,28 @@ require '../../../../lib/rake_dotnet.rb'
 PRODUCT_NAME = ENV['PRODUCT_NAME'] ? ENV['PRODUCT_NAME'] : 'Demo'
 COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'DemoCompany'
 
-demo_site = File.join(RakeDotNet::OUT_DIR, "Demo.Site")
+AssemblyInfoTask.new
 
-RakeDotNet::AssemblyInfoTask.new
+MsBuildTask.new({:dependencies=>[:assembly_info]})
 
-RakeDotNet::MsBuildTask.new({:deps=>[:assembly_info]})
+HarvestOutputTask.new({:dependencies => [:compile]})
 
-RakeDotNet::HarvestOutputTask.new({:deps => [:compile]})
+XUnitTask.new({:options=>{:html=>true}})
 
-RakeDotNet::HarvestWebApplicationTask.new({:deps=>[:compile]})
-
-RakeDotNet::RDNPackageTask.new(name='bin', {:deps=>[:compile, :harvest_output, :xunit]}) do |p|
-	p.targets.include("#{RakeDotNet::Bin_out}")
+FxCopTask.new do |fxc|
+  fxc.dll_list.exclude("#{fxc.suites_dir}/**/*Tests*.dll")
 end
 
-RakeDotNet::XUnitTask.new({:options=>{:html=>true}})
-RakeDotNet::RDNPackageTask.new(name='Demo.Site', {:deps=>[:compile, :harvest_webapps, :xunit]}) do |p|
-	p.targets.include("#{demo_site}")
-	p.targets.exclude("#{demo_site}**/obj")
+NCoverTask.new
+
+RDNPackageTask.new(:name=>'bin', :dependencies=>[:compile, :harvest_output, :xunit]) do |p|
+  p.items << {:from=>Bin_out}
 end
 
-RakeDotNet::FxCopTask.new do |fxc|
-	fxc.dll_list.exclude("#{fxc.suites_dir}/**/*Tests*.dll")
+RDNPackageTask.new(:name=>'Demo.Site', :dependencies=>[:compile, :harvest_webapps, :xunit]) do |p|
+  p.items << {:from => File.join(SRC_DIR, "Demo.Site"),
+              :exclude => ['**/obj']}
 end
-RakeDotNet::NCoverTask.new
-
 
 task :default => [:compile, :harvest_output, :xunit, :package]
 task :first_checkout => [:clobber, :assembly_info]

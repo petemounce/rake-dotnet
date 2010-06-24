@@ -6,7 +6,6 @@ class NDependTask < Rake::TaskLib
 	def initialize(params={})
 		@main_task_name = :ndepend
 		params[:build_number] ||= ENV['BUILD_NUMBER']
-		super(params)
 		@out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'ndepend')
 		@globs = params[:globs] || [File.join(Bin_out, "**", "#{PRODUCT_NAME}*.dll")]
 
@@ -15,6 +14,7 @@ class NDependTask < Rake::TaskLib
 		@options[:project] = File.join(PRODUCT_ROOT, "#{PRODUCT_NAME}.ndepend.xml") if @options[:project].nil?
 
 		yield self if block_given?
+    super(params)
 		define
 	end
 

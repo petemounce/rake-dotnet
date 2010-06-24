@@ -2,8 +2,10 @@ class TemplatesTask < Rake::TaskLib
 	include DependentTask
 
 	def initialize(params={})
+    @main_task_name = :templates
 		@cfg = Config.new
 		yield self if block_given?
+    super(params)
 		define
 	end
 

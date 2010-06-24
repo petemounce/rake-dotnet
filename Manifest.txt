@@ -71,6 +71,7 @@ lib/rake_dotnet/tasks/xunittask.rb
 spec/rake_dotnet_spec.rb
 spec/constants_spec.rb
 spec/versioner_spec.rb
+spec/shared/dependenttask_shared_spec.rb
 spec/commands/bcpcmd_spec.rb
 spec/commands/cli_spec.rb
 spec/commands/crap4ncmd_spec.rb

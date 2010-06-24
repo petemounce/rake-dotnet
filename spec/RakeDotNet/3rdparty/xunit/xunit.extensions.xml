@@ -20,7 +20,7 @@
 			</exception>
 		</member>
 		<member
-				name="M:Xunit.Extensions.Assertions.Contains``1(``0,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0})">
+name="M:Xunit.Extensions.Assertions.Contains``1(``0,System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IComparer{``0})">
 			<summary>
 				Verifies that a collection contains a given object, using a comparer.
 			</summary>

@@ -1,4 +1,3 @@
-#cli spec
 require 'spec'
 require 'fileutils'
 require 'lib/rake_dotnet.rb'

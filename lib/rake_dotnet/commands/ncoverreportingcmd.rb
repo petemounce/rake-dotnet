@@ -1,20 +1,19 @@
-class NCoverReportingCmd
-	attr_accessor :reports, :report_dir
+class NCoverReportingCmd < Cli
+  def initialize(params={})
+    @arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
+    sps = params[:search_paths] || []
+    sps << File.join(TOOLS_DIR, 'NCover', @arch)
+    sps << File.join(ENV['PROGRAMFILES'], 'NCover')
+    super(params.merge(:exe_name => 'ncover.reporting.exe', :search_paths => sps))
 
-	def initialize(report_dir, coverage_files, params)
-		@report_dir = report_dir || File.join(out_dir, 'reports', 'ncover')
-		@coverage_files = coverage_files || []
-
-		params ||= {}
-		arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
-		@exe = params[:ncover_reporting_exe] || File.join(TOOLS_DIR, 'ncover', arch, 'ncover.reporting.exe')
-
-		@is_complete_version = `#{@exe}`.include?('NCover Reporting Complete')
-		# required
+    @coverage_files = params[:coverage_files] || []
+    raise(ArgumentError, 'Must supply :coverage_files array', caller) if @coverage_files.length == 0
+    @out_dir = params[:out_dir] || File.join(OUT_DIR, 'reports', 'ncover')
+    code, stdout, stderr = systemu exe unless params[:is_complete_version]
+    @is_complete_version = params[:is_complete_version] || stdout.include?('NCover Reporting Complete')
+    @version = params[:version] || Versioner.new.get.to_s
+    @coverage_files = params[:coverage_files] || []
 		@reports = params[:reports] || ['Summary', 'UncoveredCodeSections', 'FullCoverageReport']
-		@output_path = @report_dir
-
-		# optional
 		@sort_order = params[:sort] || 'CoveragePercentageAscending'
 		@project_name = params[:project_name] || PRODUCT_NAME
 		@save_to = params[:save_to]
@@ -29,7 +28,7 @@ class NCoverReportingCmd
 	end
 
 	def build_id
-		return "//bi #{Versioner.new.get.to_s}"
+    return "//bi #{@version}"
 	end
 
 	def output_reports
@@ -48,7 +47,9 @@ class NCoverReportingCmd
 	end
 
 	def output_path
-		return "//op \"#{@output_path}\""
+    set = Pathname.new(@coverage_files.first).basename.sub('.coverage.xml', '')
+    op = File.expand_path(File.join(@out_dir, set)).gsub('/', '\\')
+    return "//op \"#{op}\""
 	end
 
 	def sort_order
@@ -64,7 +65,7 @@ class NCoverReportingCmd
 	end
 
 	def cmd
-		return "\"#{@exe}\" #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name} #{save_to}"
+    return "#{super} #{coverage_files} #{build_id} #{output_reports} #{output_path} #{sort_order} #{project_name} #{save_to}"
 	end
 
 	def run

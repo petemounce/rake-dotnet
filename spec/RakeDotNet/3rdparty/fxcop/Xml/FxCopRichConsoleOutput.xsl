@@ -126,7 +126,7 @@
 	</xsl:template>
 
 	<xsl:template match="Message" mode="moduleSuppression">[module: SuppressMessage("<xsl:value-of select="@Category"/>",
-		"<xsl:value-of select="@CheckId"/>:<xsl:value-of select="@TypeName"/>", Scope="<xsl:apply-templates select="../.."
+		"<xsl:value-of select="@CheckId"/>:<xsl:value-of select="@TypeName"/>", Scope="    <xsl:apply-templates select="../.."
 		                                                                                                    mode="suppressionScope"/>
 		", Target="<xsl:apply-templates select=".." mode="parent"/>"
 		<xsl:if test="ancestor::Resource">

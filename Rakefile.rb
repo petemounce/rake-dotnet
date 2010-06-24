@@ -39,6 +39,7 @@ Spec::Rake::SpecTask.new('examples_with_rcov') do |t|
 	t.spec_files = File.join('spec', 'rake_dotnet_spec.rb')
 	t.rcov = true
 	t.rcov_opts = ['--exclude', 'spec']
+  t.fail_on_error = true
 end
 
 file 'coverage/index.html' => [:examples_with_rcov]

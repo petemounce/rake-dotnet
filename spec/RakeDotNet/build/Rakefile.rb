@@ -9,9 +9,9 @@ COMPANY_NAME = ENV['COMPANY_NAME'] ? ENV['COMPANY_NAME'] : 'neverrunwithscissors
 
 AssemblyInfoTask.new
 
-MsBuildTask.new({:deps=>[:assembly_info]})
+MsBuildTask.new({:dependencies=>[:assembly_info]})
 
-HarvestOutputTask.new({:deps => [:compile]})
+HarvestOutputTask.new({:dependencies => [:compile]})
 
 RDNPackageTask.new(:name=>'bin', :dependencies=>[:compile, :harvest, :tests]) do |p|
 	p.items << {:from=>Bin_out}

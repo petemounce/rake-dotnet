@@ -1,12 +1,15 @@
-class FxCopCmd
+class FxCopCmd < Cli
 	attr_accessor :dlls, :out_file, :out_xsl, :apply_out_xsl, :dependencies_path, :summary, :verbose, :echo_to_console, :xsl_echo_to_console, :ignore_autogen, :culture
 
-	def initialize(dlls, params={})
-		@dlls = dlls
-#		raise(ArgumentError, 'Must supply at least one DLL', caller) if @dlls.nil?
+  def initialize(params={})
+    sps = params[:search_paths] || []
+    sps << File.join(TOOLS_DIR, 'FxCop')
+    sps << File.join(ENV['PROGRAMFILES'], 'Microsoft FxCop 1.36')
+    sps << File.join(ENV['PROGRAMFILES'], 'Microsoft FxCop')
+    super(params.merge(:exe_name => 'fxcopcmd.exe', :search_paths => sps))
 
-		@exe_dir = params[:fxcop_exe_dir] || File.join(TOOLS_DIR, 'fxcop')
-		@exe = params[:fxcop_exe] || File.join(@exe_dir, 'fxcopcmd.exe')
+    @dlls = params[:dlls]
+	raise(ArgumentError, 'Must supply at least one DLL', caller) if @dlls.nil?
 
 		@apply_out_xsl = params[:apply_out_xsl]
 		@culture = params[:culture]
@@ -14,7 +17,8 @@ class FxCopCmd
 		@echo_to_console = params[:echo_to_console]
 		@ignore_autogen = params[:ignore_autogen] || true
 		@out_file = params[:out_file]
-		@out_xsl = File.join(@exe_dir, 'Xml', params[:out_xsl]) unless params[:out_xsl].nil?
+    exe_dir = Pathname.new(exe).dirname
+    @out_xsl = File.join(exe_dir, 'Xml', params[:out_xsl]) unless params[:out_xsl].nil?
 		@summary = params[:summary]
 		@verbose = params[:verbose]
 		@xsl_echo_to_console = params[:xsl_echo_to_console]
@@ -48,7 +52,7 @@ class FxCopCmd
 	end
 
 	def cmd
-		"\"#{@exe}\" #{files_to_analyse} #{console} #{out_file} #{out_xsl} #{apply_out_xsl}"
+    "#{super} #{files_to_analyse} #{console} #{out_file} #{out_xsl} #{apply_out_xsl}"
 	end
 
 	def run
