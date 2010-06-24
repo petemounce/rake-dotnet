@@ -33,7 +33,7 @@ class MsBuildCmd
 
 	def properties
 		p = []
-		@properties.each {|key, value| p.push("#{key}=#{value}") }
+		@properties.each { |key, value| p.push("#{key}=#{value}") }
 		p.join(';')
 	end
 end

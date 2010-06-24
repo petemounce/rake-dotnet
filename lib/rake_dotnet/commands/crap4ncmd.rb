@@ -2,7 +2,7 @@ class Crap4nCmd < Cli
 	def initialize(params={})
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'crap4n')
-		super(params.merge(:exe_name=>'crap4n-console.exe',:search_paths=>sps))
+		super(params.merge(:exe_name=>'crap4n-console.exe', :search_paths=>sps))
 
 		@name = params[:name]
 		raise(ArgumentError, 'crap4n report name is required', caller) if @name.nil?
@@ -10,17 +10,17 @@ class Crap4nCmd < Cli
 	end
 
 	def cc
-		file = File.expand_path(File.join(@out_dir, 'ncover', @name, "#{@name}.coverage.xml")).gsub('/','\\')
+		file = File.expand_path(File.join(@out_dir, 'ncover', @name, "#{@name}.coverage.xml")).gsub('/', '\\')
 		return "/cc=\"#{file}\""
 	end
 
 	def cm
-		file = File.expand_path(File.join(@out_dir, 'ncover', @name, "#{@name}.coverage.xml")).gsub('/','\\')
+		file = File.expand_path(File.join(@out_dir, 'ncover', @name, "#{@name}.coverage.xml")).gsub('/', '\\')
 		return "/cm=\"#{file}\""
 	end
 
 	def xml
-		file = File.expand_path(File.join(@out_dir, 'crap4n', "#{@name}.crap4n.xml")).gsub('/','\\')
+		file = File.expand_path(File.join(@out_dir, 'crap4n', "#{@name}.crap4n.xml")).gsub('/', '\\')
 		return "/xml=\"#{file}\""
 	end
 

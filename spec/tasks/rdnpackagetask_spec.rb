@@ -13,15 +13,15 @@ describe RDNPackageTask do
 	end
 	describe 'When initialised with no items' do
 		it 'should throw because we need to package at least one item' do
-			lambda { RDNPackageTask.new(:name=>'bin')}.should raise_error(ArgumentError)
+			lambda { RDNPackageTask.new(:name=>'bin') }.should raise_error(ArgumentError)
 		end
 	end
 	describe 'When initialised with minimum-required settings' do
 		it_should_behave_like 'A DependentTask'
 		before :all do
 			@task = RDNPackageTask.new(
-							:name=>'bin',
-							:items=>[{:from=>'bin'}]
+					:name=>'bin',
+					:items=>[{:from=>'bin'}]
 			)
 			@package = Rake::Task[:package]
 			@repackage = Rake::Task[:repackage]
@@ -80,7 +80,7 @@ describe RDNPackageTask do
 		it_should_behave_like 'A DependentTask'
 		before :all do
 			@task = RDNPackageTask.new(:name=>'bin',
-							:items=>[{:from=>'bin'}], :out_dir=>'foo')
+			                           :items=>[{:from=>'bin'}], :out_dir=>'foo')
 		end
 		it 'should use it' do
 			@task.out_dir.should eql('foo')
@@ -90,7 +90,7 @@ describe RDNPackageTask do
 		it_should_behave_like 'A DependentTask'
 		before :all do
 			@task = RDNPackageTask.new(:name=>'bin',
-							:items=>[{:from=>'bin'}], :configuration=>'Release')
+			                           :items=>[{:from=>'bin'}], :configuration=>'Release')
 		end
 		it 'should use it' do
 			@task.configuration.should eql('Release')

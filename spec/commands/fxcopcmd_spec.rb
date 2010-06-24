@@ -28,14 +28,14 @@ describe FxCopCmd do
 	end
 
 	describe 'When told to use console' do
-		it 'should do so'# do
-			#FxCopCmd.new(:echo_to_console=>true).cmd.should include('/console')
+		it 'should do so' # do
+		#FxCopCmd.new(:echo_to_console=>true).cmd.should include('/console')
 		#end
 	end
 
 	describe 'When given an out_file' do
 		it 'should use it' #do
-			#FxCopCmd.new(:out_file=>'foo.xml').cmd.should include("/out:\"foo.xml\"")
+		#FxCopCmd.new(:out_file=>'foo.xml').cmd.should include("/out:\"foo.xml\"")
 		#end
 	end
 end

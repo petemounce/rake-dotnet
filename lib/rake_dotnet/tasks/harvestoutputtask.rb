@@ -1,6 +1,6 @@
 class HarvestOutputTask < Rake::TaskLib
 	include DependentTask
-	
+
 	attr_accessor :src_dir, :out_dir, :configuration, :glob
 
 	def initialize(params={})

@@ -29,14 +29,14 @@ class FxCopCmd
 	def files_to_analyse
 		list = ''
 		@dlls.each do |dll|
-			list += "/file:\"#{dll.gsub('/','\\')}\" "
+			list += "/file:\"#{dll.gsub('/', '\\')}\" "
 		end
 		list = list.chop
 	end
 
 	def out_file
 		return '' if @out_file.nil?
-		return "/out:\"#{@out_file.gsub('/','\\')}\""
+		return "/out:\"#{@out_file.gsub('/', '\\')}\""
 	end
 
 	def out_xsl

@@ -3,49 +3,49 @@
   <component name="GemRequirementsHolder" version="2">
     <requirement>
       <requirement>
-        <dependency name="gemcutter" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="gemcutter" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="hoe" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="hoe" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="json_pure" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="json_pure" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rake" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rake" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rcov" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rcov" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rspec" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rspec" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="rubyforge" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="rubyforge" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>
     <requirement>
       <requirement>
-        <dependency name="systemu" version="0" bound="GREATER_OR_EQUAL" />
+        <dependency name="systemu" version="0" bound="GREATER_OR_EQUAL" git="false" />
       </requirement>
       <source manual="true" />
     </requirement>

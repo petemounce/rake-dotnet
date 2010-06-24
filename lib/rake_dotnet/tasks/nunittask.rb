@@ -1,6 +1,6 @@
 class NUnitTask < Rake::TaskLib
 	include DependentTask
-	
+
 	attr_accessor :suites_dir, :out_dir, :runner_options
 
 	def initialize(params={})

@@ -11,7 +11,7 @@ class Versioner
 		return @vf.read.chomp if @vf.exist?
 
 		v = "#{maj_min}.#{build}.#{revision}"
-		@vf.open('w') {|f| f.write(v) }
+		@vf.open('w') { |f| f.write(v) }
 		return v
 	end
 

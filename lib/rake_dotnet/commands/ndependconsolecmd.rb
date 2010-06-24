@@ -12,12 +12,12 @@ class NDependConsoleCmd < Cli
 	end
 
 	def out_dir
-		od = File.expand_path(@out_dir).gsub('/','\\')
+		od = File.expand_path(@out_dir).gsub('/', '\\')
 		return "/OutDir \"#{od}\""
 	end
 
 	def project
-		p = File.expand_path(@project).gsub('/','\\')
+		p = File.expand_path(@project).gsub('/', '\\')
 		return "\"#{p}\""
 	end
 

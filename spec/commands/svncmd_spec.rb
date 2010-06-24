@@ -13,7 +13,7 @@ end
 
 describe SvnExport do
 	it "should require src" do
-		lambda { SvnExport.new({:dest=>'support/svn/dest'})}.should raise_error(ArgumentError)
+		lambda { SvnExport.new({:dest=>'support/svn/dest'}) }.should raise_error(ArgumentError)
 	end
 	it "should require dest" do
 		lambda { SvnExport.new({:src=>'support/svn/src'}) }.should raise_error(ArgumentError)

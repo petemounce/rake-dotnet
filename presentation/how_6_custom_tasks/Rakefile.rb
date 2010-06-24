@@ -10,6 +10,6 @@ BarTask.new do |t|
 end
 
 baz = BazTask.new
-baz.message = 'not the droids you''re looking for'
+baz.message = 'not the droids you' 're looking for'
 
 task :default => [:foo]

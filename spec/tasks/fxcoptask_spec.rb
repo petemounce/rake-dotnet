@@ -9,7 +9,7 @@ describe FxCopTask do
 	describe 'When initialised with default settings' do
 		before :all do
 			@ft = FxCopTask.new
-			@out_dir = File.join(OUT_DIR, 'reports') 
+			@out_dir = File.join(OUT_DIR, 'reports')
 			@fxcop = Rake::Task[:fxcop]
 			@report = Rake::FileTask["#{@out_dir}/#{PRODUCT_NAME}.fxcop.xml"]
 		end

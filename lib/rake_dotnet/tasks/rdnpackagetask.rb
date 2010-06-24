@@ -46,7 +46,7 @@ class RDNPackageTask < Rake::TaskLib
 			@items.each do |item|
 				f = Pathname.new(item[:from])
 				to = Pathname.new(pkg)
-				to = Pathname.new(File.join(pkg,item[:named])) unless item[:named].nil?
+				to = Pathname.new(File.join(pkg, item[:named])) unless item[:named].nil?
 				mkdir_p to if File.exist? to
 				cp_r f, to if f.directory?
 				cp f, to unless f.directory?

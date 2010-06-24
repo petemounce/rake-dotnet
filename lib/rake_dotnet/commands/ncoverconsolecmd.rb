@@ -26,7 +26,7 @@ class NCoverConsoleCmd
 	end
 
 	def working_dir
-		return "//w \"#{@working_dir.gsub('/','\\')}\""
+		return "//w \"#{@working_dir.gsub('/', '\\')}\""
 	end
 
 	def iis
@@ -60,7 +60,7 @@ class NCoverConsoleCmd
 	def trend_file
 		return '' unless @is_complete_version
 		return '' if @trend_file.nil? || @trend_file == false
-		t = File.expand_path(@trend_file).gsub('/','\\')
+		t = File.expand_path(@trend_file).gsub('/', '\\')
 		return "//at \"#{t}\""
 	end
 

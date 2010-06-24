@@ -9,7 +9,7 @@ describe NCoverTask do
 	describe 'When initialised with no settings' do
 		before :all do
 			@task = NCoverTask.new
-			@report_dir = File.join(OUT_DIR,'reports','ncover')
+			@report_dir = File.join(OUT_DIR, 'reports', 'ncover')
 			@report_dir_task = Rake::FileTask[@report_dir]
 			@clobber_ncover_task = Rake::Task[:clobber_ncover]
 			@ncover_task = Rake::FileTask[:ncover]
@@ -29,7 +29,7 @@ describe NCoverTask do
 			@task.dependencies.should be_empty
 		end
 		it 'should default profile_options' do
-			@task.profile_options[:arch].should_not be_nil 
+			@task.profile_options[:arch].should_not be_nil
 		end
 		it 'should default reporting_options' do
 			@task.reporting_options[:arch].should_not be_nil

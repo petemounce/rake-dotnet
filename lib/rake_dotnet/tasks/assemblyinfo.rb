@@ -10,7 +10,7 @@ class AssemblyInfoTask < Rake::TaskLib
 	def define
 		stamp = '.assembly_info_task_stamp'
 		CLEAN.include(stamp)
-		
+
 		src_dir_regex = regexify(@src_dir)
 		rule(/#{src_dir_regex}\/.*\/Properties\/AssemblyInfo.cs/) do |r|
 			generate_for(r, 'cs')
@@ -72,7 +72,7 @@ class AssemblyInfoTask < Rake::TaskLib
 		end
 
 		if pn_entry.basename.to_s.include? '.Website'
-			is_csharp = pn_entry.parent.children.select {|sib| sib.basename.to_s.include? '.vb'}.first.nil?
+			is_csharp = pn_entry.parent.children.select { |sib| sib.basename.to_s.include? '.vb' }.first.nil?
 			return File.join(@src_dir, pn_entry, 'App_Code', 'AssemblyInfo.cs') if is_csharp
 			return File.join(@src_dir, pn_entry, 'App_Code', 'AssemblyInfo.vb') unless is_csharp
 		end
@@ -82,14 +82,14 @@ class AssemblyInfoTask < Rake::TaskLib
 
 		proj_ext = Pathname.new(proj).extname
 		path =
-						case proj_ext
-							when '.csproj' then
-								File.join(@src_dir, pn_entry, 'Properties', 'AssemblyInfo.cs')
-							when '.vbproj' then
-								File.join(@src_dir, pn_entry, 'My Project', 'AssemblyInfo.vb')
-							else
-								nil
-						end
+				case proj_ext
+					when '.csproj' then
+						File.join(@src_dir, pn_entry, 'Properties', 'AssemblyInfo.cs')
+					when '.vbproj' then
+						File.join(@src_dir, pn_entry, 'My Project', 'AssemblyInfo.vb')
+					else
+						nil
+				end
 		return path
 	end
 
