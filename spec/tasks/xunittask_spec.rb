@@ -65,11 +65,14 @@ describe XUnitTask do
   describe 'When given dependencies' do
     before :all do
       @task = XUnitTask.new(:dependencies=>[:dooby])
+	    @xunit = Rake::Task[:xunit]
     end
     it_should_behave_like 'A DependentTask'
-    it 'should use them' do
+    it 'should read those dependencies' do
       @task.dependencies.should include(:dooby)
-      Rake::Task[:xunit].prerequisites.should include('dooby')
+    end
+    it 'should create :xunit task that depends on those' do
+      @xunit.prerequisites.should include('dooby')
     end
   end
 end
