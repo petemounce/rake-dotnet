@@ -1,7 +1,7 @@
 class MsBuildCmd < Cli
   def initialize(params={})
     sps = params[:search_paths] || []
-    sps << File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v4.0')
+    sps << File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v4.0.30319')
     sps << File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v3.5')
     sps << File.join(ENV['WINDIR'], 'Microsoft.NET', 'Framework', 'v2.0.50727')
     super(params.merge(:exe_name => 'msbuild.exe', :search_paths => sps))
