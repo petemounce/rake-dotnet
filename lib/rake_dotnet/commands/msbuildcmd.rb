@@ -44,6 +44,6 @@ class MsBuildCmd < Cli
     return '' if @properties.length == 0
 		p = []
 		@properties.each { |key, value| p.push("#{key}=#{value}") }
-    '/p:' + p.join(';')
+    '/p:' + p.reverse.join(';')
 	end
 end
