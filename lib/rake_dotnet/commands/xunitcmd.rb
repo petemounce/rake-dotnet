@@ -1,3 +1,4 @@
+# TODO: Inherit from Cli
 class XUnitCmd
 	attr_accessor :xunit, :test_dll, :reports_dir, :options
 
