@@ -50,7 +50,7 @@ class SvnInfo < SvnCmd
 	end
 
 	def revision
-		puts cmd if VERBOSE
+		puts cmd if verbose
 		out = `#{cmd}`
 		out.match(/Revision: (\d+)/)[1]
 	end

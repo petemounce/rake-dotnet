@@ -67,6 +67,7 @@ lib/rake_dotnet/tasks/ncovertask.rb
 lib/rake_dotnet/tasks/ndependtask.rb
 lib/rake_dotnet/tasks/nunittask.rb
 lib/rake_dotnet/tasks/rdnpackagetask.rb
+lib/rake_dotnet/tasks/templatestask.rb
 lib/rake_dotnet/tasks/xunittask.rb
 spec/rake_dotnet_spec.rb
 spec/constants_spec.rb

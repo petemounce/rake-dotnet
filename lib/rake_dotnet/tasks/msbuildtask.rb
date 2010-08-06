@@ -3,9 +3,10 @@ class MsBuildTask < Rake::TaskLib
 	attr_accessor :src_dir, :verbosity, :working_dir
 
 	def initialize(params={})
-    @main_task_name = :compile
-    params[:build_number] ||= ENV['BUILD_NUMBER']
-    params[:dependencies] ||= [Bin_out]
+		@main_task_name = :compile
+		@msbuild_params = []
+		params[:build_number] ||= ENV['BUILD_NUMBER']
+		params[:dependencies] ||= [Bin_out]
 
 		@configuration = params[:configuration] || CONFIGURATION
 		@src_dir = params[:src_dir] || SRC_DIR
@@ -29,12 +30,12 @@ class MsBuildTask < Rake::TaskLib
 		rule(/#{src_dir_regex}\/[\w\.]+\/bin\/[\w\.]+\.dll/) do |r|
 			build_lib(r)
 		end
-
+		
 		def build_lib(r)
 			pn = Pathname.new(r.name)
 			name = pn.basename.to_s.sub('.dll', '')
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-			mb = MsBuildCmd.new(project, @properties, ['Build'], @verbosity, @working_dir)
+			mb = MsBuildCmd.new({:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir})
 			mb.run
 		end
 
@@ -42,12 +43,12 @@ class MsBuildTask < Rake::TaskLib
 		rule(/#{src_dir_regex}\/[\w\.]+\/#{@configuration}/) do |r|
 			build_wdp(r)
 		end
-
+		
 		def build_wdp(r)
 			pn = Pathname.new(r.name)
 			name = Pathname.new(pn.dirname).basename
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.wdproj").first
-			mb = MsBuildCmd.new(project, @properties, ['Build'], @verbosity, @working_dir)
+			mb = MsBuildCmd.new({:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir})
 			mb.run
 		end
 

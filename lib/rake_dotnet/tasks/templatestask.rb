@@ -3,7 +3,7 @@ class TemplatesTask < Rake::TaskLib
 
 	def initialize(params={})
     @main_task_name = :templates
-		@cfg = Config.new
+		@cfg = TemplatesTaskConfig.new
 		yield self if block_given?
     super(params)
 		define
@@ -32,7 +32,7 @@ class TemplatesTask < Rake::TaskLib
 	end
 end
 
-class Config
+class TemplatesTaskConfig
 	attr_accessor :root, :current_template
 
 	def initialize(params={})

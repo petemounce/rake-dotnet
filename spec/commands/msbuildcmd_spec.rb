@@ -51,6 +51,7 @@ describe MsBuildCmd do
   end
   describe 'When given more than one property' do
     it 'should render all of them' do
+	  test_fudge = {:moo => 'oom'}
       MsBuildCmd.new(@safe.merge(:properties => {:foo => 'bar', :wibble => 'oops'})).cmd.should match(/\/p:foo=bar;wibble=oops/)
     end
   end
