@@ -1,5 +1,7 @@
 class NUnitCmd < Cli
+	attr_accessor :arch
 	def initialize(params={})
+		@arch = params[:arch] || ENV['PROCESSOR_ARCHITECTURE']
 		sps = params[:search_paths] || []
 		sps << File.join(TOOLS_DIR, 'nunit', 'bin', 'net-2.0')
 		sps << File.join(ENV['PROGRAMFILES'], 'nunit 2.5.3', 'bin', 'net-2.0')
@@ -7,7 +9,10 @@ class NUnitCmd < Cli
 		sps << File.join(ENV['PROGRAMFILES'], 'nunit 2.5.1', 'bin', 'net-2.0')
 		sps << File.join(ENV['PROGRAMFILES'], 'nunit 2.5.0', 'bin', 'net-2.0')
 		sps << File.join(ENV['PROGRAMFILES'], 'nunit', 'bin', 'net-2.0')
-		super(params.merge({:exe_name=>'nunit-console.exe', :search_paths=>sps}))
+		
+		exe_name = @arch == 'AMD64' ? 'nunit-console.exe' : 'nunit-console-x86.exe'
+		
+		super(params.merge({:exe_name=>exe_name, :search_paths=>sps}))
 
 		if (params[:input_files].nil?)
 			raise(ArgumentError, 'Must supply a DLL to run tests from', caller)

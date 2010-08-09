@@ -42,8 +42,9 @@ class NCoverTask < Rake::TaskLib
 				else
 					raise(ArgumentError, ':test_framework must be one of [:nunit,:xunit]', caller)
 			end
-
-			nc = NCoverConsoleCmd.new(@report_dir, dll_to_execute, @profile_options)
+			@profile_options[:out_dir] = @report_dir
+			@profile_options[:dll_to_profile] = dll_to_execute
+			nc = NCoverConsoleCmd.new(@profile_options)
 			nc.run
 		end
 
@@ -72,10 +73,11 @@ class NCoverTask < Rake::TaskLib
 
 		rule(/#{reports_dir_regex}\/.*\//) do |report_set|
 			set_name = report_set.name.match(/#{reports_dir_regex}\/(.*)\//)[1]
-			profile_xml = File.join(@report_dir, "#{set_name}.coverage.xml")
 			mkdir_p report_set.name
 			@reporting_options[:project_name] = set_name
-			ncr = NCoverReportingCmd.new(report_set.name, profile_xml, @reporting_options)
+			@reporting_options[:coverage_files] = FileList.new("#{@report_dir}/**/#{set_name}.coverage.xml")
+			@reporting_options[:out_dir] = report_set.name
+			ncr = NCoverReportingCmd.new(@reporting_options)
 			ncr.run
 		end
 
@@ -92,7 +94,9 @@ class NCoverTask < Rake::TaskLib
 		task :ncover_merged => [@report_dir, :ncover_profile] do
 			merged_coverage_xml = File.join(@report_dir, "#{PRODUCT_NAME}.merged.coverage.xml")
 			rm merged_coverage_xml if File.exists? merged_coverage_xml
-			ncr = NCoverReportingCmd.new(@report_dir, "#{@report_dir}/*.coverage.xml", @merge_options)
+			@merge_options[:coverage_files] = FileList.new("#{@report_dir}/**/*.coverage.xml")
+			@merge_options[:out_dir] = @report_dir
+			ncr = NCoverReportingCmd.new(@merge_options)
 			ncr.run
 		end
 

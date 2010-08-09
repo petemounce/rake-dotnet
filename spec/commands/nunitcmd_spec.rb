@@ -11,7 +11,7 @@ describe NUnitCmd do
 
 	describe 'By default' do
 		before :all do
-      @cmd = NUnitCmd.new({:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll'})
+			@cmd = NUnitCmd.new({:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll'})
 		end
 
 		it "should have sensible search paths" do
@@ -24,7 +24,11 @@ describe NUnitCmd do
 		end
 
 		it "should use correct exe_name" do
-      @cmd.exe.should match(/.*nunit-console.exe/)
+      @cmd.exe.should match(/.*nunit-console-x86.exe/)
+		end
+		
+		it "should read the processor architecture from the environment" do
+			@cmd.arch.should == "x86"
 		end
 
 		it 'should have no includes specified' do
@@ -57,36 +61,48 @@ describe NUnitCmd do
 	end
 
 	describe 'When told not to write xml' do
-    before :all do
-      @cmd = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll',
-                        :options=>{:xml=>false})
-    end
+		before :all do
+			@cmd = NUnitCmd.new(:input_files => 'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+			:options=>{:xml=>false})
+		end
 		it 'should not have /xml=whatever in the command' do
-      @cmd.cmd.should_not match(/\/xml=.*\.nunit\.xml/)
+			@cmd.cmd.should_not match(/\/xml=.*\.nunit\.xml/)
 		end
 	end
 
 	describe 'When includes are specified' do
-    before :all do
-      @cmd =NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
-                        :options => {:include=>['unit', 'integration']})
-    end
+		before :all do
+			@cmd =NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+			:options => {:include=>['unit', 'integration']})
+		end
 		it 'should use them' do
-      @cmd.cmd.should include('/include=')
-      @cmd.cmd.should include('unit')
-      @cmd.cmd.should include('integration')
+			@cmd.cmd.should include('/include=')
+			@cmd.cmd.should include('unit')
+			@cmd.cmd.should include('integration')
 		end
 	end
 
 	describe 'When excludes are specified' do
-    before :all do
-      @cmd = NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
-                        :options => {:exclude=>['integration', 'unit']})
-    end
+		before :all do
+			@cmd = NUnitCmd.new(:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll',
+			:options => {:exclude=>['integration', 'unit']})
+		end
 		it 'should use them' do
-      @cmd.cmd.should include('/exclude=')
-      @cmd.cmd.should include('integration')
-      @cmd.cmd.should include('unit')
+			@cmd.cmd.should include('/exclude=')
+			@cmd.cmd.should include('integration')
+			@cmd.cmd.should include('unit')
+		end
+	end
+	
+	describe 'When running on x64' do
+		before :all do
+		  @cmd = NUnitCmd.new({:input_files=>'spec/support/nunitcmd/Foo.Unit.Tests.dll', :arch => "AMD64"})
+		end
+		it 'should use the specified architecture' do
+			@cmd.arch.should == 'AMD64'
+		end
+		it 'should use correct exe_name' do
+			@cmd.exe.should match(/.*nunit-console.exe/)
 		end
 	end
 end

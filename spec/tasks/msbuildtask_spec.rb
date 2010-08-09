@@ -12,5 +12,8 @@ describe MsBuildTask do
     before :all do
       @task = MsBuildTask.new
     end
+	#it "should set build in parallel to false" do
+	#	@task.build_in_parallel.should == false
+	#end
   end
 end

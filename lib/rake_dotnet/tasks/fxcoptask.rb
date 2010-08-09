@@ -27,7 +27,8 @@ class FxCopTask < Rake::TaskLib
 		directory @report_dir
 
     file @name => [@report_dir] do
-			runner = FxCopCmd.new(@dll_list, @fxcop_options)
+			@fxcop_options[:dlls] = @dll_list
+			runner = FxCopCmd.new(@fxcop_options)
 			runner.run
 		end
 

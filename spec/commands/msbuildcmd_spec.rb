@@ -51,7 +51,7 @@ describe MsBuildCmd do
   end
   describe 'When given more than one property' do
     it 'should render all of them' do
-	  test_fudge = {:moo => 'oom'}
+	  test_fudge = {:moo => 'oom'} #not sure why this alters the order the properties are added... but it does...
       MsBuildCmd.new(@safe.merge(:properties => {:foo => 'bar', :wibble => 'oops'})).cmd.should match(/\/p:foo=bar;wibble=oops/)
     end
   end

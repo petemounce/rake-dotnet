@@ -7,13 +7,13 @@ class MsBuildTask < Rake::TaskLib
 		@msbuild_params = []
 		params[:build_number] ||= ENV['BUILD_NUMBER']
 		params[:dependencies] ||= [Bin_out]
-
+		
 		@configuration = params[:configuration] || CONFIGURATION
 		@src_dir = params[:src_dir] || SRC_DIR
 		@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 		@working_dir = params[:working_dir] || '.'
 		@buildable_projects = ['.csproj', '.vbproj', '.wdproj', '.wixproj']
-		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
+		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => false}.merge(params[:properties] || {})
 
 		yield self if block_given?
     super(params)
@@ -35,7 +35,7 @@ class MsBuildTask < Rake::TaskLib
 			pn = Pathname.new(r.name)
 			name = pn.basename.to_s.sub('.dll', '')
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.*proj").first
-			mb = MsBuildCmd.new({:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir})
+			mb = MsBuildCmd.new(:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir)
 			mb.run
 		end
 
@@ -48,7 +48,7 @@ class MsBuildTask < Rake::TaskLib
 			pn = Pathname.new(r.name)
 			name = Pathname.new(pn.dirname).basename
 			project = FileList.new("#{@src_dir}/#{name}/#{name}.wdproj").first
-			mb = MsBuildCmd.new({:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir})
+			mb = MsBuildCmd.new(:project => project, :properties => @properties, :targets => ['Build'], :verbosity => @verbosity, :working_dir => @working_dir)
 			mb.run
 		end
 
