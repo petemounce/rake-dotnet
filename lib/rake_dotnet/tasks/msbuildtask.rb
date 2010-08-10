@@ -13,7 +13,7 @@ class MsBuildTask < Rake::TaskLib
 		@verbosity = params[:verbosity] || MSBUILD_VERBOSITY || 'm'
 		@working_dir = params[:working_dir] || '.'
 		@buildable_projects = ['.csproj', '.vbproj', '.wdproj', '.wixproj']
-		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => false}.merge(params[:properties] || {})
+		@properties = {:Configuration => @configuration, :TreatWarningsAsErrors => true, :WarningLevel => 4, :BuildInParallel => true}.merge(params[:properties] || {})
 
 		yield self if block_given?
     super(params)
